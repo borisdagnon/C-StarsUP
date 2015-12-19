@@ -80,7 +80,7 @@ namespace StarsUP
             }
             else
             {
-                string Filter = "Identifiant_du_departement='" + n + "'";
+                string Filter = "Identifiant_Departement='" + n + "'";
                 controller.Vmodel.Dv_visite.RowFilter = Filter;
             }
             dataGV.Refresh();
@@ -97,7 +97,7 @@ namespace StarsUP
             }
             else
             {
-                string Filter = "Identifiant_de_la_saison='" + n + "'";
+                string Filter = "Identifiant_Saison='" + n + "'";
                 controller.Vmodel.Dv_visite.RowFilter = Filter;
             }
             dataGV.Refresh();

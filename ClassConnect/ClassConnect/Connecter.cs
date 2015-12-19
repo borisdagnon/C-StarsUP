@@ -124,7 +124,9 @@ namespace ClassConnect
         public void import()
         {
             if (!connopen) return;
-            mySqlDataAdapter.SelectCommand = new MySqlCommand(" select * from departement;select * from saison;select * from visite;", myConnection);
+            MySqlCommand cmd = new MySqlCommand("call maj_vm_visites ", myConnection);
+           
+            mySqlDataAdapter.SelectCommand = new MySqlCommand(" select * from departement;select * from saison;select * from vm_visites;", myConnection);
             try
             {
                 dataSet.Clear();
@@ -164,6 +166,8 @@ namespace ClassConnect
 
             if (count == 1)
             {
+                
+           
                 ret = true;
             }
             else
