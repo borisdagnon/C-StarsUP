@@ -90,7 +90,7 @@
             this.IsMdiContainer = true;
             this.Name = "Connection";
             this.Text = "Connection";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Connection_FormClosed);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Connection_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 

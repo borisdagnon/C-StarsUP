@@ -58,11 +58,14 @@ namespace StarsUP
         }
                 }
 
-        private void Connection_FormClosed(object sender, FormClosedEventArgs e)
+        private void Connection_FormClosing(object sender, FormClosingEventArgs e)
         {
-            
-            controller.Vmodel.sedeconnecter();
-        
+            if(MessageBox.Show("Voulez-vous quitter StarsUP ?", "Quitter", MessageBoxButtons.YesNo)==DialogResult.Yes)
+            {
+                e.Cancel = false;
+            }
         }
+
+       
     }
 }
