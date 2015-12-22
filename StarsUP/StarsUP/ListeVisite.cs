@@ -53,6 +53,8 @@ namespace StarsUP
             dataGV.DataSource = bindingSource1;
 
             dataGV.Columns[0].Visible = false;
+            dataGV.Columns[6].Visible = false;
+            dataGV.Columns[7].Visible = false;
 
             int vwidth = dataGV.RowHeadersWidth;
             for(int i = 0;i<dataGV.Columns.Count;i++)
@@ -102,6 +104,15 @@ namespace StarsUP
             }
             dataGV.Refresh();
         }
+
+        public void filtreD()
+        {
+           
+            string Filter = "Date_de_visite>='"+dateTimePicker1.Value.ToShortDateString()+"' AND Date_de_visite<='"+dateTimePicker2.Value.ToShortDateString()+"'";
+            controller.Vmodel.Dv_visite.RowFilter=Filter;
+            dataGV.Refresh();
+        }
+        
         public ListeVisite()
         {
             InitializeComponent();
@@ -109,6 +120,7 @@ namespace StarsUP
             dataGV.AllowUserToAddRows = false;
             dataGV.AllowUserToDeleteRows = false;
             dataGV.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            
         }
 
         private void cbDepartement_SelectionChangeCommitted(object sender, EventArgs e)
@@ -119,6 +131,16 @@ namespace StarsUP
         private void cbSaison_SelectionChangeCommitted(object sender, EventArgs e)
         {
             filtreS();
+        }
+
+        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        {
+            filtreD();
+        }
+
+        private void dateTimePicker2_ValueChanged(object sender, EventArgs e)
+        {
+            filtreD();
         }
 
         

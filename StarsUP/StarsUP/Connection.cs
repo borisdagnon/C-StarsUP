@@ -12,9 +12,12 @@ namespace StarsUP
 {
     public partial class Connection : Form
     {
+        public String var="";
         public Connection()
         {
             InitializeComponent();
+            tbMDP.PasswordChar='*';
+          
         }
 
         private void btnConnection_Click(object sender, EventArgs e)
@@ -41,8 +44,8 @@ namespace StarsUP
                     sb.Append(tbNomUtil.Text).Append(" réussie");
                     MessageBox.Show(sb.ToString());
                     this.Hide();
-                    
-                    Index I = new Index();
+                    String nomInsp=tbNomUtil.Text;
+                    Index I = new Index(nomInsp);
                     I.Show();
                 }
                 else

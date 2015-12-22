@@ -101,6 +101,12 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox tbNomUtil;
+
+        public System.Windows.Forms.TextBox TbNomUtil
+        {
+            get { return tbNomUtil; }
+            set { tbNomUtil = value; }
+        }
         private System.Windows.Forms.TextBox tbMDP;
         private System.Windows.Forms.Button btnConnection;
     }

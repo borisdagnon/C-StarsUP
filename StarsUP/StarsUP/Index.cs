@@ -12,10 +12,12 @@ namespace StarsUP
 {
     public partial class Index : Form
     {
-        public Index()
+        private String nomInsp = "";
+        public Index(String nomInsp)
         {
             InitializeComponent();
             gestionToolStripMenuItem.Visible = false;
+            this.nomInsp = nomInsp;
         }
 
         private void listeVisiteToolStripMenuItem_Click(object sender, EventArgs e)
@@ -45,7 +47,9 @@ namespace StarsUP
             else
             {
                 MessageBox.Show("Success Connexion", "Connexion OK", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                controller.Vmodel.import();
+
+                Connection C = new Connection();
+               controller.Vmodel.import(nomInsp.ToString());
                 if (controller.Vmodel.Chargement == true)
                 {
                     MessageBox.Show("Success Import", "Import", MessageBoxButtons.OK, MessageBoxIcon.Information);

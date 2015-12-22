@@ -121,12 +121,12 @@ namespace ClassConnect
         }
 
 
-        public void import()
+        public void import(String nomInsp)
         {
             if (!connopen) return;
-            MySqlCommand cmd = new MySqlCommand("call maj_vm_visites ", myConnection);
-           
-            mySqlDataAdapter.SelectCommand = new MySqlCommand(" select * from departement;select * from saison;select * from vm_visites;", myConnection);
+            MySqlCommand cmd = new MySqlCommand("call maj_vm_visites() ", myConnection);
+
+            mySqlDataAdapter.SelectCommand = new MySqlCommand(" select * from departement;select * from saison;select * from vm_visites where Nom_Inspecteur='"+nomInsp.ToString()+"';", myConnection);
             try
             {
                 dataSet.Clear();
