@@ -64,6 +64,12 @@
       <DependentUpon>Connection.cs</DependentUpon>
     </Compile>
     <Compile Include="controller.cs" />
+    <Compile Include="GenerationPDF.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GenerationPDF.Designer.cs">
+      <DependentUpon>GenerationPDF.cs</DependentUpon>
+    </Compile>
     <Compile Include="Index.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -80,6 +86,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Connection.resx">
       <DependentUpon>Connection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GenerationPDF.resx">
+      <DependentUpon>GenerationPDF.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Index.resx">
       <DependentUpon>Index.cs</DependentUpon>

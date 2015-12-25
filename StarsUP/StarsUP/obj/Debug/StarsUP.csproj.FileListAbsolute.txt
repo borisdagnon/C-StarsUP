@@ -92,3 +92,4 @@ H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\obj\Debug\StarsUP.Index.resources
 H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\obj\Debug\StarsUP.ListeVisite.resources
 H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\obj\Debug\StarsUP.Properties.Resources.resources
 H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\obj\Debug\StarsUP.csproj.GenerateResource.Cache
+H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\obj\Debug\StarsUP.GenerationPDF.resources

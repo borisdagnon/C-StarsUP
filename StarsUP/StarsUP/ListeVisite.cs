@@ -42,6 +42,7 @@ namespace StarsUP
             cbDepartement.DisplayMember = "Value";
             cbDepartement.Text = cbDepartement.Items[0].ToString();
             cbDepartement.DropDownStyle = ComboBoxStyle.DropDownList;
+            
 
             cbSaison.DataSource = FlistS;
             cbSaison.ValueMember = "Key";
@@ -53,6 +54,7 @@ namespace StarsUP
             dataGV.DataSource = bindingSource1;
 
             dataGV.Columns[0].Visible = false;
+            dataGV.Columns[1].Visible = false;
             dataGV.Columns[6].Visible = false;
             dataGV.Columns[7].Visible = false;
 

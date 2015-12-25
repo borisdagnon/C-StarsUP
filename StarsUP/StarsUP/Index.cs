@@ -62,5 +62,11 @@ namespace StarsUP
             }
             controller.Vmodel.seconnecter();
         }
+
+        private void générerPDFToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GenerationPDF GPDF = new GenerationPDF();
+            GPDF.Show();
+        }
     }
 }

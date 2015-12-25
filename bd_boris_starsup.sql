@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Mar 22 Décembre 2015 à 19:52
+-- Généré le :  Ven 25 Décembre 2015 à 01:58
 -- Version du serveur :  5.6.17
 -- Version de PHP :  5.5.12
 
@@ -24,6 +24,18 @@ DELIMITER $$
 --
 -- Procédures
 --
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ETOILLE`(IN `Nom_Inspecteur` VARCHAR(30))
+BEGIN
+
+      SELECT i.IDINSPECTEUR,i.NOMINSPECTEUR,i.PRENOMINSPECTEUR,NUMEROTEL,LIBSPECIALITE,h.NOMHEBERGEMENT,dv.DATEV,his.ETOILLE 
+       FROM inspecteur i INNER JOIN visite v ON i.IDINSPECTEUR=v.IDINSPECTEUR 
+       INNER JOIN hebergement h ON v.IDHEBERGEMENT=h.IDHEBERGEMENT 
+       INNER JOIN datev dv ON v.IDDATEV=dv.IDDATEV 
+       INNER JOIN historique his ON h.IDHEBERGEMENT=his.IDHEBERGEMENT 
+       INNER JOIN specialite s ON i.IDSPECIALITEI=s.IDSPECIALITE 
+       WHERE v.IDINSPECTEUR=(SELECT i.IDINSPECTEUR FROM inspecteur WHERE NOMINSPECTEUR=Nom_Inspecteur);
+       END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `maj_ajout_etoille`(IN `IdHeb` INT(6), IN `IdSais` INT(6), IN `EtoileAj` INT(6))
     NO SQL
 BEGIN
@@ -109,7 +121,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `maj_vm_visites`()
 BEGIN
 TRUNCATE vm_visites;
 INSERT INTO vm_visites
-select v.IDINSPECTEUR as Identifiant_Inspecteur,NOMINSPECTEUR as Nom_Inspecteur,PRENOMINSPECTEUR 
+select v.IDVISITE as Identifiant_Visite, v.IDINSPECTEUR as Identifiant_Inspecteur,NOMINSPECTEUR as Nom_Inspecteur,PRENOMINSPECTEUR 
 as Prenom_Inspecteur, h.NOMHEBERGEMENT as Nom_Hebergement,ADRESSEHEBERGEMENT as Adresse_Hebergement, DATEV as Date_de_visite,s.IDSAISON as Identifiant_Saison,d.IDDEPARTEMENT 
 as Identifiant_Departement, LIBDEPARTEMENT as Nom_Departement from visite v inner join hebergement h on v.IDHEBERGEMENT=h.IDHEBERGEMENT 
 inner join historique his on h.IDHEBERGEMENT=his.IDHEBERGEMENT inner join saison s on his.IDSAISON=s.IDSAISON 
@@ -447,7 +459,7 @@ CREATE TABLE IF NOT EXISTS `inspecteur` (
   `NOMINSPECTEUR` char(32) DEFAULT NULL,
   `PRENOMINSPECTEUR` char(32) DEFAULT NULL,
   `IDDEPARTEMENT` smallint(6) NOT NULL,
-  `NUMEROTEL` bigint(20) DEFAULT NULL,
+  `NUMEROTEL` int(10) unsigned zerofill DEFAULT NULL,
   `MDPINSPECTEUR` varchar(30) NOT NULL,
   PRIMARY KEY (`IDINSPECTEUR`),
   KEY `I_FK_INSPECTEUR_SPECIALITE` (`IDSPECIALITEI`),
@@ -459,8 +471,8 @@ CREATE TABLE IF NOT EXISTS `inspecteur` (
 --
 
 INSERT INTO `inspecteur` (`IDINSPECTEUR`, `IDSPECIALITEI`, `NOMINSPECTEUR`, `PRENOMINSPECTEUR`, `IDDEPARTEMENT`, `NUMEROTEL`, `MDPINSPECTEUR`) VALUES
-(1, 1, 'Flemming', 'David', 1, 623298517, 'linch'),
-(2, 2, 'Minea', 'Douglas', 2, 623521485, 'douglas');
+(1, 1, 'Flemming', 'David', 1, 0623298517, 'linch'),
+(2, 2, 'Minea', 'Douglas', 2, 0623521485, 'douglas');
 
 -- --------------------------------------------------------
 
@@ -609,6 +621,7 @@ DELIMITER ;
 --
 
 CREATE TABLE IF NOT EXISTS `vm_visites` (
+  `Identifiant_Visite` smallint(6) NOT NULL,
   `Identifiant_Inspecteur` smallint(6) DEFAULT NULL,
   `Nom_Inspecteur` char(32) CHARACTER SET latin1 DEFAULT NULL,
   `Prenom_Inspecteur` char(32) CHARACTER SET latin1 DEFAULT NULL,
@@ -624,8 +637,8 @@ CREATE TABLE IF NOT EXISTS `vm_visites` (
 -- Contenu de la table `vm_visites`
 --
 
-INSERT INTO `vm_visites` (`Identifiant_Inspecteur`, `Nom_Inspecteur`, `Prenom_Inspecteur`, `Nom_Hebergement`, `Adresse_Hebergement`, `Date_de_visite`, `Identifiant_Saison`, `Identifiant_Departement`, `Nom_Departement`) VALUES
-(1, 'Flemming', 'David', 'LES FLINGUETTES', '19 Rue Des Capucins', '2015-12-08', 1, 1, 'Maine-Et-Loire');
+INSERT INTO `vm_visites` (`Identifiant_Visite`, `Identifiant_Inspecteur`, `Nom_Inspecteur`, `Prenom_Inspecteur`, `Nom_Hebergement`, `Adresse_Hebergement`, `Date_de_visite`, `Identifiant_Saison`, `Identifiant_Departement`, `Nom_Departement`) VALUES
+(1, 1, 'Flemming', 'David', 'LES FLINGUETTES', '19 Rue Des Capucins', '2015-12-08', 1, 1, 'Maine-Et-Loire');
 
 --
 -- Contraintes pour les tables exportées

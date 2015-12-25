@@ -22,12 +22,19 @@ namespace ClassConnect
 
         private MySqlDataAdapter mySqlDataAdapter = new MySqlDataAdapter();
         private DataSet dataSet = new DataSet();
-        private DataView dv_visite = new DataView(), dv_departement = new DataView(), dv_saison = new DataView();
+        private DataView dv_visite = new DataView(), dv_departement = new DataView(), dv_saison = new DataView(), dv_pdf = new DataView();
+
+       
 
 
         #endregion
 
         #region assesseurs:
+        public DataView Dv_pdf
+        {
+            get { return dv_pdf; }
+            set { dv_pdf = value; }
+        }
         public bool Connopen
         {
             get { return connopen; }
@@ -126,7 +133,7 @@ namespace ClassConnect
             if (!connopen) return;
             MySqlCommand cmd = new MySqlCommand("call maj_vm_visites() ", myConnection);
 
-            mySqlDataAdapter.SelectCommand = new MySqlCommand(" select * from departement;select * from saison;select * from vm_visites where Nom_Inspecteur='"+nomInsp.ToString()+"';", myConnection);
+            mySqlDataAdapter.SelectCommand = new MySqlCommand(" select * from departement;select * from saison;select * from vm_visites where Nom_Inspecteur='" + nomInsp.ToString() + "';", myConnection);
             try
             {
                 dataSet.Clear();
@@ -142,6 +149,8 @@ namespace ClassConnect
                 dv_departement = dataSet.Tables[0].DefaultView;
                 dv_saison = dataSet.Tables[1].DefaultView;
                 dv_visite = dataSet.Tables[2].DefaultView;
+                
+
 
                 chargement = true;
             }
