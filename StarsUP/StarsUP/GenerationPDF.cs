@@ -16,6 +16,7 @@ namespace StarsUP
 {
     public partial class GenerationPDF : Form
     {
+        private String nomInsp = "";
         private BindingSource bindingSource1 = new BindingSource();
 
         public void remplirCb()
@@ -38,13 +39,81 @@ namespace StarsUP
             cbVisites.Text = cbVisites.Items[0].ToString();
             cbVisites.DropDownStyle = ComboBoxStyle.DropDownList;
         }
-        public GenerationPDF()
+        public GenerationPDF(String nomInsp)
         {
             InitializeComponent();
             remplirCb();
+            this.nomInsp = nomInsp;
         }
 
         private void GenerationPDF_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnPDF_Click(object sender, EventArgs e)
+        {
+            StringBuilder sb = new StringBuilder("");
+           
+           string res= cbVisites.Text;
+            try
+            {
+                DateTime d = DateTime.Parse(res);
+                string final = d.ToString("yyy/MM/dd");
+                String requete =controller.Vmodel.import2(nomInsp.ToString(), final.ToString());
+                String requete2 = controller.Vmodel.import3(nomInsp.ToString(), final.ToString());
+                MessageBox.Show(requete.ToString());
+                MessageBox.Show(requete2.ToString());
+
+                try
+                {
+                    
+                    string copyOfOriginal = "H:/Fichiers/PPE4/Planning.pdf"; //Création du document 
+                    string imageSRC = "H:/Fichiers/PPE4/C-StarsUP/imagestar.gif"; //Récupération de l'image 
+                    iTextSharp.text.Rectangle rec = new iTextSharp.text.Rectangle(PageSize.A4); 
+                    rec.BackgroundColor = new BaseColor(System.Drawing.Color.WhiteSmoke);
+                    iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(imageSRC);
+                    FileStream fs = new FileStream(copyOfOriginal, FileMode.Create, FileAccess.Write, FileShare.None);
+                    
+                    Document doc = new Document(rec);
+                    PdfWriter writer = PdfWriter.GetInstance(doc, fs);
+                    doc.Open();
+                    image.Alignment = Element.ALIGN_TOP;
+                    image.Alignment = Element.ALIGN_LEFT;
+                    Paragraph para = new Paragraph(requete);
+                    Paragraph para2 = new Paragraph(requete2);
+                    para.Alignment = Element.ALIGN_JUSTIFIED;
+                    para.Alignment = Element.ALIGN_RIGHT;
+                    para2.Alignment = Element.ALIGN_JUSTIFIED;
+                    para2.Alignment = Element.ALIGN_BOTTOM;
+                    para2.Alignment = Element.ALIGN_CENTER;
+                    doc.Add(image);
+                    doc.Add(para);
+                    doc.Add(para2);
+                    doc.Close();
+                   
+                }
+               catch(Exception er)
+                {
+                    MessageBox.Show("Une erreur est survenue lors de la génération du fichier " + er + "", "Erreur Génération", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+
+                
+            }
+           catch
+            {
+                MessageBox.Show("Sélectionnez une date");
+            }
+
+           
+            
+
+            
+            
+        }
+
+        private void GenerationPDF_FormClosing(object sender, FormClosingEventArgs e)
         {
 
         }

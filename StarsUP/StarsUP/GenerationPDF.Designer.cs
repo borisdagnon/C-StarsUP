@@ -40,6 +40,7 @@
             this.btnPDF.TabIndex = 0;
             this.btnPDF.Text = "Generer";
             this.btnPDF.UseVisualStyleBackColor = true;
+            this.btnPDF.Click += new System.EventHandler(this.btnPDF_Click);
             // 
             // cbVisites
             // 
@@ -59,6 +60,7 @@
             this.Controls.Add(this.btnPDF);
             this.Name = "GenerationPDF";
             this.Text = "GenerationPDF";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GenerationPDF_FormClosing);
             this.Load += new System.EventHandler(this.GenerationPDF_Load);
             this.ResumeLayout(false);
 

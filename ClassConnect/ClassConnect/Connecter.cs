@@ -21,7 +21,11 @@ namespace ClassConnect
 
 
         private MySqlDataAdapter mySqlDataAdapter = new MySqlDataAdapter();
+        private DataTable dt = new DataTable();
+
         private DataSet dataSet = new DataSet();
+        
+
         private DataView dv_visite = new DataView(), dv_departement = new DataView(), dv_saison = new DataView(), dv_pdf = new DataView();
 
        
@@ -127,10 +131,135 @@ namespace ClassConnect
             }
         }
 
+        public String import2(String nomInsp, String date)
+        {
+            StringBuilder sb2 = new StringBuilder("");
 
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append("SELECT * FROM inspecteur i INNER JOIN visite v ON i.IDINSPECTEUR=v.IDINSPECTEUR");
+            sb.Append(" INNER JOIN hebergement h ON v.IDHEBERGEMENT=h.IDHEBERGEMENT");
+            sb.Append(" INNER JOIN datev dv ON v.IDDATEV=dv.IDDATEV ");
+            sb.Append("INNER JOIN historique his ON h.IDHEBERGEMENT=his.IDHEBERGEMENT");
+            sb.Append(" INNER JOIN specialite s ON i.IDSPECIALITEI=s.IDSPECIALITE WHERE v.IDINSPECTEUR=");
+            sb.Append(" (SELECT i.IDINSPECTEUR FROM inspecteur WHERE NOMINSPECTEUR='" + nomInsp.ToString() + "') AND DATEV='" + date.ToString() + "'");
+            
+             MySqlDataReader dr;
+      
+            MySqlCommand cmd = new MySqlCommand(sb.ToString(), myConnection);
+           
+            try
+            {
+                dr = cmd.ExecuteReader();
+               
+
+                if(dr.HasRows)
+                {
+                     //lecture de ta table
+                    
+                        while (dr.Read())
+                        {
+                                sb2 = sb2.Append("Numéro Inspecteur :  " + (dr.GetString(0)) + "\n");
+                                sb2 = sb2.Append("\n");
+                                sb2.Append("Prénom Inspecteur :  "+ (dr.GetString(3))+"\n");
+                                sb2 = sb2.Append("\n");
+                                sb2 = sb2.Append("Nom Inspecteur :  " + (dr.GetString(2))+"\n");
+                                sb2 = sb2.Append("\n");
+                            try
+                            {
+                                DateTime d = Convert.ToDateTime( dr.GetString(21));
+                                string finaldate = d.ToString("dd/MM/yyyy");
+                                sb2 = sb2.Append("Date Visite :  " + (finaldate.ToString()) + "");
+                            }
+                            catch (Exception err)
+                            {
+                                errgrave = true;
+                            }
+                           
+                            
+                                
+                            
+                            dr.Read();
+
+
+                        
+                    }
+                }
+                dr.NextResult();
+                dr.Close();
+            }
+            catch (Exception err)
+            {
+                errgrave = true;
+               
+            }
+
+            return sb2.ToString();
+
+        }
+
+        public String import3(String nomInsp, String date)
+        {
+            StringBuilder sb2 = new StringBuilder("");
+
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append("SELECT * FROM inspecteur i INNER JOIN visite v ON i.IDINSPECTEUR=v.IDINSPECTEUR");
+            sb.Append(" INNER JOIN hebergement h ON v.IDHEBERGEMENT=h.IDHEBERGEMENT");
+            sb.Append(" INNER JOIN datev dv ON v.IDDATEV=dv.IDDATEV ");
+            sb.Append("INNER JOIN historique his ON h.IDHEBERGEMENT=his.IDHEBERGEMENT");
+            sb.Append(" INNER JOIN specialite s ON i.IDSPECIALITEI=s.IDSPECIALITE WHERE v.IDINSPECTEUR=");
+            sb.Append(" (SELECT i.IDINSPECTEUR FROM inspecteur WHERE NOMINSPECTEUR='" + nomInsp.ToString() + "') AND DATEV='" + date.ToString() + "'");
+
+            MySqlDataReader dr;
+
+            MySqlCommand cmd = new MySqlCommand(sb.ToString(), myConnection);
+
+            try
+            {
+                dr = cmd.ExecuteReader();
+
+
+                if (dr.HasRows)
+                {
+                    //lecture de ta table
+
+                    while (dr.Read())
+                    {
+                        sb2 = sb2.Append("Numéro Visite :  " + (dr.GetString(7)) + "\n");
+                        sb2 = sb2.Append("\n");
+                        sb2.Append("Nom Hébergement :  " + (dr.GetString(15)) + "\n");
+                        sb2 = sb2.Append("\n");
+                        sb2 = sb2.Append("Adresse Hébergement :  " + (dr.GetString(17)) + "\n");
+                        sb2 = sb2.Append("\n");
+                        sb2 = sb2.Append("Étoile Actuel :  " + (dr.GetString(24)) + "");
+
+
+
+
+                        dr.Read();
+
+
+
+                    }
+                }
+                dr.NextResult();
+                dr.Close();
+            }
+            catch (Exception err)
+            {
+                errgrave = true;
+
+            }
+
+            return sb2.ToString();
+
+        }
         public void import(String nomInsp)
         {
             if (!connopen) return;
+
+           
             MySqlCommand cmd = new MySqlCommand("call maj_vm_visites() ", myConnection);
 
             mySqlDataAdapter.SelectCommand = new MySqlCommand(" select * from departement;select * from saison;select * from vm_visites where Nom_Inspecteur='" + nomInsp.ToString() + "';", myConnection);
@@ -187,10 +316,7 @@ namespace ClassConnect
 
         }
 
-
-
-
-
+       
 
 
     }

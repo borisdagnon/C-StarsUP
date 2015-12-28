@@ -66,6 +66,7 @@ namespace StarsUP
             if(MessageBox.Show("Voulez-vous quitter StarsUP ?", "Quitter", MessageBoxButtons.YesNo)==DialogResult.Yes)
             {
                 e.Cancel = false;
+                Environment.Exit(1);
             }
         }
 

@@ -17,6 +17,7 @@ namespace StarsUP
         {
             InitializeComponent();
             gestionToolStripMenuItem.Visible = false;
+            pDFToolStripMenuItem.Visible = false;
             this.nomInsp = nomInsp;
         }
 
@@ -48,12 +49,13 @@ namespace StarsUP
             {
                 MessageBox.Show("Success Connexion", "Connexion OK", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                Connection C = new Connection();
+                
                controller.Vmodel.import(nomInsp.ToString());
                 if (controller.Vmodel.Chargement == true)
                 {
                     MessageBox.Show("Success Import", "Import", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     gestionToolStripMenuItem.Visible = true;
+                    pDFToolStripMenuItem.Visible = true;
                 }
 
 
@@ -65,7 +67,7 @@ namespace StarsUP
 
         private void générerPDFToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GenerationPDF GPDF = new GenerationPDF();
+            GenerationPDF GPDF = new GenerationPDF(nomInsp.ToString());
             GPDF.Show();
         }
     }
