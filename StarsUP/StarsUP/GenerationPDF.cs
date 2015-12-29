@@ -69,28 +69,40 @@ namespace StarsUP
                 {
                     
                     string copyOfOriginal = "H:/Fichiers/PPE4/Planning.pdf"; //Création du document 
-                    string imageSRC = "H:/Fichiers/PPE4/C-StarsUP/imagestar.gif"; //Récupération de l'image 
+                    string imageSRC = "H:/Fichiers/PPE4/C-StarsUP/image/star.gif"; //Récupération de l'image de l'étoile
+                    string imageSRCTitre = "H:/Fichiers/PPE4/C-StarsUP/image/Titre.png"; //Récupération de l'image du titre
+                    iTextSharp.text.Image imageTitre = iTextSharp.text.Image.GetInstance(imageSRCTitre);
                     iTextSharp.text.Rectangle rec = new iTextSharp.text.Rectangle(PageSize.A4); 
                     rec.BackgroundColor = new BaseColor(System.Drawing.Color.WhiteSmoke);
-                    iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(imageSRC);
+                    iTextSharp.text.Image imageStarsUP = iTextSharp.text.Image.GetInstance(imageSRC);
                     FileStream fs = new FileStream(copyOfOriginal, FileMode.Create, FileAccess.Write, FileShare.None);
                     
                     Document doc = new Document(rec);
                     PdfWriter writer = PdfWriter.GetInstance(doc, fs);
                     doc.Open();
-                    image.Alignment = Element.ALIGN_TOP;
-                    image.Alignment = Element.ALIGN_LEFT;
+
+
+                    imageStarsUP.Alignment = Element.ALIGN_TOP;
+                    imageStarsUP.Alignment = Element.ALIGN_LEFT;
+
+                    imageTitre.Alignment = Element.ALIGN_TOP;
+                    imageTitre.Alignment = Element.ALIGN_MIDDLE;
                     Paragraph para = new Paragraph(requete);
+                    
                     Paragraph para2 = new Paragraph(requete2);
                     para.Alignment = Element.ALIGN_JUSTIFIED;
                     para.Alignment = Element.ALIGN_RIGHT;
                     para2.Alignment = Element.ALIGN_JUSTIFIED;
                     para2.Alignment = Element.ALIGN_BOTTOM;
                     para2.Alignment = Element.ALIGN_CENTER;
-                    doc.Add(image);
-                    doc.Add(para);
+                    doc.Add(imageTitre);
+                    doc.Add(imageStarsUP);
+                    
+                    doc.Add(para); //Ajout des éléments text ou image
                     doc.Add(para2);
-                    doc.Close();
+                    doc.Close(); //Fermer le document 
+                    MessageBox.Show("Génération OK");
+                    System.Diagnostics.Process.Start("H:\\Fichiers\\PPE4\\Planning.pdf");
                    
                 }
                catch(Exception er)
