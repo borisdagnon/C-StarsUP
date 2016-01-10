@@ -7,27 +7,29 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MetroFramework.Forms;
 
 namespace StarsUP
 {
-    public partial class Connection : Form
+    public partial class Connection : MetroForm
     {
         public String var="";
         public Connection()
         {
             InitializeComponent();
-            tbMDP.PasswordChar='*';
+            tbMDP.PasswordChar='*'; //Ceci permet d'avoir des étoiles lorsqu'on saisi le mot de passe
           
         }
 
         private void btnConnection_Click(object sender, EventArgs e)
         {
-            if(tbNomUtil.Text=="" && tbMDP.Text=="" | tbNomUtil.Text=="" | tbMDP.Text=="")
+            if(tbNomUtil.Text=="" && tbMDP.Text=="" | tbNomUtil.Text=="" | tbMDP.Text=="") // les textbox sont vides alors on envoie un message
             {
                 MessageBox.Show("Veuillez remplir toous les champs");
             }
             else
             {
+                //Sinon on essaie de se connecter
             controller.init();
             controller.Vmodel.seconnecter();
             if (!controller.Vmodel.Connopen)
@@ -38,7 +40,8 @@ namespace StarsUP
             else
             {
                 MessageBox.Show("Access BDD Success", "Connexion résussie", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                if (controller.Vmodel.login(tbNomUtil.Text, tbMDP.Text))
+                if (controller.Vmodel.login(tbNomUtil.Text, tbMDP.Text)) //Cette instruction permet de tester si la valeur booleenne est vrai ou fausse et de récupérer le nom de l'inspecteur.
+                    //Ce qui nous renvoie sur la form Index
                 {
                     StringBuilder sb = new StringBuilder("Connection de : ");
                     sb.Append(tbNomUtil.Text).Append(" réussie");

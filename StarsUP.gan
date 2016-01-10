@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?><project name="Projet StarsUP" company="StarsUP" webLink="http://" view-date="2015-12-04" view-index="0" gantt-divider-location="368" resource-divider-location="300" version="2.7.1" locale="fr">
+    <description/>
+    <view zooming-state="default:0" id="gantt-chart">
+        <field id="tpd3" name="Nom" width="56" order="0"/>
+        <field id="tpd4" name="Date de début" width="21" order="1"/>
+        <field id="tpd5" name="Date de fin" width="21" order="2"/>
+    </view>
+    <view id="resource-table">
+        <field id="0" name="Nom" width="50" order="0"/>
+        <field id="1" name="Rôle par défaut" width="49" order="1"/>
+    </view>
+    <!-- -->
+    <calendars>
+        <day-types>
+            <day-type id="0"/>
+            <day-type id="1"/>
+            <default-week id="1" name="default" sun="1" mon="0" tue="0" wed="0" thu="0" fri="0" sat="1"/>
+            <only-show-weekends value="false"/>
+            <overriden-day-types/>
+            <days/>
+        </day-types>
+    </calendars>
+    <tasks empty-milestones="true">
+        <taskproperties>
+            <taskproperty id="tpd0" name="type" type="default" valuetype="icon"/>
+            <taskproperty id="tpd1" name="priority" type="default" valuetype="icon"/>
+            <taskproperty id="tpd2" name="info" type="default" valuetype="icon"/>
+            <taskproperty id="tpd3" name="name" type="default" valuetype="text"/>
+            <taskproperty id="tpd4" name="begindate" type="default" valuetype="date"/>
+            <taskproperty id="tpd5" name="enddate" type="default" valuetype="date"/>
+            <taskproperty id="tpd6" name="duration" type="default" valuetype="int"/>
+            <taskproperty id="tpd7" name="completion" type="default" valuetype="int"/>
+            <taskproperty id="tpd8" name="coordinator" type="default" valuetype="text"/>
+            <taskproperty id="tpd9" name="predecessorsr" type="default" valuetype="text"/>
+        </taskproperties>
+        <task id="39" name="Création de la BDD" color="#8cb6ce" meeting="false" start="2015-12-11" duration="6" complete="0" priority="2" expand="true">
+            <depend id="37" type="3" difference="0" hardness="Strong"/>
+        </task>
+        <task id="34" name="C#" color="#8cb6ce" meeting="false" start="2015-12-18" duration="11" complete="0" expand="true">
+            <task id="37" name="Définir les fonctionnalités pour le C#" color="#8cb6ce" meeting="false" start="2015-12-18" duration="1" complete="2" expand="true">
+                <depend id="38" type="3" difference="0" hardness="Strong"/>
+            </task>
+            <task id="38" name="Création de la forme Connection" color="#8cb6ce" meeting="false" start="2015-12-18" duration="1" complete="0" expand="true">
+                <depend id="40" type="2" difference="1" hardness="Strong"/>
+            </task>
+            <task id="40" name="Création de la forme Index" color="#8cb6ce" meeting="false" start="2015-12-22" duration="1" complete="0" expand="true">
+                <depend id="45" type="2" difference="2" hardness="Strong"/>
+            </task>
+            <task id="45" name="Création forme Liste Visite" color="#8cb6ce" meeting="false" start="2015-12-25" duration="1" complete="0" expand="true">
+                <depend id="63" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="63" name="Création Génération PDF" color="#8cb6ce" meeting="false" start="2015-12-28" duration="5" complete="0" expand="true"/>
+        </task>
+    </tasks>
+    <resources/>
+    <allocations/>
+    <vacations/>
+    <taskdisplaycolumns>
+        <displaycolumn property-id="tpd2" order="-1" width="75" visible="false"/>
+        <displaycolumn property-id="tpd7" order="-1" width="75" visible="false"/>
+        <displaycolumn property-id="tpd12" order="-1" width="75" visible="false"/>
+        <displaycolumn property-id="tpd3" order="0" width="205" visible="true"/>
+        <displaycolumn property-id="tpd4" order="1" width="80" visible="true"/>
+        <displaycolumn property-id="tpd5" order="2" width="79" visible="true"/>
+        <displaycolumn property-id="tpd6" order="-1" width="75" visible="false"/>
+        <displaycolumn property-id="tpd10" order="-1" width="75" visible="false"/>
+        <displaycolumn property-id="tpd11" order="-1" width="75" visible="false"/>
+        <displaycolumn property-id="tpd1" order="-1" width="75" visible="false"/>
+        <displaycolumn property-id="tpd9" order="-1" width="75" visible="false"/>
+        <displaycolumn property-id="tpd8" order="-1" width="75" visible="false"/>
+        <displaycolumn property-id="tpd13" order="-1" width="75" visible="false"/>
+        <displaycolumn property-id="tpd0" order="-1" width="75" visible="false"/>
+    </taskdisplaycolumns>
+    <previous/>
+    <roles roleset-name="Default"/>
+    <roles roleset-name="SoftwareDevelopment"/>
+</project>

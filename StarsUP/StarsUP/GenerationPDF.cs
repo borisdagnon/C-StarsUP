@@ -10,24 +10,33 @@ using System.Windows.Forms;
 using iTextSharp.text;
 using System.IO;
 using iTextSharp.text.pdf;
-
+using MetroFramework.Forms;
 
 namespace StarsUP
 {
-    public partial class GenerationPDF : Form
+    /// <summary>
+    /// Cette class permet de générer un document PDF grâce au dll iTextSharp
+    /// Il faut premièrement sélectionner la date de la visite dans la combobox dont on veut générer le document PDF, puis celui-ci s'ouvre grâce à un logiciel.
+    /// On a alors la possibilité de l'imprimer, de l'enregistrer...etc selon ce que permett le logiciel qui l'ouvre.
+    /// </summary>
+    public partial class GenerationPDF : MetroForm
     {
         private String nomInsp = "";
-        private BindingSource bindingSource1 = new BindingSource();
-
+       
+        /// <summary>
+        /// Cette méthode charge la combobox, ( List<KeyValuePair<int, string>>) nous permet de récupérer l'identifiant et la chaine de caractère lié
+        /// On fait ensuite un for(){} pour pouvoir remplir  la combobox
+        /// On fait la liaison après avec 
+        /// </summary>
         public void remplirCb()
         {
             List<KeyValuePair<int, string>> Flist = new List<KeyValuePair<int, string>>();
-            Flist.Add(new KeyValuePair<int, string>(0, "Visites"));
+            Flist.Add(new KeyValuePair<int, string>(0, "Visites")); //on ajoute à l'index 0 le string "Visites", c'st donc le premier qu'on verra
             cbVisites.Items.Add("Visites");
 
             for (int i = 0; i < controller.Vmodel.Dv_visite.ToTable().Rows.Count; i++)
             {
-                
+                //On récupère les valeurs qui sont dans le DataView grâce à leurs index ( [ligne][colonne] )
                 Flist.Add(new KeyValuePair<int, string>(Convert.ToInt32(controller.Vmodel.Dv_visite.ToTable().Rows[i][0].ToString()),
                 controller.Vmodel.Dv_visite.ToTable().Rows[i][6].ToString()));
             }
@@ -37,8 +46,14 @@ namespace StarsUP
             cbVisites.ValueMember = "Key";
             cbVisites.DisplayMember = "Value";
             cbVisites.Text = cbVisites.Items[0].ToString();
-            cbVisites.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbVisites.DropDownStyle = ComboBoxStyle.DropDownList; //Comobox de style DropDownList ce qui veut dire pas de possibilité de rajouter à la mains
         }
+        /// <summary>
+        /// Au chargement de la form GenerationPDF on remplit la listbox
+        /// On récupère ensuite le nom de l'inspecteur
+        /// </summary>
+        /// <param name="nomInsp">Il s'agit du nom de l'inspecteur qui va nous servir à faire la requête d'import des informations liées
+        /// à la visite de l'inspecteur</param>
         public GenerationPDF(String nomInsp)
         {
             InitializeComponent();
@@ -65,6 +80,7 @@ namespace StarsUP
                 MessageBox.Show(requete.ToString());
                 MessageBox.Show(requete2.ToString());
 
+                
                 try
                 {
                     

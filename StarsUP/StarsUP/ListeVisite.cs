@@ -7,10 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MetroFramework.Forms;
 
 namespace StarsUP
 {
-    public partial class ListeVisite : Form
+    public partial class ListeVisite : MetroForm
     {
 
         private BindingSource bindingSource1 = new BindingSource();
