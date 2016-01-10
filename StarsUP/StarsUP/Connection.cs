@@ -11,6 +11,10 @@ using MetroFramework.Forms;
 
 namespace StarsUP
 {
+    /// <summary>
+    /// Cette form permet la connetion de l'inspecteur à la base de donnéee. Une fois connecté il a accès à la form Index qui lui permet,
+    /// de choisir ce qu'il veut faire
+    /// </summary>
     public partial class Connection : MetroForm
     {
         public String var="";
@@ -21,6 +25,11 @@ namespace StarsUP
           
         }
 
+        /// <summary>
+        /// Pour la connetion de l'inspecteur on vérifi les textbox et on voit si elles sont vides, si c'est le cas on envoie un message
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnConnection_Click(object sender, EventArgs e)
         {
             if(tbNomUtil.Text=="" && tbMDP.Text=="" | tbNomUtil.Text=="" | tbMDP.Text=="") // les textbox sont vides alors on envoie un message
@@ -63,15 +72,43 @@ namespace StarsUP
             }
         }
                 }
-
+        /// <summary>
+        /// Cette méthode permet de fermer le programme après avoir clické sur le bouton X
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Connection_FormClosing(object sender, FormClosingEventArgs e)
         {
             if(MessageBox.Show("Voulez-vous quitter StarsUP ?", "Quitter", MessageBoxButtons.YesNo)==DialogResult.Yes)
             {
                 e.Cancel = false;
                 Environment.Exit(1);
+
             }
         }
+
+        private void tbNomUtil_KeyUp(object sender, KeyEventArgs e)
+        {
+           if(e.KeyCode==Keys.Enter)
+           {
+               btnConnection_Click(sender, e);
+           }
+        }
+
+        private void tbMDP_KeyUp(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode==Keys.Enter)
+            {
+                btnConnection_Click(sender, e);
+            }
+        }
+
+       
+      
+
+        
+
+        
 
        
     }

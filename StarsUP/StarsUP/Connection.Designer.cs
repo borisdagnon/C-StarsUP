@@ -34,8 +34,8 @@
             this.tbNomUtil = new System.Windows.Forms.TextBox();
             this.tbMDP = new System.Windows.Forms.TextBox();
             this.btnConnection = new System.Windows.Forms.Button();
-            this.panel1 = new System.Windows.Forms.Panel();
             this.label3 = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -63,6 +63,7 @@
             this.tbNomUtil.Name = "tbNomUtil";
             this.tbNomUtil.Size = new System.Drawing.Size(177, 25);
             this.tbNomUtil.TabIndex = 1;
+            this.tbNomUtil.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tbNomUtil_KeyUp);
             // 
             // tbMDP
             // 
@@ -70,42 +71,43 @@
             this.tbMDP.Name = "tbMDP";
             this.tbMDP.Size = new System.Drawing.Size(177, 25);
             this.tbMDP.TabIndex = 1;
+            this.tbMDP.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tbMDP_KeyUp);
             // 
             // btnConnection
             // 
             this.btnConnection.Image = ((System.Drawing.Image)(resources.GetObject("btnConnection.Image")));
-            this.btnConnection.Location = new System.Drawing.Point(252, 253);
+            this.btnConnection.Location = new System.Drawing.Point(170, 249);
             this.btnConnection.Name = "btnConnection";
-            this.btnConnection.Size = new System.Drawing.Size(177, 44);
+            this.btnConnection.Size = new System.Drawing.Size(177, 48);
             this.btnConnection.TabIndex = 2;
             this.btnConnection.Text = "Se Connecter";
             this.btnConnection.UseVisualStyleBackColor = true;
             this.btnConnection.Click += new System.EventHandler(this.btnConnection_Click);
             // 
-            // panel1
-            // 
-            this.panel1.BackColor = System.Drawing.Color.Gray;
-            this.panel1.Controls.Add(this.label3);
-            this.panel1.Location = new System.Drawing.Point(0, 1);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(582, 102);
-            this.panel1.TabIndex = 4;
-            // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Segoe UI", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(223, 24);
+            this.label3.Location = new System.Drawing.Point(243, 12);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(157, 50);
             this.label3.TabIndex = 0;
             this.label3.Text = "StarsUP";
             // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.Gray;
+            this.panel1.Controls.Add(this.label3);
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(504, 62);
+            this.panel1.TabIndex = 4;
+            // 
             // Connection
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(583, 341);
+            this.ClientSize = new System.Drawing.Size(669, 381);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.btnConnection);
             this.Controls.Add(this.tbMDP);
@@ -138,8 +140,8 @@
         }
         private System.Windows.Forms.TextBox tbMDP;
         private System.Windows.Forms.Button btnConnection;
-        private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Panel panel1;
     }
 }
 

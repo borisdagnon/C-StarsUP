@@ -86,10 +86,12 @@ H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\bin\Debug\itextsharp.pdfa.dll
 H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\bin\Debug\itextsharp.xtra.dll
 H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\bin\Debug\ClassConnect.pdb
 H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\bin\Debug\itextsharp.xml
-H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\obj\Debug\StarsUP.csprojResolveAssemblyReference.cache
 H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\obj\Debug\StarsUP.Connection.resources
 H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\obj\Debug\StarsUP.Index.resources
 H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\obj\Debug\StarsUP.ListeVisite.resources
 H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\obj\Debug\StarsUP.Properties.Resources.resources
 H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\obj\Debug\StarsUP.csproj.GenerateResource.Cache
 H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\obj\Debug\StarsUP.GenerationPDF.resources
+H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\bin\Debug\MetroFramework.dll
+H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\bin\Debug\MetroFramework.Fonts.dll
+H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\obj\Debug\StarsUP.csprojResolveAssemblyReference.cache

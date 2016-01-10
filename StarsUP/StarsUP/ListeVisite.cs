@@ -73,7 +73,9 @@ namespace StarsUP
             dataGV.Refresh();
 
         }
-
+        /// <summary>
+        /// Il s'agit d'un filtre qu'on effectue avec l'identifiant du département
+        /// </summary>
         public void filtre()
         {
             string num = cbDepartement.SelectedValue.ToString();
@@ -91,6 +93,9 @@ namespace StarsUP
             dataGV.Refresh();
         }
 
+        /// <summary>
+        /// Il s'agit ici du filtre pour la saison.On voit le nom de la saison 
+        /// </summary>
         public void filtreS()
         {
             string num = cbSaison.SelectedValue.ToString();
@@ -108,6 +113,9 @@ namespace StarsUP
             dataGV.Refresh();
         }
 
+        /// <summary>
+        /// Il s'agit du filtre pour les dates que l'inspecteur va selectionner. On filtre les visites situées entre les deux dates
+        /// </summary>
         public void filtreD()
         {
            

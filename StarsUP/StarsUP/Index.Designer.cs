@@ -45,9 +45,9 @@
             this.importToolStripMenuItem,
             this.gestionToolStripMenuItem,
             this.pDFToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Location = new System.Drawing.Point(20, 60);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(608, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(568, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -63,14 +63,14 @@
             // importToolStripMenuItem1
             // 
             this.importToolStripMenuItem1.Name = "importToolStripMenuItem1";
-            this.importToolStripMenuItem1.Size = new System.Drawing.Size(110, 22);
+            this.importToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
             this.importToolStripMenuItem1.Text = "import";
             this.importToolStripMenuItem1.Click += new System.EventHandler(this.importToolStripMenuItem1_Click);
             // 
             // exportToolStripMenuItem
             // 
             this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            this.exportToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exportToolStripMenuItem.Text = "export";
             // 
             // gestionToolStripMenuItem
@@ -84,7 +84,7 @@
             // listeVisiteToolStripMenuItem
             // 
             this.listeVisiteToolStripMenuItem.Name = "listeVisiteToolStripMenuItem";
-            this.listeVisiteToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.listeVisiteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.listeVisiteToolStripMenuItem.Text = "Liste Visite";
             this.listeVisiteToolStripMenuItem.Click += new System.EventHandler(this.listeVisiteToolStripMenuItem_Click);
             // 
