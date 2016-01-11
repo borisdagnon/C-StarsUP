@@ -34,7 +34,7 @@ namespace StarsUP
         {
             if(tbNomUtil.Text=="" && tbMDP.Text=="" | tbNomUtil.Text=="" | tbMDP.Text=="") // les textbox sont vides alors on envoie un message
             {
-                MessageBox.Show("Veuillez remplir toous les champs");
+                MessageBox.Show("Veuillez remplir tous les champs");
             }
             else
             {
@@ -57,7 +57,9 @@ namespace StarsUP
                     MessageBox.Show(sb.ToString());
                     this.Hide();
                     String nomInsp=tbNomUtil.Text;
-                    Index I = new Index(nomInsp);
+                    String mdpInsp=tbMDP.Text;
+                    Index I = new Index(nomInsp.ToString(),mdpInsp.ToString());
+                 
                     I.Show();
                 }
                 else

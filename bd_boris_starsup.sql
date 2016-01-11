@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Lun 28 Décembre 2015 à 20:55
+-- Généré le :  Lun 11 Janvier 2016 à 13:01
 -- Version du serveur :  5.6.17
 -- Version de PHP :  5.5.12
 
@@ -146,6 +146,13 @@ CREATE TABLE IF NOT EXISTS `attribuer` (
   KEY `I_FK_ATTRIBUER_EQUIPEMENTS` (`IDEQUIPEMENT`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Contenu de la table `attribuer`
+--
+
+INSERT INTO `attribuer` (`IDHEBERGEMENT`, `IDEQUIPEMENT`) VALUES
+(2, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -160,6 +167,13 @@ CREATE TABLE IF NOT EXISTS `avoir_gerant` (
   KEY `I_FK_AVOIR_GERANT_GERANT` (`IDGERANT`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Contenu de la table `avoir_gerant`
+--
+
+INSERT INTO `avoir_gerant` (`IDHEBERGEMENT`, `IDGERANT`) VALUES
+(2, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -170,6 +184,13 @@ CREATE TABLE IF NOT EXISTS `camping` (
   `IDHEBERGEMENT` smallint(6) NOT NULL,
   PRIMARY KEY (`IDHEBERGEMENT`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Contenu de la table `camping`
+--
+
+INSERT INTO `camping` (`IDHEBERGEMENT`) VALUES
+(2);
 
 --
 -- Déclencheurs `camping`
@@ -251,11 +272,12 @@ DELIMITER //
 CREATE TRIGGER `avant_insertion_contre_visite` BEFORE INSERT ON `contrevisite`
  FOR EACH ROW BEGIN
       DECLARE var int(6) DEFAULT 0;
-      SELECT count(*) into var FROM visite WHERE IDVISITE=NEW.IDVISITE AND IDINSPECTEUR=NEW.IDINSPECTEUR  AND IDDATEV=NEW.IDDATEV;
+      SELECT COUNT(*) into var FROM visite WHERE IDVISITE=NEW.IDVISITE AND IDINSPECTEUR=NEW.IDINSPECTEUR  AND IDDATEV=NEW.IDDATEV;
 
       IF var > 0
       THEN
-          signal sqlstate '16440' set message_text='Vous ne pouvez pas insérer cette contre visite: il existe une visite similaire' ;
+          signal sqlstate '16440' SET message_text='Vous ne pouvez pAS insérer cette cONtre visite: il existe une visite similaire, Veuillez changer l'inspecteur effectuant la visite
+          ou l'hébergement visité ou la saison à laquelle la visite a va être effectué ';
 
 END IF;
 END
@@ -330,7 +352,14 @@ CREATE TABLE IF NOT EXISTS `equipements` (
   `IDEQUIPEMENT` smallint(6) NOT NULL AUTO_INCREMENT,
   `NOMEQUIPEMENT` char(32) DEFAULT NULL,
   PRIMARY KEY (`IDEQUIPEMENT`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Contenu de la table `equipements`
+--
+
+INSERT INTO `equipements` (`IDEQUIPEMENT`, `NOMEQUIPEMENT`) VALUES
+(1, 'Chauffage Mobile');
 
 -- --------------------------------------------------------
 
@@ -345,7 +374,14 @@ CREATE TABLE IF NOT EXISTS `gerant` (
   `TELGERANT` bigint(20) DEFAULT NULL,
   `ADRESSEGERANT` char(32) DEFAULT NULL,
   PRIMARY KEY (`IDGERANT`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Contenu de la table `gerant`
+--
+
+INSERT INTO `gerant` (`IDGERANT`, `NOMGERANT`, `PRENOMGERANT`, `TELGERANT`, `ADRESSEGERANT`) VALUES
+(1, 'Callou', 'Roger', 623958474, '12 Rue Des Philippines');
 
 -- --------------------------------------------------------
 
@@ -361,14 +397,15 @@ CREATE TABLE IF NOT EXISTS `hebergement` (
   `VILLE` char(32) DEFAULT NULL,
   PRIMARY KEY (`IDHEBERGEMENT`),
   KEY `I_FK_HEBERGEMENT_DEPARTEMENT` (`IDDEPARTEMENT`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
 -- Contenu de la table `hebergement`
 --
 
 INSERT INTO `hebergement` (`IDHEBERGEMENT`, `NOMHEBERGEMENT`, `IDDEPARTEMENT`, `ADRESSEHEBERGEMENT`, `VILLE`) VALUES
-(1, 'LES FLINGUETTES', 1, '19 Rue Des Capucins', 'Angers');
+(1, 'LES FLINGUETTES', 1, '19 Rue Des Capucins', 'Angers'),
+(2, 'Les Callanques', 1, '18 Rue De Oliveras', 'Angers');
 
 --
 -- Déclencheurs `hebergement`
@@ -380,8 +417,7 @@ CREATE TRIGGER `avant_insertion_hebergement` BEFORE INSERT ON `hebergement`
 	       IF EXISTS(SELECT * FROM hebergement WHERE LOWER(ADRESSEHEBERGEMENT)=LOWER(NEW.ADRESSEHEBERGEMENT))
 	       THEN
 	        signal sqlstate '16440' set message_text='Un hébergement à déjà cette adresse' ;
-	        ELSE
-	        INSERT INTO hebergement(IDHEBERGEMENT,IDDEPARTEMENT,ADRESSEHEBERGEMENT,VILLE)VALUES(NULL,NEW.IDDEPARTEMENT,NEW.ADRESSEHEBERGEMENT,NEW.VILLE);
+	        
 	        END IF;
 	        END
 //
@@ -407,7 +443,7 @@ CREATE TABLE IF NOT EXISTS `historique` (
 --
 
 INSERT INTO `historique` (`IDHEBERGEMENT`, `IDSAISON`, `ETOILLE`) VALUES
-(1, 1, 1);
+(1, 1, 5);
 
 -- --------------------------------------------------------
 
@@ -500,43 +536,18 @@ CREATE TABLE IF NOT EXISTS `saison` (
   `IDSAISON` smallint(6) NOT NULL AUTO_INCREMENT,
   `LIBSAISON` char(32) DEFAULT NULL,
   `ANNEESAISON` year(4) DEFAULT NULL,
-  PRIMARY KEY (`IDSAISON`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+  PRIMARY KEY (`IDSAISON`),
+  UNIQUE KEY `LIBSAISON` (`LIBSAISON`),
+  UNIQUE KEY `ANNEESAISON` (`ANNEESAISON`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
 -- Contenu de la table `saison`
 --
 
 INSERT INTO `saison` (`IDSAISON`, `LIBSAISON`, `ANNEESAISON`) VALUES
-(1, 'Les Bleus', 2015);
-
--- --------------------------------------------------------
-
---
--- Structure de la table `semaine`
---
-
-CREATE TABLE IF NOT EXISTS `semaine` (
-  `IDSEMAINE` smallint(6) NOT NULL AUTO_INCREMENT,
-  `DATEDEBUT` date NOT NULL,
-  `DATEFIN` date NOT NULL,
-  PRIMARY KEY (`IDSEMAINE`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
---
--- Déclencheurs `semaine`
---
-DROP TRIGGER IF EXISTS `avant_insertion_semaine`;
-DELIMITER //
-CREATE TRIGGER `avant_insertion_semaine` BEFORE INSERT ON `semaine`
- FOR EACH ROW BEGIN 
-   IF NOT EXISTS(SELECT DAYNAME(NEW.DATEDEBUT) = 'Monday' AND DAYNAME(NEW.DATEFIN) = 'Sunday')
-   	THEN
-   	signal sqlstate'16440' SET message_text='Ajout semaine Impossible: Vérifiez que l'interval est de 7 jours et qu'elle débute un Lundi pour finir un Dimanche';
-       END IF;
-       END
-//
-DELIMITER ;
+(1, 'Les Bleus', 2015),
+(2, 'La Grâce', 2016);
 
 -- --------------------------------------------------------
 
@@ -601,16 +612,48 @@ INSERT INTO `visite` (`IDVISITE`, `IDINSPECTEUR`, `IDHEBERGEMENT`, `IDDATEV`, `C
 --
 -- Déclencheurs `visite`
 --
-DROP TRIGGER IF EXISTS `avant_insertion_inspecteur`;
+DROP TRIGGER IF EXISTS `avant_insertion_visite`;
 DELIMITER //
-CREATE TRIGGER `avant_insertion_inspecteur` BEFORE INSERT ON `visite`
+CREATE TRIGGER `avant_insertion_visite` BEFORE INSERT ON `visite`
  FOR EACH ROW BEGIN
-   IF NOT EXISTS( SELECT * FROM inspecteur i inner join hebergement h where i.IDINSPECTEUR=NEW.IDINSPECTEUR AND h.IDHEBERGEMENT=NEW.IDHEBERGEMENT AND  h.IDDEPARTEMENT=i.IDDEPARTEMENT)
-      THEN
-         signal sqlstate'16440' SET message_text='Visite Impossible: le département de l'inspecteur et de l'hébergement sont différents';
-         call maj_vm_visites();
-         END IF;
-         END
+
+          DECLARE nom_spe varchar(30) DEFAULT '';
+          SELECT (LIBSPECIALITE) INTO nom_spe FROM inspecteur i INNER JOIN specialite s ON i.IDSPECIALITEI=s.IDSPECIALITE WHERE i.IDINSPECTEUR=NEW.IDINSPECTEUR;
+          
+           IF NOT EXISTS( SELECT * FROM inspecteur i inner join hebergement h where i.IDINSPECTEUR=NEW.IDINSPECTEUR AND h.IDHEBERGEMENT=NEW.IDHEBERGEMENT AND h.IDDEPARTEMENT=i.IDDEPARTEMENT)
+           	 THEN 
+           	 signal sqlstate'16440' SET message_text='Visite Impossible: le département de l'inspecteur et de l'hébergement sont différents';
+           	 ELSE
+
+          IF nom_spe='Hotel'
+          THEN
+                                         IF NOT EXISTS(SELECT * FROM hotel WHERE IDHEBERGEMENT=NEW.IDHEBERGEMENT) 
+                                         THEN
+                                                  
+                                                       signal sqlstate '16440' SET message_text='L'hébergement ne correspONd pAS à la specialité de l'inspecteur' ;
+                                          END IF;
+
+            ELSE
+            IF nom_spe='Camping'
+                          THEN
+                                         IF NOT EXISTS(SELECT * FROM camping WHERE IDHEBERGEMENT=NEW.IDHEBERGEMENT)
+                                        THEN
+                                           signal sqlstate '16440' SET message_text='L'hébergement ne correspONd pAS à la specialité de l'inspecteur' ;
+                                          END IF;                
+            ELSE
+            IF nom_spe='Chambre hôte'
+                           THEN
+                                          IF NOT EXISTS(SELECT * FROM chambre_hotte WHERE IDHEBERGEMENT=NEW.IDHEBERGEMENT)
+                                          THEN
+                                           signal sqlstate '16440' SET message_text='L'hébergement ne correspONd pAS à la specialité de l'inspecteur' ;
+                                         END IF;
+                       END IF;
+ END IF;
+
+ END IF;
+ END IF;
+           
+  END
 //
 DELIMITER ;
 

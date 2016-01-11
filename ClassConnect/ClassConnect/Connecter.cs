@@ -18,7 +18,7 @@ namespace ClassConnect
         private static bool errgrave = false;
         private bool chargement = false;
 
-
+        private DataTable dtInsp;
 
         private MySqlDataAdapter mySqlDataAdapter = new MySqlDataAdapter();
         private DataTable dt = new DataTable();
@@ -197,7 +197,42 @@ namespace ClassConnect
             return sb2.ToString();
 
         }
+        public DataTable infoInspecteur(string nominsp, string mdpInsp)
+        {
+            dtInsp =new DataTable();
+            dtInsp.Columns.Add("Identifiant", typeof(int));
+            dtInsp.Columns.Add("Nom", typeof(string));
+            dtInsp.Columns.Add("Prénom",typeof(string));
+            dtInsp.Columns.Add("Numéro", typeof(string));
+            dt.AcceptChanges();
 
+            MySqlDataReader dr;
+            MySqlCommand cmd = new MySqlCommand("SELECT * FROM inspecteur where NOMINSPECTEUR='"+nominsp+"' AND MDPINSPECTEUR='"+mdpInsp+"'", myConnection);
+
+            try
+            {
+                dr = cmd.ExecuteReader();
+                for(int index=0;index<dr.FieldCount;index++)
+                {
+                     while(dr.Read())
+                {
+                    object[] row = new object[]
+                    {
+                        dr[index].ToString()
+                   
+
+                    };
+                    dt.Rows.Add(row);
+                }
+                }
+               
+            }
+            catch(Exception err)
+            {
+                errgrave = true;
+            }
+            return dt;
+        }
         public String import3(String nomInsp, String date)
         {
             StringBuilder sb2 = new StringBuilder("");

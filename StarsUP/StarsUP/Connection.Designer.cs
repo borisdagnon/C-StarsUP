@@ -107,7 +107,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(669, 381);
+            this.ClientSize = new System.Drawing.Size(605, 332);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.btnConnection);
             this.Controls.Add(this.tbMDP);

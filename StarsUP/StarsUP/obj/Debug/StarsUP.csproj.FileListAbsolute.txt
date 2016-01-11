@@ -95,3 +95,4 @@ H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\obj\Debug\StarsUP.GenerationPDF.resou
 H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\bin\Debug\MetroFramework.dll
 H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\bin\Debug\MetroFramework.Fonts.dll
 H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\obj\Debug\StarsUP.csprojResolveAssemblyReference.cache
+H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\obj\Debug\StarsUP.Profil.resources

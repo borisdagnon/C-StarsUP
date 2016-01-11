@@ -18,17 +18,19 @@ namespace StarsUP
     public partial class Index : MetroForm
     {
         private String nomInsp = "";//Création de la variable afin de récupérer le nom de l'inspecteur pour les requêtes
+       private String mdpInsp="";
         /// <summary>
         /// Comme un constructeur on récupère la nom de l'ispecteur et on l'instancie
         /// On met le menu à false pour éviter d'avoir une erreur avant l'importation
         /// </summary>
         /// <param name="nomInsp">Récupération du nom de l'inwpecteur pour la requête</param>
-        public Index(String nomInsp)
+        public Index(String nomInsp,String mdpInsp)
         {
             InitializeComponent();
             gestionToolStripMenuItem.Visible = false;
             pDFToolStripMenuItem.Visible = false;
             this.nomInsp = nomInsp;
+            this.mdpInsp=mdpInsp;
         }
 
         private void listeVisiteToolStripMenuItem_Click(object sender, EventArgs e)
@@ -85,6 +87,14 @@ namespace StarsUP
         {
             GenerationPDF GPDF = new GenerationPDF(nomInsp.ToString());
             GPDF.Show();
+        }
+
+        private void btnProfil_Click(object sender, EventArgs e)
+        {
+            
+            Profil P = new Profil( nomInsp.ToString(),mdpInsp.ToString());
+            P.Show();
+
         }
     }
 }
