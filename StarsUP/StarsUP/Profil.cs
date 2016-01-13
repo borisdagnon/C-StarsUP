@@ -25,16 +25,16 @@ namespace StarsUP
 
         public void chargerinfo()
         {
-            DataTable dt = new DataTable();
+            String lst = "";
+            Int32 Idenifiant = 0;
             String Nom="";
             String Prénom="";
-            dt= controller.Vmodel.infoInspecteur(nomInsp.ToString(),mdpInsp.ToString());
-            foreach(DataRow row in dt.Rows)
-            {
-                 Nom = row["Nom"].ToString();
-                 Prénom = row["Prénom"].ToString();
-                
-            }
+            String Numero="";
+
+            MessageBox.Show(nomInsp.ToString()+"  "+ mdpInsp.ToString());
+            lst= controller.Vmodel.infoInspecteur(nomInsp.ToString(),mdpInsp.ToString());
+            MessageBox.Show(lst.ToString());
+           
             lbNom.Text = Nom.ToString();
             lbPrenom.Text = Prénom.ToString();
         }

@@ -18,7 +18,7 @@ namespace ClassConnect
         private static bool errgrave = false;
         private bool chargement = false;
 
-        private DataTable dtInsp;
+      
 
         private MySqlDataAdapter mySqlDataAdapter = new MySqlDataAdapter();
         private DataTable dt = new DataTable();
@@ -197,41 +197,33 @@ namespace ClassConnect
             return sb2.ToString();
 
         }
-        public DataTable infoInspecteur(string nominsp, string mdpInsp)
+        public String infoInspecteur(string nominsp, string mdpInsp)
         {
-            dtInsp =new DataTable();
-            dtInsp.Columns.Add("Identifiant", typeof(int));
-            dtInsp.Columns.Add("Nom", typeof(string));
-            dtInsp.Columns.Add("Prénom",typeof(string));
-            dtInsp.Columns.Add("Numéro", typeof(string));
-            dt.AcceptChanges();
+            String res="" ;
+            String infos = "";
 
             MySqlDataReader dr;
-            MySqlCommand cmd = new MySqlCommand("SELECT * FROM inspecteur where NOMINSPECTEUR='"+nominsp+"' AND MDPINSPECTEUR='"+mdpInsp+"'", myConnection);
+            MySqlCommand cmd = new MySqlCommand("SELECT IDINSPECTEUR,NOMINSPECTEUR,PRENOMINSPECTEUR,NUMEROTEL FROM inspecteur where NOMINSPECTEUR='"+nominsp+"' AND MDPINSPECTEUR='"+mdpInsp+"'", myConnection);
 
             try
             {
                 dr = cmd.ExecuteReader();
-                for(int index=0;index<dr.FieldCount;index++)
+                if (dr.HasRows)
                 {
-                     while(dr.Read())
-                {
-                    object[] row = new object[]
+                    while (dr.Read())
                     {
-                        dr[index].ToString()
-                   
 
-                    };
-                    dt.Rows.Add(row);
+                        infos = (Convert.ToString(dr.GetString(0)));
+                    }
+
                 }
-                }
-               
             }
             catch(Exception err)
             {
                 errgrave = true;
             }
-            return dt;
+            return infos;
+           
         }
         public String import3(String nomInsp, String date)
         {

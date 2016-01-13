@@ -31,6 +31,7 @@ namespace StarsUP
             pDFToolStripMenuItem.Visible = false;
             this.nomInsp = nomInsp;
             this.mdpInsp=mdpInsp;
+           
         }
 
         private void listeVisiteToolStripMenuItem_Click(object sender, EventArgs e)

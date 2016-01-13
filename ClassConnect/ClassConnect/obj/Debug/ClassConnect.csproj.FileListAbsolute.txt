@@ -19,4 +19,3 @@ H:\Fichiers\PPE4\C-StarsUP\ClassConnect\ClassConnect\bin\Debug\ClassConnect.dll
 H:\Fichiers\PPE4\C-StarsUP\ClassConnect\ClassConnect\bin\Debug\ClassConnect.pdb
 H:\Fichiers\PPE4\C-StarsUP\ClassConnect\ClassConnect\obj\Debug\ClassConnect.dll
 H:\Fichiers\PPE4\C-StarsUP\ClassConnect\ClassConnect\obj\Debug\ClassConnect.pdb
-H:\Fichiers\PPE4\C-StarsUP\ClassConnect\ClassConnect\obj\Debug\ClassConnect.csprojResolveAssemblyReference.cache
