@@ -31,7 +31,7 @@ namespace StarsUP
             pDFToolStripMenuItem.Visible = false;
             this.nomInsp = nomInsp;
             this.mdpInsp=mdpInsp;
-           
+            btnProfil.Visible = false;
         }
 
         private void listeVisiteToolStripMenuItem_Click(object sender, EventArgs e)
@@ -70,6 +70,7 @@ namespace StarsUP
                     MessageBox.Show("Success Import", "Import", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     gestionToolStripMenuItem.Visible = true;
                     pDFToolStripMenuItem.Visible = true;
+                    btnProfil.Visible = true;
                 }
 
 

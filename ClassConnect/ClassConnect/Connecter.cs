@@ -17,7 +17,7 @@ namespace ClassConnect
         private ArrayList rapport = new ArrayList();
         private static bool errgrave = false;
         private bool chargement = false;
-
+       
       
 
         private MySqlDataAdapter mySqlDataAdapter = new MySqlDataAdapter();
@@ -97,6 +97,10 @@ namespace ClassConnect
         #endregion
 
         #region méthodes:
+
+
+
+       
 
         public void seconnecter()
         {
@@ -197,34 +201,47 @@ namespace ClassConnect
             return sb2.ToString();
 
         }
-        public String infoInspecteur(string nominsp, string mdpInsp)
+        public List<String> infoInspecteur(String nominsp, String  mdpInsp)
         {
-            String res="" ;
-            String infos = "";
-
+            
+          
+            List<String> infos = new List<String>();
+          
+            
             MySqlDataReader dr;
-            MySqlCommand cmd = new MySqlCommand("SELECT IDINSPECTEUR,NOMINSPECTEUR,PRENOMINSPECTEUR,NUMEROTEL FROM inspecteur where NOMINSPECTEUR='"+nominsp+"' AND MDPINSPECTEUR='"+mdpInsp+"'", myConnection);
+            MySqlCommand cd = new MySqlCommand("SELECT IDINSPECTEUR,NOMINSPECTEUR,PRENOMINSPECTEUR,NUMEROTEL FROM inspecteur where NOMINSPECTEUR='" + nominsp + "' AND MDPINSPECTEUR='" + mdpInsp + "';", myConnection);
 
             try
             {
-                dr = cmd.ExecuteReader();
-                if (dr.HasRows)
-                {
-                    while (dr.Read())
-                    {
-
-                        infos = (Convert.ToString(dr.GetString(0)));
+                dr = cd.ExecuteReader();
+               
+                
+                   while (dr.Read())
+                        {
+                            infos.Add(dr[0].ToString());
+                           infos.Add( dr[1].ToString());
+                            infos.Add( dr[2].ToString());
+                           infos.Add( dr[3].ToString());
+                           
+                        }
+                 
                     }
+                  
+                       
 
-                }
-            }
+                
+            
             catch(Exception err)
             {
                 errgrave = true;
             }
             return infos;
-           
+            dr.Close();
+            dr.Dispose();
         }
+
+        
+
         public String import3(String nomInsp, String date)
         {
             StringBuilder sb2 = new StringBuilder("");
@@ -314,6 +331,7 @@ namespace ClassConnect
             {
                 errgrave = true;
             }
+
         }
 
         public bool login(string pseudo, string mdp)
