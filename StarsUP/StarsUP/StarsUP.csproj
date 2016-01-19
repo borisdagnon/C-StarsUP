@@ -68,6 +68,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Path.cs" />
+    <Compile Include="Session.cs" />
     <Compile Include="Connection.cs">
       <SubType>Form</SubType>
     </Compile>

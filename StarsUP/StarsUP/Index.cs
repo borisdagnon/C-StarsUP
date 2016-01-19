@@ -17,6 +17,7 @@ namespace StarsUP
     /// </summary>
     public partial class Index : MetroForm
     {
+        int index;
         private String nomInsp = "";//Création de la variable afin de récupérer le nom de l'inspecteur pour les requêtes
        private String mdpInsp="";
         /// <summary>
@@ -32,6 +33,7 @@ namespace StarsUP
             this.nomInsp = nomInsp;
             this.mdpInsp=mdpInsp;
             btnProfil.Visible = false;
+            index = 0;
         }
 
         private void listeVisiteToolStripMenuItem_Click(object sender, EventArgs e)
@@ -93,10 +95,10 @@ namespace StarsUP
 
         private void btnProfil_Click(object sender, EventArgs e)
         {
-            
-            Profil P = new Profil( nomInsp.ToString(),mdpInsp.ToString());
+            index++;
+            Profil P = new Profil( nomInsp.ToString(),mdpInsp.ToString(),index);
             P.Show();
-
+            
         }
     }
 }

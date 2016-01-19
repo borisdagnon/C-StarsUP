@@ -203,9 +203,9 @@ namespace ClassConnect
         }
         public List<String> infoInspecteur(String nominsp, String  mdpInsp)
         {
-            
-          
-            List<String> infos = new List<String>();
+
+
+            List<String> infos  = new List<String>();
           
             
             MySqlDataReader dr;
@@ -213,6 +213,7 @@ namespace ClassConnect
 
             try
             {
+                
                 dr = cd.ExecuteReader();
                
                 
@@ -226,16 +227,14 @@ namespace ClassConnect
                         }
                  
                     }
-                  
-                       
-
-                
+               
             
             catch(Exception err)
             {
                 errgrave = true;
             }
             return infos;
+            cd.Dispose();
             dr.Close();
             dr.Dispose();
         }
@@ -358,7 +357,7 @@ namespace ClassConnect
                 ret = false;
             }
             return ret;
-
+            dr.Close();
         }
 
        
