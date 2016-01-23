@@ -81,9 +81,6 @@ H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\obj\Debug\StarsUP.pdb
 H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\bin\Debug\StarsUP.exe
 H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\bin\Debug\StarsUP.pdb
 H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\bin\Debug\ClassConnect.dll
-H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\bin\Debug\itextsharp.dll
-H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\bin\Debug\itextsharp.pdfa.dll
-H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\bin\Debug\itextsharp.xtra.dll
 H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\bin\Debug\ClassConnect.pdb
 H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\bin\Debug\itextsharp.xml
 H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\obj\Debug\StarsUP.Connection.resources
@@ -96,3 +93,5 @@ H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\bin\Debug\MetroFramework.dll
 H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\bin\Debug\MetroFramework.Fonts.dll
 H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\obj\Debug\StarsUP.csprojResolveAssemblyReference.cache
 H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\obj\Debug\StarsUP.Profil.resources
+H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\bin\Debug\MetroFramework.Design.dll
+H:\Fichiers\PPE4\C-StarsUP\StarsUP\StarsUP\bin\Debug\MySql.Data.dll

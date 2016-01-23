@@ -121,6 +121,22 @@ namespace StarsUP
            
             string Filter = "Date_de_visite>='"+dateTimePicker1.Value.ToShortDateString()+"' AND Date_de_visite<='"+dateTimePicker2.Value.ToShortDateString()+"'";
             controller.Vmodel.Dv_visite.RowFilter=Filter;
+            string FilterSaison = "ANNEESAISON='"+dateTimePicker1.Value.Year.ToString()+"'";
+            controller.Vmodel.Dv_saison.RowFilter = FilterSaison;
+            
+
+            List<KeyValuePair<int, string>> FlistS = new List<KeyValuePair<int, string>>();
+            FlistS.Add(new KeyValuePair<int, string>(0, "Toutes les saisons"));
+      
+
+           
+            for (int i = 0; i < controller.Vmodel.Dv_saison.ToTable().Rows.Count; i++)
+            {
+                FlistS.Add(new KeyValuePair<int, string>(Convert.ToInt32(controller.Vmodel.Dv_saison.ToTable().Rows[i][0].ToString()),
+                controller.Vmodel.Dv_saison.ToTable().Rows[i][1].ToString()));
+            }
+            cbSaison.DataSource=FlistS;
+            cbSaison.Refresh();
             dataGV.Refresh();
         }
         

@@ -13,6 +13,7 @@ using System.Reflection;
 using MySql.Data.MySqlClient;
 using System.Xml.Serialization;
 using System.Drawing.Imaging;
+using System.Text.RegularExpressions;
 namespace StarsUP
 {
     public partial class Profil : MetroForm
@@ -24,21 +25,30 @@ namespace StarsUP
         MySqlDataReader dr;
         String nomInsp;
         String mdpInsp;
-        int nbClic;
+        int nbClic;//Cette variable sert à connaître le nombre de clic qu'il y a eu sur le bouton Profil dans Index
         private OpenFileDialog OP;
         private MySqlParameter image;
         MySqlDataAdapter sda;
         public string cheminComplet;
-        int clicImage=0;
+        int clicImage=0;//Cette variable sert à compter le nombre de fois qu'on clic sur l'image afin d'ouvrir la connection ou de la fermer
         String nomplusExtension = "";
+        /// <summary>
+        /// Je récupère ici les valeurs envoyé depuis la form Index
+        /// </summary>
+        /// <param name="nomInsp">Nom de l'inspecteur</param>
+        /// <param name="mdpInsp">Mot de passe de l'inspecteur</param>
+        /// <param name="nbClic">Nombre de clic sur le bouton Profil</param>
         public Profil(String nomInsp,String mdpInsp,int nbClic)
         {
             InitializeComponent();
+            
+           
             this.nomInsp = nomInsp;
             this.mdpInsp = mdpInsp;
             this.nbClic = nbClic;
+            
             chargerinfo();
-
+ 
         }
 
         public void chargerinfo()
@@ -103,6 +113,7 @@ namespace StarsUP
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
+           
             clicImage++;
             try
             {
@@ -121,9 +132,9 @@ namespace StarsUP
                         pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
                         ResizeImage(OP.FileName.ToString());
                         nomplusExtension = OP.SafeFileName.ToString();
-                        MessageBox.Show(nomplusExtension);
+                    
                         cheminComplet = OP.FileName;
-                        MessageBox.Show(cheminComplet);
+                       
                         SauvegarderImage();
                       
                     }
@@ -132,6 +143,7 @@ namespace StarsUP
             catch(Exception ex)
             {
                 MessageBox.Show(ex.ToString());
+                cn.Close();
             }
 
         }
@@ -144,9 +156,11 @@ namespace StarsUP
         public string verifChemin(Char param)
         {
             string chemin = "";
+            string remplace="";
             if (param.Equals('R'))
             {
-                string path = @"C:\\StarsUP\\Images\\" + nomplusExtension.ToString();
+               
+                string path = @"C:\\StarsUP\\Images\\" + remplace;
                 string cheminComplet = path.ToString();
                  chemin = cheminComplet.ToString();
             }
@@ -165,9 +179,10 @@ namespace StarsUP
                     chemin = cheminComplet.ToString();
                 }
             }
-           
-                
+
+          
             return chemin.ToString();
+
         }
 
 
@@ -187,7 +202,10 @@ namespace StarsUP
              
                 cmd.CommandText = "SELECT * from image where IDINSPECTEUR='"+Convert.ToInt32(lbIdentifiant.Text)+"'";
                 
+                
                     cn.Open();
+                
+                    
                
                 
                 dr = cmd.ExecuteReader();
@@ -204,16 +222,24 @@ namespace StarsUP
                     DialogResult dialogResult = MessageBox.Show("Voulez-vous changer votre photo de profil ?", "Modifier", MessageBoxButtons.YesNo);
                     if (dialogResult == DialogResult.Yes)
                     {
-                        MessageBox.Show(verifChemin('R').ToString());
+                        
                         
                         cmd.CommandText = "UPDATE image set nomImage='"+OP.SafeFileName.ToString()+"', pathImage='"+verifChemin('R').ToString()+"'";
                        
                         cmd.ExecuteNonQuery();//Ceci permet d'exécuter la requête, ne pas oublier qu'on peut faire ça seulementt quand cn (la connexion) est ouverte sinon une erreur intervient
 
                         MessageBox.Show("Votre image a été modifié", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        File.Delete(verifChemin('X').ToString());
+
+                        XmlSerializer cheminPrecedent = new XmlSerializer(typeof(Path));
+                        StreamReader lirecheminPrecedent = new StreamReader("CheminImage.xml");
+                        Path pathCheminPrecedent = (Path)cheminPrecedent.Deserialize(lirecheminPrecedent);
+                        
+                        lirecheminPrecedent.Close();
+                        
+                        File.Delete(pathCheminPrecedent.Path1);
+       //On remplace ensuite l'image
                         File.Copy(cheminComplet, verifChemin('X').ToString());
-                        //On procède à une sérialization dans le fichier CheminImage.xml
+  //On procède à une sérialization dans le fichier CheminImage.xml
                         Path chemin = new Path { Path1 = verifChemin('X').ToString() }; //On met false en paramètre pour lui dire qu'il ne s'agit pas d'un chemin pour la base de donnée
                         XmlSerializer serial = new XmlSerializer(typeof(Path));
                         StreamWriter ecrire = new StreamWriter("CheminImage.xml", false);
@@ -228,6 +254,7 @@ namespace StarsUP
                         lire.Close();
 
                         pictureBox1.Image = Image.FromFile(p.Path1.ToString());
+                      
                     }
                     else 
                     {
@@ -294,7 +321,79 @@ namespace StarsUP
                 MessageBox.Show(ex.ToString());
             }
         }
-       
+
+        /*
+
+        /// <summary>
+        /// Cette méthode permet de changer les dimension de l'image lors du chargement. On met l'image dans un MemoryStream pour éviter d'avoir
+        /// une erreur quand il faudra supprimer l'image dans le répertoire après que l'inspecteur ai changé son image 
+        /// </summary>
+        /// <param name="path"></param>
+        private void ResizeImageAncien(string path)
+        {
+
+            FileStream fsImageAncien = new FileStream(path.ToString(), FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            byte[] buffer = new byte[fsImageAncien.Length];
+            fsImageAncien.Read(buffer, 0, (int)fsImageAncien.Length);
+            MemoryStream msfsImageAncien = new MemoryStream(buffer);
+
+                       
+
+
+            // réglages des valeurs servant au calcul
+            int Lmax = pictureBox1.Width;
+            // IMG est le nom de ma pictureBox
+            int Hmax = pictureBox1.Height;
+
+            Image i = Image.FromStream(msfsImageAncien);
+            // objet image à partir de l'image choisie
+            double ratio = (double)Lmax / Hmax;
+            // ratio de base à obtenir pour rentrer correctement dans la picturebox
+            double ratioImage = (double)i.Width / i.Height;
+            // ratio de l'image d'origine
+            double Flng = i.Width;
+            // largeur de l'image d'origine
+            double Fht = i.Height;
+            // hauteur de l'image d'origine
+            if (Flng > Lmax || Fht > Hmax)
+            // si l'image est plus grande d'une quelconque longueur
+            {
+                if (Flng > Lmax) // si la longueur est plus longue
+                {
+                    if (1 > ratioImage) // et si la largueur est plus longue
+                    {
+                        Fht = Hmax; // la hauteur prend la hauteur maximale
+                        if (Flng > i.Height) Flng = Fht / ratioImage;
+                        // calcul de la longueur
+                        else Flng = Fht * ratioImage;
+                        // calcul de la longueur (bis)
+                    }
+                    else // seule la largeur est plus longue
+                    {
+                        Flng = Lmax; // la largeur prend la largeur maximale
+                        if (Fht > i.Width) Fht = Flng / ratioImage;
+                        // calcul de la hauteur
+                        else Fht = Flng / ratioImage;
+                    }
+                }
+                else // seule la largeur est plus longue
+                {
+                    Fht = Hmax;
+                    Flng = Fht * ratioImage;
+                }
+                //On charge l'ancienne image dans un stream pour pouvoir y avoir accès plus tard lors de la suppresion sinon on à une erreur qui est générée
+                pictureBox1.Image = Image.FromStream(fsImageAncien).GetThumbnailImage(Convert.ToInt32(Flng), Convert.ToInt32(Fht), null, IntPtr.Zero);
+              
+                // j'en tire une miniature
+            }
+            //Même principe si on atterit ici, on récupère l'image à partir d'un stream
+            else pictureBox1.Image = Image.FromStream(fsImageAncien);
+            // sinon j'affiche l'image de base
+
+           
+        }
+
+        */
 
         /// <summary>
         /// Cette méthode sert à redimentionner l'image dans le cadre du picturebox
@@ -302,6 +401,9 @@ namespace StarsUP
         /// <param name="path"> Il s'agit du chemin du fichier</param>
         private void ResizeImage(string path)
         {
+            
+            
+
             // réglages des valeurs servant au calcul
             int Lmax = pictureBox1.Width;
             // IMG est le nom de ma pictureBox
@@ -343,10 +445,12 @@ namespace StarsUP
                 Fht = Hmax;
                 Flng = Fht * ratioImage;
             }
-                pictureBox1.Image = Image.FromFile(path).GetThumbnailImage
-(Convert.ToInt32(Flng),Convert.ToInt32(Fht),null, IntPtr.Zero);
+                //On charge l'ancienne image à partir du chemin passé en paramètre de la méthode
+                pictureBox1.Image = Image.FromFile(path).GetThumbnailImage (Convert.ToInt32(Flng),Convert.ToInt32(Fht),null,IntPtr.Zero);
+               
  // j'en tire une miniature
             }
+            //Même principe si on atterit ici, on récupère l'image à partir du chemin passé en paramètre de la méthode
             else pictureBox1.Image = Image.FromFile(path);
  // sinon j'affiche l'image de base
         }
@@ -361,17 +465,28 @@ namespace StarsUP
             cmd.Connection = cn;
             try
             {
+                string Dossier = @"C:\StarsUP";
+                string SousDossier = System.IO.Path.Combine(Dossier, "Images");
+
+                if (!Directory.Exists(SousDossier))
+                {
+                    Directory.CreateDirectory(SousDossier);
+                }
+                else
+                    MessageBox.Show("Le chemin pour l'avatar existe déjà");
+
                 XmlSerializer serial = new XmlSerializer(typeof(Path));
                 StreamReader lire = new StreamReader("CheminImage.xml");
                 Path p = (Path)serial.Deserialize(lire);
                 lire.Close();
 
-                ResizeImage(p.Path1.ToString());
+                pictureBox1.Image = NonLockingOpen(p.Path1);
+
             }
             
             catch(Exception ex)
             {
-                MessageBox.Show("Bonjour " + nomInsp.ToString() +", c'est votre première connexion, pensez à changer votre avatar, ", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Bonjour " + nomInsp.ToString() +",pensez à changer votre avatar, ", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
@@ -386,6 +501,34 @@ namespace StarsUP
             lesInfos.Clear();
         }
        
+        public static Image NonLockingOpen(string filename)
+        {
+            Image result;
+
+            long size = (new FileInfo(filename)).Length;
+            FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
+            byte[] data = new byte[size];
+            try
+            {
+                fs.Read(data, 0, (int)size);
+
+            }
+            finally { 
+                fs.Close(); fs.Dispose(); 
+            }
+
+            MemoryStream ms = new MemoryStream();
+            ms.Write(data, 0, (int)size);
+            result = new Bitmap(ms);
+          result=  Image.FromStream(ms).GetThumbnailImage(Convert.ToInt32(122), Convert.ToInt32(67), null, IntPtr.Zero);
+              
+            ms.Close();
+            return result;
+        }
+
+       
+
+
 
     }
 }

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Lun 11 Janvier 2016 à 13:01
+-- Généré le :  Jeu 21 Janvier 2016 à 19:15
 -- Version du serveur :  5.6.17
 -- Version de PHP :  5.5.12
 
@@ -486,6 +486,28 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `image`
+--
+
+CREATE TABLE IF NOT EXISTS `image` (
+  `idImage` int(11) NOT NULL AUTO_INCREMENT,
+  `nomImage` varchar(40) DEFAULT NULL,
+  `pathImage` varchar(100) NOT NULL,
+  `IDINSPECTEUR` smallint(6) NOT NULL,
+  PRIMARY KEY (`idImage`),
+  KEY `IDINSPECTEUR` (`IDINSPECTEUR`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+
+--
+-- Contenu de la table `image`
+--
+
+INSERT INTO `image` (`idImage`, `nomImage`, `pathImage`, `IDINSPECTEUR`) VALUES
+(3, '0QcvQ - Imgur.jpg', 'C:\\StarsUP\\Images\\0QcvQ - Imgur.jpg', 1);
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `inspecteur`
 --
 
@@ -745,6 +767,12 @@ ALTER TABLE `historique`
 --
 ALTER TABLE `hotel`
   ADD CONSTRAINT `hotel_ibfk_1` FOREIGN KEY (`IDHEBERGEMENT`) REFERENCES `hebergement` (`IDHEBERGEMENT`);
+
+--
+-- Contraintes pour la table `image`
+--
+ALTER TABLE `image`
+  ADD CONSTRAINT `image_ibfk_1` FOREIGN KEY (`IDINSPECTEUR`) REFERENCES `inspecteur` (`IDINSPECTEUR`);
 
 --
 -- Contraintes pour la table `inspecteur`
