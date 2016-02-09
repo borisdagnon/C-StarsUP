@@ -46,7 +46,6 @@ namespace StarsUP
 
         private void Index_FormClosed(object sender, FormClosedEventArgs e)
         {
-            
             controller.Vmodel.sedeconnecter();
             Connection C = new Connection();
             C.Show();
@@ -99,6 +98,26 @@ namespace StarsUP
             Profil P = new Profil( nomInsp.ToString(),mdpInsp.ToString(),index);
             P.Show();
             
+        }
+
+        private void Index_FormClosing(object sender, FormClosingEventArgs e)
+        {
+          
+        }
+
+        private void exportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            controller.Vmodel.seconnecter();
+            if (!controller.Vmodel.Connopen)//Si la connetion se passe mal on renvoie un message d'erreur
+            {
+                MessageBox.Show("Erreur de Connexion", "La connexion n'a pu avoir lieu", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                MessageBox.Show("Connexion réussie", "OK", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                controller.Vmodel.export();
+                controller.Vmodel.sedeconnecter();
+            }
         }
     }
 }

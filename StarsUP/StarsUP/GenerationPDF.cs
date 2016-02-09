@@ -75,6 +75,7 @@ namespace StarsUP
             {
                 DateTime d = DateTime.Parse(res);
                 string final = d.ToString("yyy/MM/dd");
+                MessageBox.Show(nomInsp + " " + final);
                 String requete =controller.Vmodel.import2(nomInsp.ToString(), final.ToString());
                 String requete2 = controller.Vmodel.import3(nomInsp.ToString(), final.ToString());
                 MessageBox.Show(requete.ToString());
@@ -84,12 +85,14 @@ namespace StarsUP
                 try
                 {
                     
-                    string copyOfOriginal = "H:/Fichiers/PPE4/Planning.pdf"; //Création du document 
-                    string imageSRC = "H:/Fichiers/PPE4/C-StarsUP/image/star.gif"; //Récupération de l'image de l'étoile
-                    string imageSRCTitre = "H:/Fichiers/PPE4/C-StarsUP/image/Titre.png"; //Récupération de l'image du titre
+                    
+                    string imageSRC = System.IO.Path.GetFullPath("star.gif"); //Récupération de l'image de l'étoile
+                    string imageSRCTitre = System.IO.Path.GetFullPath("Titre.png"); //Récupération de l'image du titre
+                    string copyOfOriginal = System.IO.Path.GetFullPath("Planning.pdf");//Création du document 
+
                     iTextSharp.text.Image imageTitre = iTextSharp.text.Image.GetInstance(imageSRCTitre);
-                    iTextSharp.text.Rectangle rec = new iTextSharp.text.Rectangle(PageSize.A4); 
-                    rec.BackgroundColor = new BaseColor(System.Drawing.Color.WhiteSmoke);
+                    iTextSharp.text.Rectangle rec = new iTextSharp.text.Rectangle(PageSize.A4); //Format dela page pdf
+                    rec.BackgroundColor = new BaseColor(System.Drawing.Color.WhiteSmoke);//Couleur de la page pdf
                     iTextSharp.text.Image imageStarsUP = iTextSharp.text.Image.GetInstance(imageSRC);
                     FileStream fs = new FileStream(copyOfOriginal, FileMode.Create, FileAccess.Write, FileShare.None);
                     
@@ -118,7 +121,7 @@ namespace StarsUP
                     doc.Add(para2);
                     doc.Close(); //Fermer le document 
                     MessageBox.Show("Génération OK");
-                    System.Diagnostics.Process.Start("H:\\Fichiers\\PPE4\\Planning.pdf");
+                    System.Diagnostics.Process.Start(copyOfOriginal.ToString());
                    
                 }
                catch(Exception er)

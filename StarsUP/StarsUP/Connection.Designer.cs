@@ -33,9 +33,10 @@
             this.label2 = new System.Windows.Forms.Label();
             this.tbNomUtil = new System.Windows.Forms.TextBox();
             this.tbMDP = new System.Windows.Forms.TextBox();
-            this.btnConnection = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.btnConnection = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -73,17 +74,6 @@
             this.tbMDP.TabIndex = 1;
             this.tbMDP.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tbMDP_KeyUp);
             // 
-            // btnConnection
-            // 
-            this.btnConnection.Image = ((System.Drawing.Image)(resources.GetObject("btnConnection.Image")));
-            this.btnConnection.Location = new System.Drawing.Point(170, 249);
-            this.btnConnection.Name = "btnConnection";
-            this.btnConnection.Size = new System.Drawing.Size(177, 48);
-            this.btnConnection.TabIndex = 2;
-            this.btnConnection.Text = "Se Connecter";
-            this.btnConnection.UseVisualStyleBackColor = true;
-            this.btnConnection.Click += new System.EventHandler(this.btnConnection_Click);
-            // 
             // label3
             // 
             this.label3.AutoSize = true;
@@ -102,6 +92,17 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(504, 62);
             this.panel1.TabIndex = 4;
+            // 
+            // btnConnection
+            // 
+            this.btnConnection.Image = ((System.Drawing.Image)(resources.GetObject("btnConnection.Image")));
+            this.btnConnection.Location = new System.Drawing.Point(170, 249);
+            this.btnConnection.Name = "btnConnection";
+            this.btnConnection.Size = new System.Drawing.Size(177, 48);
+            this.btnConnection.TabIndex = 2;
+            this.btnConnection.Text = "Se Connecter";
+            this.btnConnection.UseVisualStyleBackColor = true;
+            this.btnConnection.Click += new System.EventHandler(this.btnConnection_Click);
             // 
             // Connection
             // 
@@ -142,6 +143,7 @@
         private System.Windows.Forms.Button btnConnection;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Panel panel1;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
     }
 }
 

@@ -15,6 +15,7 @@ namespace ClassConnect
         private bool connopen = false;
         private char vaction, vtable;
         private ArrayList rapport = new ArrayList();
+        private bool errmaj = false;
         private static bool errgrave = false;
         private bool chargement = false;
        
@@ -26,7 +27,7 @@ namespace ClassConnect
         private DataSet dataSet = new DataSet();
         
 
-        private DataView dv_visite = new DataView(), dv_departement = new DataView(), dv_saison = new DataView(), dv_pdf = new DataView();
+        private DataView dv_visite = new DataView(), dv_departement = new DataView(), dv_saison = new DataView(), dv_inspecteur = new DataView();
 
        
 
@@ -34,17 +35,17 @@ namespace ClassConnect
         #endregion
 
         #region assesseurs:
-        public DataView Dv_pdf
+        public DataView Dv_inspecteur
         {
-            get { return dv_pdf; }
-            set { dv_pdf = value; }
+            get { return dv_inspecteur; }
+            set { dv_inspecteur = value; }
         }
         public bool Connopen
         {
             get { return connopen; }
 
         }
-        private bool errmaj = false;
+      
 
         public bool Errmaj
         {
@@ -184,13 +185,16 @@ namespace ClassConnect
                                 
                             
                             dr.Read();
-
+                        
 
                         
                     }
                 }
                 dr.NextResult();
+                cmd.Dispose();
                 dr.Close();
+                dr.Dispose();
+              
             }
             catch (Exception err)
             {
@@ -199,7 +203,7 @@ namespace ClassConnect
             }
 
             return sb2.ToString();
-
+            sb2 = null;
         }
         public List<String> infoInspecteur(String nominsp, String  mdpInsp)
         {
@@ -287,16 +291,19 @@ namespace ClassConnect
                     }
                 }
                 dr.NextResult();
+                cmd.Dispose();
                 dr.Close();
+                dr.Dispose();
+
             }
             catch (Exception err)
             {
                 errgrave = true;
 
             }
-
+          
             return sb2.ToString();
-
+            sb2 = null;
         }
         public void import(String nomInsp)
         {
@@ -305,7 +312,7 @@ namespace ClassConnect
            
             MySqlCommand cmd = new MySqlCommand("call maj_vm_visites() ", myConnection);
 
-            mySqlDataAdapter.SelectCommand = new MySqlCommand(" select * from departement;select * from saison;select * from vm_visites where Nom_Inspecteur='" + nomInsp.ToString() + "';", myConnection);
+            mySqlDataAdapter.SelectCommand = new MySqlCommand(" select * from departement;select * from saison;select * from vm_visites where Nom_Inspecteur='" + nomInsp.ToString() + "';select * from inspecteur where NOMINSPECTEUR='"+nomInsp.ToString()+"';", myConnection);
             try
             {
                 dataSet.Clear();
@@ -321,7 +328,7 @@ namespace ClassConnect
                 dv_departement = dataSet.Tables[0].DefaultView;
                 dv_saison = dataSet.Tables[1].DefaultView;
                 dv_visite = dataSet.Tables[2].DefaultView;
-                
+                dv_inspecteur = dataSet.Tables[3].DefaultView;
 
 
                 chargement = true;
@@ -330,7 +337,7 @@ namespace ClassConnect
             {
                 errgrave = true;
             }
-
+            cmd.Dispose();
         }
 
         public bool login(string pseudo, string mdp)
@@ -348,8 +355,6 @@ namespace ClassConnect
 
             if (count == 1)
             {
-                
-           
                 ret = true;
             }
             else
@@ -357,11 +362,89 @@ namespace ClassConnect
                 ret = false;
             }
             return ret;
+            cmd.Dispose();
             dr.Close();
+            
         }
 
-       
+       private void onRowUpdated(object sender, MySqlRowUpdatedEventArgs args)
+        {
+            string msg = "";
+            Int64 nb = 0;
+           if(args.Status==UpdateStatus.ErrorsOccurred)
+           {
+               if(vaction=='u')
+               {
+                   MySqlCommand vcommand = myConnection.CreateCommand();
+                   if(vtable=='i')
+                   {
+                       vcommand.CommandText="SELECT COUNT(*) FROM inspecteur WHERE IDINSPECTEUR ='"+args.Row[0,DataRowVersion.Original]+"'";
+                   }
+                   nb = (Int64)vcommand.ExecuteScalar();
+                   //on veut savoir si l'inspecteur existe dans la bdd
+               }
+               if(vaction=='u')
+               {
+                   if(nb==1)
+                   {
+                       if(vtable=='i')
+                       {
+                           msg = "pour le numéro de personne: " + args.Row[0, DataRowVersion.Original] + " impossible MAJ car enr modifié dans la base";
+                       }
+                       rapport.Add(msg);
+                       errmaj = true;
+                   }
+                   else
+                   {
+                       if(vtable=='i')
+                       {
+                           msg = "pour le numéro de personne : " + args.Row[0, DataRowVersion.Original] + " impossible MAJ car enr supprimé dans la base";
+                       }
+                       rapport.Add(msg);
+                       errmaj = true;
+                   }
+               }
+           }
+        }
 
+
+        public void mod_inspecteur()
+       {
+           vaction = 'u';
+           vtable = 'i';
+
+           if (!connopen) return;
+           mySqlDataAdapter.RowUpdated += new MySqlRowUpdatedEventHandler(onRowUpdated);
+           mySqlDataAdapter.InsertCommand = new MySqlCommand("UPDATE inspecteur set PRENOMINSPECTEUR=?PRENOMINSPECTEUR, NUMEROTEL=?NUMEROTEL, MDPINSPECTEUR=?MDPINSPECTEUR WHERE IDINSPECTEUR= ?IDINSPECTEUR,", myConnection);
+
+           mySqlDataAdapter.InsertCommand.Parameters.Add("?PRENOMINSPECTEUR", MySqlDbType.Text, 655, "PRENOMINSPECTEUR");
+           mySqlDataAdapter.InsertCommand.Parameters.Add("?NUMEROTEL", MySqlDbType.Text, 655, "NUMEROTEL");
+           mySqlDataAdapter.InsertCommand.Parameters.Add("?MDPINSPECTEUR", MySqlDbType.Text, 655, "MDPINSPECTEUR");
+           mySqlDataAdapter.InsertCommand.Parameters.Add("?IDINSPECTEUR", MySqlDbType.Text, 655, "IDINSPECTEUR");
+
+           mySqlDataAdapter.ContinueUpdateOnError = true;
+
+           DataTable table = dataSet.Tables[3];
+
+           mySqlDataAdapter.Update(table.Select(null, null, DataViewRowState.Added));
+
+           mySqlDataAdapter.RowUpdated -= new MySqlRowUpdatedEventHandler(onRowUpdated);
+        
+        }
+
+
+        public void export()
+        {
+            if (!connopen) return;
+            try
+            {
+                mod_inspecteur();
+            }
+            catch(Exception err)
+            {
+                errgrave = true;
+            }
+        }
 
     }
 }

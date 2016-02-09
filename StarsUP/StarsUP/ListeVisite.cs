@@ -118,25 +118,28 @@ namespace StarsUP
         /// </summary>
         public void filtreD()
         {
-           
+           //Ce filtre permet de charger les visites qui sont situées entre les deux dates 
             string Filter = "Date_de_visite>='"+dateTimePicker1.Value.ToShortDateString()+"' AND Date_de_visite<='"+dateTimePicker2.Value.ToShortDateString()+"'";
             controller.Vmodel.Dv_visite.RowFilter=Filter;
+            //Il s'agit du filtre de la saison
             string FilterSaison = "ANNEESAISON='"+dateTimePicker1.Value.Year.ToString()+"'";
             controller.Vmodel.Dv_saison.RowFilter = FilterSaison;
             
-
+            //On crée une nouvelle liste pour lui ajouter les nouvelles saison en fonction de l'année de la date
             List<KeyValuePair<int, string>> FlistS = new List<KeyValuePair<int, string>>();
             FlistS.Add(new KeyValuePair<int, string>(0, "Toutes les saisons"));
       
 
-           
+           //On parcour le dataview pour charger les nouvelles saisons
             for (int i = 0; i < controller.Vmodel.Dv_saison.ToTable().Rows.Count; i++)
             {
                 FlistS.Add(new KeyValuePair<int, string>(Convert.ToInt32(controller.Vmodel.Dv_saison.ToTable().Rows[i][0].ToString()),
                 controller.Vmodel.Dv_saison.ToTable().Rows[i][1].ToString()));
             }
             cbSaison.DataSource=FlistS;
+            //On fait un rafraichissement pour la combobox pour pouvoir voir les nouvelles saison en fonction de l'année de l'une des dates
             cbSaison.Refresh();
+            //On fait un rafraichissement de la datagridview pour pouvoir voir le résultat
             dataGV.Refresh();
         }
         
@@ -152,21 +155,25 @@ namespace StarsUP
 
         private void cbDepartement_SelectionChangeCommitted(object sender, EventArgs e)
         {
+            //On appele le filtre sur cet évènement
             filtre();
         }
 
         private void cbSaison_SelectionChangeCommitted(object sender, EventArgs e)
         {
+            //Même chose
             filtreS();
         }
 
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
+            //""
             filtreD();
         }
 
         private void dateTimePicker2_ValueChanged(object sender, EventArgs e)
         {
+            //""
             filtreD();
         }
 

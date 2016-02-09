@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MetroFramework.Forms;
+using System.IO;
 
 namespace StarsUP
 {
@@ -15,23 +16,27 @@ namespace StarsUP
     /// Cette form permet la connetion de l'inspecteur à la base de donnéee. Une fois connecté il a accès à la form Index qui lui permet,
     /// de choisir ce qu'il veut faire
     /// </summary>
+    /// 
+
     public partial class Connection : MetroForm
     {
         public String var="";
+        
         public Connection()
         {
             InitializeComponent();
+      
             tbMDP.PasswordChar='*'; //Ceci permet d'avoir des étoiles lorsqu'on saisi le mot de passe
-          
+
         }
 
-        /// <summary>
-        /// Pour la connetion de l'inspecteur on vérifi les textbox et on voit si elles sont vides, si c'est le cas on envoie un message
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+       
+        
         private void btnConnection_Click(object sender, EventArgs e)
         {
+           
+        
+           
             if(tbNomUtil.Text=="" && tbMDP.Text=="" | tbNomUtil.Text=="" | tbMDP.Text=="") // les textbox sont vides alors on envoie un message
             {
                 MessageBox.Show("Veuillez remplir tous les champs");

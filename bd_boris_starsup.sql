@@ -276,8 +276,8 @@ CREATE TRIGGER `avant_insertion_contre_visite` BEFORE INSERT ON `contrevisite`
 
       IF var > 0
       THEN
-          signal sqlstate '16440' SET message_text='Vous ne pouvez pAS insérer cette cONtre visite: il existe une visite similaire, Veuillez changer l'inspecteur effectuant la visite
-          ou l'hébergement visité ou la saison à laquelle la visite a va être effectué ';
+          signal sqlstate '16440' SET message_text='Vous ne pouvez pAS insérer cette cONtre visite: il existe une visite similaire, Veuillez changer l\'inspecteur effectuant la visite
+          ou l\'hébergement visité ou la saison à laquelle la visite a va être effectué ';
 
 END IF;
 END
@@ -644,7 +644,7 @@ CREATE TRIGGER `avant_insertion_visite` BEFORE INSERT ON `visite`
           
            IF NOT EXISTS( SELECT * FROM inspecteur i inner join hebergement h where i.IDINSPECTEUR=NEW.IDINSPECTEUR AND h.IDHEBERGEMENT=NEW.IDHEBERGEMENT AND h.IDDEPARTEMENT=i.IDDEPARTEMENT)
            	 THEN 
-           	 signal sqlstate'16440' SET message_text='Visite Impossible: le département de l'inspecteur et de l'hébergement sont différents';
+           	 signal sqlstate'16440' SET message_text='Visite Impossible: le département de l\'inspecteur et de l\'hébergement sont différents';
            	 ELSE
 
           IF nom_spe='Hotel'
@@ -652,7 +652,7 @@ CREATE TRIGGER `avant_insertion_visite` BEFORE INSERT ON `visite`
                                          IF NOT EXISTS(SELECT * FROM hotel WHERE IDHEBERGEMENT=NEW.IDHEBERGEMENT) 
                                          THEN
                                                   
-                                                       signal sqlstate '16440' SET message_text='L'hébergement ne correspONd pAS à la specialité de l'inspecteur' ;
+                                                       signal sqlstate '16440' SET message_text='L\'hébergement ne correspONd pAS à la specialité de l\'inspecteur' ;
                                           END IF;
 
             ELSE
@@ -660,14 +660,14 @@ CREATE TRIGGER `avant_insertion_visite` BEFORE INSERT ON `visite`
                           THEN
                                          IF NOT EXISTS(SELECT * FROM camping WHERE IDHEBERGEMENT=NEW.IDHEBERGEMENT)
                                         THEN
-                                           signal sqlstate '16440' SET message_text='L'hébergement ne correspONd pAS à la specialité de l'inspecteur' ;
+                                           signal sqlstate '16440' SET message_text='L\'hébergement ne correspONd pAS à la specialité de l\'inspecteur' ;
                                           END IF;                
             ELSE
             IF nom_spe='Chambre hôte'
                            THEN
                                           IF NOT EXISTS(SELECT * FROM chambre_hotte WHERE IDHEBERGEMENT=NEW.IDHEBERGEMENT)
                                           THEN
-                                           signal sqlstate '16440' SET message_text='L'hébergement ne correspONd pAS à la specialité de l'inspecteur' ;
+                                           signal sqlstate '16440' SET message_text='L\'hébergement ne correspONd pAS à la specialité de l\'inspecteur' ;
                                          END IF;
                        END IF;
  END IF;

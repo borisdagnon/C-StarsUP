@@ -20,7 +20,7 @@ namespace StarsUP
     {
         List<String> lesInfos = new List<String>();
         PictureBox PB;
-        MySqlConnection cn = new MySqlConnection();
+        MySqlConnection cn = new MySqlConnection();//Connection pour les requêtes 
         MySqlCommand cmd = new MySqlCommand();
         MySqlDataReader dr;
         String nomInsp;
@@ -29,7 +29,7 @@ namespace StarsUP
         private OpenFileDialog OP;
         private MySqlParameter image;
         MySqlDataAdapter sda;
-        public string cheminComplet;
+        public string cheminComplet;//Chemin complet pour les requêtes et pour la serialisation
         int clicImage=0;//Cette variable sert à compter le nombre de fois qu'on clic sur l'image afin d'ouvrir la connection ou de la fermer
         String nomplusExtension = "";
         /// <summary>
@@ -55,7 +55,7 @@ namespace StarsUP
         {
            
 
-           
+           //Si c'est la première fois qu'il accède à cette form depuis la connection alors on charge les données depuis la BDD 
         if(nbClic==1)
         {
             lesInfos = controller.Vmodel.infoInspecteur(nomInsp.ToString(), mdpInsp.ToString());
@@ -66,7 +66,9 @@ namespace StarsUP
             PrenomInspecteur = lbPrenom.Text = lesInfos[2].ToString(),
             NumeroInspecteur = lbNumero.Text = "+33" + lesInfos[3].ToString()
             };
-
+               
+            //On procède ensuite à une serialisation pour pouvoir enregistrer les données dans le fichier xml.
+            
            
 
          //On crée une instance de XmlSerializer dans lequel on lui spécifie le type
@@ -89,6 +91,7 @@ namespace StarsUP
         }
         else
         {
+            //On deserialize pour récupérer les données de l'inspecteur 
             XmlSerializer serial = new XmlSerializer(typeof(Session));
 
             StreamReader lire = new StreamReader("Session.xml");
@@ -322,84 +325,11 @@ namespace StarsUP
             }
         }
 
-        /*
-
-        /// <summary>
-        /// Cette méthode permet de changer les dimension de l'image lors du chargement. On met l'image dans un MemoryStream pour éviter d'avoir
-        /// une erreur quand il faudra supprimer l'image dans le répertoire après que l'inspecteur ai changé son image 
-        /// </summary>
-        /// <param name="path"></param>
-        private void ResizeImageAncien(string path)
-        {
-
-            FileStream fsImageAncien = new FileStream(path.ToString(), FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            byte[] buffer = new byte[fsImageAncien.Length];
-            fsImageAncien.Read(buffer, 0, (int)fsImageAncien.Length);
-            MemoryStream msfsImageAncien = new MemoryStream(buffer);
-
-                       
-
-
-            // réglages des valeurs servant au calcul
-            int Lmax = pictureBox1.Width;
-            // IMG est le nom de ma pictureBox
-            int Hmax = pictureBox1.Height;
-
-            Image i = Image.FromStream(msfsImageAncien);
-            // objet image à partir de l'image choisie
-            double ratio = (double)Lmax / Hmax;
-            // ratio de base à obtenir pour rentrer correctement dans la picturebox
-            double ratioImage = (double)i.Width / i.Height;
-            // ratio de l'image d'origine
-            double Flng = i.Width;
-            // largeur de l'image d'origine
-            double Fht = i.Height;
-            // hauteur de l'image d'origine
-            if (Flng > Lmax || Fht > Hmax)
-            // si l'image est plus grande d'une quelconque longueur
-            {
-                if (Flng > Lmax) // si la longueur est plus longue
-                {
-                    if (1 > ratioImage) // et si la largueur est plus longue
-                    {
-                        Fht = Hmax; // la hauteur prend la hauteur maximale
-                        if (Flng > i.Height) Flng = Fht / ratioImage;
-                        // calcul de la longueur
-                        else Flng = Fht * ratioImage;
-                        // calcul de la longueur (bis)
-                    }
-                    else // seule la largeur est plus longue
-                    {
-                        Flng = Lmax; // la largeur prend la largeur maximale
-                        if (Fht > i.Width) Fht = Flng / ratioImage;
-                        // calcul de la hauteur
-                        else Fht = Flng / ratioImage;
-                    }
-                }
-                else // seule la largeur est plus longue
-                {
-                    Fht = Hmax;
-                    Flng = Fht * ratioImage;
-                }
-                //On charge l'ancienne image dans un stream pour pouvoir y avoir accès plus tard lors de la suppresion sinon on à une erreur qui est générée
-                pictureBox1.Image = Image.FromStream(fsImageAncien).GetThumbnailImage(Convert.ToInt32(Flng), Convert.ToInt32(Fht), null, IntPtr.Zero);
-              
-                // j'en tire une miniature
-            }
-            //Même principe si on atterit ici, on récupère l'image à partir d'un stream
-            else pictureBox1.Image = Image.FromStream(fsImageAncien);
-            // sinon j'affiche l'image de base
-
-           
-        }
-
-        */
-
-        /// <summary>
+         /// <summary>
         /// Cette méthode sert à redimentionner l'image dans le cadre du picturebox
         /// </summary>
         /// <param name="path"> Il s'agit du chemin du fichier</param>
-        private void ResizeImage(string path)
+        public void ResizeImage(string path)
         {
             
             
@@ -461,6 +391,7 @@ namespace StarsUP
 
         private void Profil_Load(object sender, EventArgs e)
         {
+            Int16 result = 0;
             cn.ConnectionString = "Database=bd_boris_starsup;Data Source=localhost;User Id=root;";
             cmd.Connection = cn;
             try
@@ -479,8 +410,42 @@ namespace StarsUP
                 StreamReader lire = new StreamReader("CheminImage.xml");
                 Path p = (Path)serial.Deserialize(lire);
                 lire.Close();
+                if(File.Exists(p.Path1))
+                {
+                    pictureBox1.Image = NonLockingOpen(p.Path1);
+                }
+                else
+                
+                {
+                    try
+                    {
+                        
+                        pictureBox1.Image = null;
+                        cmd.CommandText = "SELECT * FROM image WHERE IDINSPECTEUR=" + lbIdentifiant.Text + "";
+                       
+                        cn.Open();
+                        dr = cmd.ExecuteReader();
+                        while(dr.Read())
+                        {
+                            result++;
+                        }
+                        if (result >= 1)
+                        {
+                            cmd.CommandText = "DELETE FROM image WHERE IDINSPECTEUR=" + lbIdentifiant.Text + "";
+                            cmd.ExecuteNonQuery();
+                        }
+                            
+                        cn.Close();
 
-                pictureBox1.Image = NonLockingOpen(p.Path1);
+                    }
+                    catch(Exception ex )
+                    {
+                        MessageBox.Show(ex.ToString());
+                    }
+
+
+                }
+              
 
             }
             
@@ -497,6 +462,7 @@ namespace StarsUP
 
         private void Profil_FormClosing(object sender, FormClosingEventArgs e)
         {
+            cmd.Dispose();
             cn.Close();
             lesInfos.Clear();
         }
@@ -524,6 +490,12 @@ namespace StarsUP
               
             ms.Close();
             return result;
+        }
+
+        private void btnModifier_Click(object sender, EventArgs e)
+        {
+            controller.crud_Inspecteur('u', lbIdentifiant.Text.ToString());
+
         }
 
        

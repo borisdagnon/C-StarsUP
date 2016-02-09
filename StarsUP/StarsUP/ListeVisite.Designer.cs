@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ListeVisite));
             this.dataGV = new System.Windows.Forms.DataGridView();
             this.cbSaison = new System.Windows.Forms.ComboBox();
             this.cbDepartement = new System.Windows.Forms.ComboBox();
@@ -135,6 +136,8 @@
             this.Controls.Add(this.cbDepartement);
             this.Controls.Add(this.cbSaison);
             this.Controls.Add(this.dataGV);
+            this.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ListeVisite";
             this.Text = "Liste Visites";
             ((System.ComponentModel.ISupportInitialize)(this.dataGV)).EndInit();

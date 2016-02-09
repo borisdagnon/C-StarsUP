@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 namespace StarsUP
 {
+    /// <summary>
+    /// Cette classe nous permet de serializer le chemin de l'image
+    /// </summary>
      [Serializable]
    public class Path
     {

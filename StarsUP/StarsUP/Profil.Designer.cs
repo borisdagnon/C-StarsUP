@@ -35,15 +35,15 @@
             this.lbIdentifiant = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.btnModifier = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::StarsUP.Properties.Resources.icon_store_member;
             this.pictureBox1.Location = new System.Drawing.Point(1, 63);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(122, 67);
+            this.pictureBox1.Size = new System.Drawing.Size(138, 82);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
@@ -53,41 +53,39 @@
             this.lbNom.AutoSize = true;
             this.lbNom.Location = new System.Drawing.Point(1, 159);
             this.lbNom.Name = "lbNom";
-            this.lbNom.Size = new System.Drawing.Size(35, 13);
+            this.lbNom.Size = new System.Drawing.Size(29, 13);
             this.lbNom.TabIndex = 1;
-            this.lbNom.Text = "label1";
+            this.lbNom.Text = "Nom";
             // 
             // lbPrenom
             // 
             this.lbPrenom.AutoSize = true;
             this.lbPrenom.Location = new System.Drawing.Point(71, 159);
             this.lbPrenom.Name = "lbPrenom";
-            this.lbPrenom.Size = new System.Drawing.Size(35, 13);
+            this.lbPrenom.Size = new System.Drawing.Size(43, 13);
             this.lbPrenom.TabIndex = 1;
-            this.lbPrenom.Text = "label1";
+            this.lbPrenom.Text = "Prénom";
             // 
             // lbNumero
             // 
             this.lbNumero.AutoSize = true;
             this.lbNumero.Location = new System.Drawing.Point(225, 117);
             this.lbNumero.Name = "lbNumero";
-            this.lbNumero.Size = new System.Drawing.Size(35, 13);
+            this.lbNumero.Size = new System.Drawing.Size(0, 13);
             this.lbNumero.TabIndex = 1;
-            this.lbNumero.Text = "label1";
             // 
             // lbIdentifiant
             // 
             this.lbIdentifiant.AutoSize = true;
             this.lbIdentifiant.Location = new System.Drawing.Point(225, 63);
             this.lbIdentifiant.Name = "lbIdentifiant";
-            this.lbIdentifiant.Size = new System.Drawing.Size(35, 13);
+            this.lbIdentifiant.Size = new System.Drawing.Size(0, 13);
             this.lbIdentifiant.TabIndex = 1;
-            this.lbIdentifiant.Text = "label1";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(145, 117);
+            this.label1.Location = new System.Drawing.Point(154, 117);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(50, 13);
             this.label1.TabIndex = 3;
@@ -102,11 +100,22 @@
             this.label2.TabIndex = 3;
             this.label2.Text = "Identifiant :";
             // 
+            // btnModifier
+            // 
+            this.btnModifier.Location = new System.Drawing.Point(64, 269);
+            this.btnModifier.Name = "btnModifier";
+            this.btnModifier.Size = new System.Drawing.Size(75, 23);
+            this.btnModifier.TabIndex = 4;
+            this.btnModifier.Text = "Modifier";
+            this.btnModifier.UseVisualStyleBackColor = true;
+            this.btnModifier.Click += new System.EventHandler(this.btnModifier_Click);
+            // 
             // Profil
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(605, 332);
+            this.Controls.Add(this.btnModifier);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lbPrenom);
@@ -133,5 +142,6 @@
         private System.Windows.Forms.Label lbIdentifiant;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button btnModifier;
     }
 }
