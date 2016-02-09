@@ -116,7 +116,8 @@ BEGIN
        SELECT 'Cet hébergement n\'existe pas dans la table hébergement';
        END IF;
        END$$
-
+       
+--Cette procédure permet de mettre à jour la vue vm_visites, on la charge avant les CRUD
 CREATE DEFINER=`root`@`localhost` PROCEDURE `maj_vm_visites`()
 BEGIN
 TRUNCATE vm_visites;
@@ -194,7 +195,9 @@ INSERT INTO `camping` (`IDHEBERGEMENT`) VALUES
 
 --
 -- Déclencheurs `camping`
---
+--Ce déclencheur permet avant l'insertion d'un camping de vérifier si il existe ailleurs soit dans
+--une chambre d'hôte, soit dans un hotel.
+--Il s'agit de vérifier la contrainte d'héritage
 DROP TRIGGER IF EXISTS `avant_insertion_camping`;
 DELIMITER //
 CREATE TRIGGER `avant_insertion_camping` BEFORE INSERT ON `camping`
@@ -227,7 +230,9 @@ CREATE TABLE IF NOT EXISTS `chambre_hotte` (
 
 --
 -- Déclencheurs `chambre_hotte`
---
+--Ce déclencheur permet avant l'insertion d'une chambre hôte de vérifier si il existe ailleurs soit dans
+-- un hotel, oou dans un camping.
+--Il s'agit de vérifier la contrainte d'héritage
 DROP TRIGGER IF EXISTS `avant_insertion_chambre_hotte`;
 DELIMITER //
 CREATE TRIGGER `avant_insertion_chambre_hotte` BEFORE INSERT ON `chambre_hotte`
@@ -265,8 +270,8 @@ CREATE TABLE IF NOT EXISTS `contrevisite` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
--- Déclencheurs `contrevisite`
---
+--Déclencheurs `contrevisite`
+--Ce déclencheur vérifi qu'il n'y a pas de visite portant les mêmes informations, nottement au niveau de IDVISITE, IDINSPECTEUR et IDDATEV
 DROP TRIGGER IF EXISTS `avant_insertion_contre_visite`;
 DELIMITER //
 CREATE TRIGGER `avant_insertion_contre_visite` BEFORE INSERT ON `contrevisite`
@@ -276,7 +281,7 @@ CREATE TRIGGER `avant_insertion_contre_visite` BEFORE INSERT ON `contrevisite`
 
       IF var > 0
       THEN
-          signal sqlstate '16440' SET message_text='Vous ne pouvez pAS insérer cette cONtre visite: il existe une visite similaire, Veuillez changer l\'inspecteur effectuant la visite
+          signal sqlstate '16440' SET message_text='Vous ne pouvez pas insérer cette cONtre visite: il existe une visite similaire, Veuillez changer l\'inspecteur effectuant la visite
           ou l\'hébergement visité ou la saison à laquelle la visite a va être effectué ';
 
 END IF;
@@ -307,7 +312,7 @@ INSERT INTO `datev` (`IDDATEV`, `IDSAISON`, `DATEV`) VALUES
 
 --
 -- Déclencheurs `datev`
---
+--Ce déclencheur avant l'insertion d'une date de viste, vérifi que l'année de la date de visite est la même que l'année de la saison 
 DROP TRIGGER IF EXISTS `avant_insertion_date_visite`;
 DELIMITER //
 CREATE TRIGGER `avant_insertion_date_visite` BEFORE INSERT ON `datev`
@@ -409,7 +414,7 @@ INSERT INTO `hebergement` (`IDHEBERGEMENT`, `NOMHEBERGEMENT`, `IDDEPARTEMENT`, `
 
 --
 -- Déclencheurs `hebergement`
---
+--Ce déclencheur vérifi que l'hébergement qui va être inséré n'a pas la même adresse qu'un autre qui serait déjà enregistré
 DROP TRIGGER IF EXISTS `avant_insertion_hebergement`;
 DELIMITER //
 CREATE TRIGGER `avant_insertion_hebergement` BEFORE INSERT ON `hebergement`
@@ -465,7 +470,8 @@ INSERT INTO `hotel` (`IDHEBERGEMENT`) VALUES
 
 --
 -- Déclencheurs `hotel`
---
+--Ce déclencheur vérifi qu'avant l'insertion d'un hotel, celui n'est pas déjà présent dans la table chambre hôte ou camping.
+--Il s'agit de vérifier la contrainte d'héritage
 DROP TRIGGER IF EXISTS `avant_insertion_hotel`;
 DELIMITER //
 CREATE TRIGGER `avant_insertion_hotel` BEFORE INSERT ON `hotel`
@@ -633,7 +639,7 @@ INSERT INTO `visite` (`IDVISITE`, `IDINSPECTEUR`, `IDHEBERGEMENT`, `IDDATEV`, `C
 
 --
 -- Déclencheurs `visite`
---
+--Vérifi que l'hébergement qu'on va inséré correspond à la spécialité de l'inspecteur
 DROP TRIGGER IF EXISTS `avant_insertion_visite`;
 DELIMITER //
 CREATE TRIGGER `avant_insertion_visite` BEFORE INSERT ON `visite`
@@ -652,7 +658,7 @@ CREATE TRIGGER `avant_insertion_visite` BEFORE INSERT ON `visite`
                                          IF NOT EXISTS(SELECT * FROM hotel WHERE IDHEBERGEMENT=NEW.IDHEBERGEMENT) 
                                          THEN
                                                   
-                                                       signal sqlstate '16440' SET message_text='L\'hébergement ne correspONd pAS à la specialité de l\'inspecteur' ;
+                                                       signal sqlstate '16440' SET message_text='L\'hébergement ne correspond pAS à la specialité de l\'inspecteur' ;
                                           END IF;
 
             ELSE
@@ -660,14 +666,14 @@ CREATE TRIGGER `avant_insertion_visite` BEFORE INSERT ON `visite`
                           THEN
                                          IF NOT EXISTS(SELECT * FROM camping WHERE IDHEBERGEMENT=NEW.IDHEBERGEMENT)
                                         THEN
-                                           signal sqlstate '16440' SET message_text='L\'hébergement ne correspONd pAS à la specialité de l\'inspecteur' ;
+                                           signal sqlstate '16440' SET message_text='L\'hébergement ne correspond pas à la specialité de l\'inspecteur' ;
                                           END IF;                
             ELSE
             IF nom_spe='Chambre hôte'
                            THEN
                                           IF NOT EXISTS(SELECT * FROM chambre_hotte WHERE IDHEBERGEMENT=NEW.IDHEBERGEMENT)
                                           THEN
-                                           signal sqlstate '16440' SET message_text='L\'hébergement ne correspONd pAS à la specialité de l\'inspecteur' ;
+                                           signal sqlstate '16440' SET message_text='L\'hébergement ne correspond pas à la specialité de l\'inspecteur' ;
                                          END IF;
                        END IF;
  END IF;
