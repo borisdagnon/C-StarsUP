@@ -129,8 +129,6 @@ namespace StarsUP
                     MessageBox.Show("Une erreur est survenue lors de la génération du fichier " + er + "", "Erreur Génération", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
-
-                
             }
            catch
             {
@@ -138,10 +136,6 @@ namespace StarsUP
             }
 
            
-            
-
-            
-            
         }
 
         private void GenerationPDF_FormClosing(object sender, FormClosingEventArgs e)

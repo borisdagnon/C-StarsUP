@@ -177,6 +177,20 @@ namespace StarsUP
             filtreD();
         }
 
+        private void dataGV_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            
+            controller.crud_etoile('u', dataGV.Rows[dataGV.SelectedRows[0].Index].Cells[0].Value.ToString());
+            bindingSource1.MoveLast();
+            bindingSource1.MoveFirst();
+            dataGV.Refresh();
+        }
+
         
 
 

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GenerationPDF));
             this.btnPDF = new System.Windows.Forms.Button();
             this.cbVisites = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
@@ -55,9 +56,11 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(503, 293);
+            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+            this.ClientSize = new System.Drawing.Size(512, 303);
             this.Controls.Add(this.cbVisites);
             this.Controls.Add(this.btnPDF);
+            this.ForeColor = System.Drawing.SystemColors.ControlText;
             this.Name = "GenerationPDF";
             this.Text = "GenerationPDF";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GenerationPDF_FormClosing);

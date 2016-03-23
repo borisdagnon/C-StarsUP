@@ -16,11 +16,11 @@ namespace StarsUP
         /// Ce controleur nous permet d'avoir un lien avec la BDD pour les reqêtes, qui elles sont situées dans la class Connecter
         /// qui n'est pas dans ce fichier sln. On a par contre importé la dll ClassConnect qui nous permet de faire le lien
         /// </summary>
-        private static ClassConnect.Connecter vmodel;
+        private static Connecter vmodel;
 
         
         #region assesseurs;
-        public static ClassConnect.Connecter Vmodel
+        public static Connecter Vmodel
         {
             get { return controller.vmodel; }
             set { controller.vmodel = value; }
@@ -30,6 +30,11 @@ namespace StarsUP
         public static void init()
         {
             vmodel = new Connecter();
+        }
+
+        public static void update(MAJ M,char c)
+        {
+           
         }
 
        public static void crud_Inspecteur(Char c, String cle)
@@ -49,57 +54,32 @@ namespace StarsUP
            }
 
            M.ShowDialog();
-           if (M.DialogResult == DialogResult.OK)
+          
+        }
+        public static void crud_etoile(Char c, String cle)
+       {
+           int index = 0;
+           Commentaire co = new Commentaire();
+
+           if (c == 'u' || c == 'd')
            {
-
-
-           if(c=='u')
-           {
-                    //On ne change pas le numéro si il n'est pas bon 
-               if(verif_numero(M.TbNumero.Text))
-               {
-                   vmodel.Dv_inspecteur[index]["NUMEROTEL"] = M.TbNumero.Text;
-               }
-                   
-
-               vmodel.Dv_inspecteur[index]["IDINSPECTEUR"] = Convert.ToInt32( M.LbIdentifiant.Text);
-               vmodel.Dv_inspecteur[index]["PRENOMINSPECTEUR"] = M.TbPrenom.Text;
-              
-               vmodel.Dv_inspecteur[index]["MDPINSPECTEUR"] = M.TbMdp.Text;
-           }
-
-           MessageBox.Show("Mise à jour OK", "MAJ", MessageBoxButtons.OK, MessageBoxIcon.Information);
-           M.Dispose();//Sert à femer la form
-
+               string sort = "IDVISITE";
+               vmodel.Dv_etoile.Sort = sort;
+               index=vmodel.Dv_etoile.Find(cle);
+               co.TbCommentaire.Text = controller.vmodel.Dv_etoile[index][1].ToString();
+               co.TbEtoile.Value =Convert.ToInt32( controller.vmodel.Dv_etoile[index][2]);
                
            }
-           else
-           {
-               MessageBox.Show("Mise à jour annulée", "MAJ", MessageBoxButtons.OK, MessageBoxIcon.Information);
-               M.Dispose();
-           }
-        }
+
+           co.ShowDialog();
+
+       }
         /// <summary>
         /// Il s'agit d'une expression régulière pour vérifier le numéro de téléphone lorsqu'il change
         /// Si il est correcte on renvoie un message positif sinon un warning et on ne change pas le numéro
         /// </summary>
         /// <param name="num"></param>
         /// <returns></returns>
-        private static bool verif_numero(string num)
-       {
-           bool ret = false;
-           string match = @"^(6|7)[0-9]{8}";
-           if (Regex.IsMatch(num, match))
-           {
-               MessageBox.Show("Numéro de téléphone valide", "OK", MessageBoxButtons.OK, MessageBoxIcon.Information);
-               ret = true;
-           }
-            else
-           {
-               MessageBox.Show("Numéro de téléphone invalide", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-               
-           }
-           return ret;
-       }
+       
     }
 }

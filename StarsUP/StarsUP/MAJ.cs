@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MetroFramework.Forms;
+using System.Text.RegularExpressions;
 namespace StarsUP
 {
     public partial class MAJ : MetroForm
@@ -73,7 +74,52 @@ namespace StarsUP
                 tbMdp.ReadOnly = true;
         }
 
-       
+        private void btnOk_Click(object sender, EventArgs e)
+        {
+            int index = 0;
+      
+            
+                //On ne change pas le numéro si il n'est pas bon 
+            if (verif_numero(TbNumero.Text) && TbNumero.Text.Count() < 11)
+            {
+                controller.Vmodel.Dv_inspecteur[index]["NUMEROTEL"] = TbNumero.Text;
+                MessageBox.Show(controller.Vmodel.Dv_inspecteur[index]["NUMEROTEL"].ToString());
+            }
+            else
+            {
+                MessageBox.Show("Veuillez vérifier le numéro", "Attention", MessageBoxButtons.OK,MessageBoxIcon.Warning);
+            }
+                
+
+                controller.Vmodel.Dv_inspecteur[index]["IDINSPECTEUR"] = LbIdentifiant.Text;
+                MessageBox.Show(controller.Vmodel.Dv_inspecteur[index]["IDINSPECTEUR"].ToString());
+                controller.Vmodel.Dv_inspecteur[index]["PRENOMINSPECTEUR"] = TbPrenom.Text;
+                MessageBox.Show(controller.Vmodel.Dv_inspecteur[index]["PRENOMINSPECTEUR"].ToString());
+                controller.Vmodel.Dv_inspecteur[index]["MDPINSPECTEUR"] = TbMdp.Text;
+                MessageBox.Show(controller.Vmodel.Dv_inspecteur[index]["MDPINSPECTEUR"].ToString());
+            
+
+            MessageBox.Show("Mise à jour OK", "MAJ", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Dispose();//Sert à femer la form
+
+        }
+
+        private static bool verif_numero(string num)
+        {
+            bool ret = false;
+            string match = @"^(6|7)[0-9]{8}";
+            if (Regex.IsMatch(num, match))
+            {
+                MessageBox.Show("Numéro de téléphone valide", "OK", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                ret = true;
+            }
+            else
+            {
+                MessageBox.Show("Numéro de téléphone invalide", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+            }
+            return ret;
+        }
 
      
     }

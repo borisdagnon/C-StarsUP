@@ -9,7 +9,7 @@ namespace StarsUP
 {
     /// <summary>
     /// Cette classe est comme une session de sauvegarde des informations de l'inspecteur dans la form profil
-    /// Elle permet d'éviter de déranger la BDD. Une fois le premier chargement fini les informations sont serialisez et rechargé lor du deuxième clic
+    /// Elle permet d'éviter de déranger la BDD. Une fois le premier chargement fini les informations sont serialisez et rechargé lors du deuxième clic
     /// sur le bouton Profil
     /// </summary>
     [Serializable]//Pemret de dire que cette classe est serializable

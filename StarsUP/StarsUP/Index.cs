@@ -115,7 +115,8 @@ namespace StarsUP
             else
             {
                 MessageBox.Show("Connexion réussie", "OK", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                controller.Vmodel.export();
+                if (!controller.Vmodel.export())
+                    MessageBox.Show("Erreur Export");
                 controller.Vmodel.sedeconnecter();
             }
         }

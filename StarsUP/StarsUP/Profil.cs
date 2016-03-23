@@ -27,7 +27,7 @@ namespace StarsUP
         String mdpInsp;
         int nbClic;//Cette variable sert à connaître le nombre de clic qu'il y a eu sur le bouton Profil dans Index
         private OpenFileDialog OP;
-        private MySqlParameter image;
+       /* private MySqlParameter image;*/
         MySqlDataAdapter sda;
         public string cheminComplet;//Chemin complet pour les requêtes et pour la serialisation
         int clicImage=0;//Cette variable sert à compter le nombre de fois qu'on clic sur l'image afin d'ouvrir la connection ou de la fermer
@@ -72,7 +72,7 @@ namespace StarsUP
            
 
          //On crée une instance de XmlSerializer dans lequel on lui spécifie le type
-         //de l'objet à sérialiser. On utiliser l'opérateur typeof pour cela.
+         //de l'objet à sérialiser. On utilise l'opérateur typeof pour cela.
          XmlSerializer serial = new XmlSerializer(typeof(Session));
 
 
@@ -220,7 +220,7 @@ namespace StarsUP
                 }
                 dr.Close();
                 if(count==1)//Si il a déjà une image on lui demande s'il veut changer si oui alors on change le nom et le chemin, sans oublier d'enregistrer la nouvelle image
-                    //et ne oublier aussi la serialization du chemin car celui-ci change aussi.
+                    //et sans oublier la serialization du chemin car celui-ci change aussi.
                 {
                     DialogResult dialogResult = MessageBox.Show("Voulez-vous changer votre photo de profil ?", "Modifier", MessageBoxButtons.YesNo);
                     if (dialogResult == DialogResult.Yes)
@@ -315,6 +315,7 @@ namespace StarsUP
                 pictureBox1.Image = Image.FromFile(dt.Rows[0]["pathImage"].ToString());
                 sda.Dispose();
                 dt.Dispose();
+                
 
             }
                  
@@ -396,6 +397,7 @@ namespace StarsUP
             cmd.Connection = cn;
             try
             {
+                //Cette partie sert a créer les dossiers imbriqué, C\StarsUP\Images\
                 string Dossier = @"C:\StarsUP";
                 string SousDossier = System.IO.Path.Combine(Dossier, "Images");
 
@@ -432,6 +434,8 @@ namespace StarsUP
                         if (result >= 1)
                         {
                             cmd.CommandText = "DELETE FROM image WHERE IDINSPECTEUR=" + lbIdentifiant.Text + "";
+                            dr.Close();
+                            dr.Dispose();
                             cmd.ExecuteNonQuery();
                         }
                             

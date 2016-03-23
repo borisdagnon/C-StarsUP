@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Jeu 21 Janvier 2016 à 19:15
+-- Généré le :  Ven 11 Mars 2016 à 17:58
 -- Version du serveur :  5.6.17
 -- Version de PHP :  5.5.12
 
@@ -116,8 +116,7 @@ BEGIN
        SELECT 'Cet hébergement n\'existe pas dans la table hébergement';
        END IF;
        END$$
-       
---Cette procédure permet de mettre à jour la vue vm_visites, on la charge avant les CRUD
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `maj_vm_visites`()
 BEGIN
 TRUNCATE vm_visites;
@@ -191,13 +190,12 @@ CREATE TABLE IF NOT EXISTS `camping` (
 --
 
 INSERT INTO `camping` (`IDHEBERGEMENT`) VALUES
-(2);
+(2),
+(5);
 
 --
 -- Déclencheurs `camping`
---Ce déclencheur permet avant l'insertion d'un camping de vérifier si il existe ailleurs soit dans
---une chambre d'hôte, soit dans un hotel.
---Il s'agit de vérifier la contrainte d'héritage
+--
 DROP TRIGGER IF EXISTS `avant_insertion_camping`;
 DELIMITER //
 CREATE TRIGGER `avant_insertion_camping` BEFORE INSERT ON `camping`
@@ -229,10 +227,15 @@ CREATE TABLE IF NOT EXISTS `chambre_hotte` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
+-- Contenu de la table `chambre_hotte`
+--
+
+INSERT INTO `chambre_hotte` (`IDHEBERGEMENT`, `NBCHAMBRE`, `CUISINE`) VALUES
+(3, 4, NULL);
+
+--
 -- Déclencheurs `chambre_hotte`
---Ce déclencheur permet avant l'insertion d'une chambre hôte de vérifier si il existe ailleurs soit dans
--- un hotel, oou dans un camping.
---Il s'agit de vérifier la contrainte d'héritage
+--
 DROP TRIGGER IF EXISTS `avant_insertion_chambre_hotte`;
 DELIMITER //
 CREATE TRIGGER `avant_insertion_chambre_hotte` BEFORE INSERT ON `chambre_hotte`
@@ -269,26 +272,6 @@ CREATE TABLE IF NOT EXISTS `contrevisite` (
   KEY `I_FK_CONTREVISITE_VISITE` (`IDVISITE`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
---
---Déclencheurs `contrevisite`
---Ce déclencheur vérifi qu'il n'y a pas de visite portant les mêmes informations, nottement au niveau de IDVISITE, IDINSPECTEUR et IDDATEV
-DROP TRIGGER IF EXISTS `avant_insertion_contre_visite`;
-DELIMITER //
-CREATE TRIGGER `avant_insertion_contre_visite` BEFORE INSERT ON `contrevisite`
- FOR EACH ROW BEGIN
-      DECLARE var int(6) DEFAULT 0;
-      SELECT COUNT(*) into var FROM visite WHERE IDVISITE=NEW.IDVISITE AND IDINSPECTEUR=NEW.IDINSPECTEUR  AND IDDATEV=NEW.IDDATEV;
-
-      IF var > 0
-      THEN
-          signal sqlstate '16440' SET message_text='Vous ne pouvez pas insérer cette cONtre visite: il existe une visite similaire, Veuillez changer l\'inspecteur effectuant la visite
-          ou l\'hébergement visité ou la saison à laquelle la visite a va être effectué ';
-
-END IF;
-END
-//
-DELIMITER ;
-
 -- --------------------------------------------------------
 
 --
@@ -301,18 +284,19 @@ CREATE TABLE IF NOT EXISTS `datev` (
   `DATEV` date DEFAULT NULL,
   PRIMARY KEY (`IDDATEV`),
   KEY `I_FK_DATEV_SAISON` (`IDSAISON`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
 -- Contenu de la table `datev`
 --
 
 INSERT INTO `datev` (`IDDATEV`, `IDSAISON`, `DATEV`) VALUES
-(1, 1, '2015-12-08');
+(1, 1, '2015-12-08'),
+(2, 2, '2016-03-11');
 
 --
 -- Déclencheurs `datev`
---Ce déclencheur avant l'insertion d'une date de viste, vérifi que l'année de la date de visite est la même que l'année de la saison 
+--
 DROP TRIGGER IF EXISTS `avant_insertion_date_visite`;
 DELIMITER //
 CREATE TRIGGER `avant_insertion_date_visite` BEFORE INSERT ON `datev`
@@ -357,14 +341,16 @@ CREATE TABLE IF NOT EXISTS `equipements` (
   `IDEQUIPEMENT` smallint(6) NOT NULL AUTO_INCREMENT,
   `NOMEQUIPEMENT` char(32) DEFAULT NULL,
   PRIMARY KEY (`IDEQUIPEMENT`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
 -- Contenu de la table `equipements`
 --
 
 INSERT INTO `equipements` (`IDEQUIPEMENT`, `NOMEQUIPEMENT`) VALUES
-(1, 'Chauffage Mobile');
+(1, 'Chauffage Mobile'),
+(2, 'Poste Radio'),
+(3, 'Télévision 4k');
 
 -- --------------------------------------------------------
 
@@ -379,14 +365,15 @@ CREATE TABLE IF NOT EXISTS `gerant` (
   `TELGERANT` bigint(20) DEFAULT NULL,
   `ADRESSEGERANT` char(32) DEFAULT NULL,
   PRIMARY KEY (`IDGERANT`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
 -- Contenu de la table `gerant`
 --
 
 INSERT INTO `gerant` (`IDGERANT`, `NOMGERANT`, `PRENOMGERANT`, `TELGERANT`, `ADRESSEGERANT`) VALUES
-(1, 'Callou', 'Roger', 623958474, '12 Rue Des Philippines');
+(1, 'Callou', 'Roger', 623958474, '12 Rue Des Philippines'),
+(2, 'Diams', 'Greg', 623258414, '45 Rue Des Molières');
 
 -- --------------------------------------------------------
 
@@ -402,7 +389,7 @@ CREATE TABLE IF NOT EXISTS `hebergement` (
   `VILLE` char(32) DEFAULT NULL,
   PRIMARY KEY (`IDHEBERGEMENT`),
   KEY `I_FK_HEBERGEMENT_DEPARTEMENT` (`IDDEPARTEMENT`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
 
 --
 -- Contenu de la table `hebergement`
@@ -410,11 +397,17 @@ CREATE TABLE IF NOT EXISTS `hebergement` (
 
 INSERT INTO `hebergement` (`IDHEBERGEMENT`, `NOMHEBERGEMENT`, `IDDEPARTEMENT`, `ADRESSEHEBERGEMENT`, `VILLE`) VALUES
 (1, 'LES FLINGUETTES', 1, '19 Rue Des Capucins', 'Angers'),
-(2, 'Les Callanques', 1, '18 Rue De Oliveras', 'Angers');
+(2, 'Les Callanques', 1, '18 Rue De Oliveras', ' 	Le May-sur-Èvre'),
+(3, 'Les Dammières', 2, '1 Avenue Brasières', 'Vertou'),
+(4, 'La Passadona', 1, '5 Rue Des Collines', ' 	Saumur'),
+(5, 'La Gullerma', 2, '6 Rue Rémal', ' Bouguenais'),
+(6, 'L''Everton', 1, '10 Avenue Symbale', ' 	Doué-la-Fontaine'),
+(7, 'L''Iliade', 1, 'La Rue Des Florandes', 'Chemillé'),
+(8, 'Dial', 2, 'Rue Tassigni', 'Carquefou');
 
 --
 -- Déclencheurs `hebergement`
---Ce déclencheur vérifi que l'hébergement qui va être inséré n'a pas la même adresse qu'un autre qui serait déjà enregistré
+--
 DROP TRIGGER IF EXISTS `avant_insertion_hebergement`;
 DELIMITER //
 CREATE TRIGGER `avant_insertion_hebergement` BEFORE INSERT ON `hebergement`
@@ -448,7 +441,9 @@ CREATE TABLE IF NOT EXISTS `historique` (
 --
 
 INSERT INTO `historique` (`IDHEBERGEMENT`, `IDSAISON`, `ETOILLE`) VALUES
-(1, 1, 5);
+(1, 1, 1),
+(5, 1, NULL),
+(6, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -466,12 +461,13 @@ CREATE TABLE IF NOT EXISTS `hotel` (
 --
 
 INSERT INTO `hotel` (`IDHEBERGEMENT`) VALUES
-(1);
+(1),
+(4),
+(6);
 
 --
 -- Déclencheurs `hotel`
---Ce déclencheur vérifi qu'avant l'insertion d'un hotel, celui n'est pas déjà présent dans la table chambre hôte ou camping.
---Il s'agit de vérifier la contrainte d'héritage
+--
 DROP TRIGGER IF EXISTS `avant_insertion_hotel`;
 DELIMITER //
 CREATE TRIGGER `avant_insertion_hotel` BEFORE INSERT ON `hotel`
@@ -502,14 +498,14 @@ CREATE TABLE IF NOT EXISTS `image` (
   `IDINSPECTEUR` smallint(6) NOT NULL,
   PRIMARY KEY (`idImage`),
   KEY `IDINSPECTEUR` (`IDINSPECTEUR`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
 
 --
 -- Contenu de la table `image`
 --
 
 INSERT INTO `image` (`idImage`, `nomImage`, `pathImage`, `IDINSPECTEUR`) VALUES
-(3, '0QcvQ - Imgur.jpg', 'C:\\StarsUP\\Images\\0QcvQ - Imgur.jpg', 1);
+(5, 'Desert.jpg', 'C:\\StarsUP\\Images\\', 1);
 
 -- --------------------------------------------------------
 
@@ -528,15 +524,17 @@ CREATE TABLE IF NOT EXISTS `inspecteur` (
   PRIMARY KEY (`IDINSPECTEUR`),
   KEY `I_FK_INSPECTEUR_SPECIALITE` (`IDSPECIALITEI`),
   KEY `IDDATEV` (`IDDEPARTEMENT`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 --
 -- Contenu de la table `inspecteur`
 --
 
 INSERT INTO `inspecteur` (`IDINSPECTEUR`, `IDSPECIALITEI`, `NOMINSPECTEUR`, `PRENOMINSPECTEUR`, `IDDEPARTEMENT`, `NUMEROTEL`, `MDPINSPECTEUR`) VALUES
-(1, 1, 'Flemming', 'David', 1, 0623298517, 'linch'),
-(2, 2, 'Minea', 'Douglas', 2, 0623521485, 'douglas');
+(1, 1, 'Flemming', 'Bob', 1, 0623298541, 'linch'),
+(2, 2, 'Minea', 'Douglas', 2, 0623521485, 'douglas'),
+(3, 3, 'Prince', 'Jacob', 2, 0745126325, 'gladiator'),
+(4, 1, 'Mauriah', 'Alexandre', 1, 0745851265, 'uquino');
 
 -- --------------------------------------------------------
 
@@ -567,7 +565,7 @@ CREATE TABLE IF NOT EXISTS `saison` (
   PRIMARY KEY (`IDSAISON`),
   UNIQUE KEY `LIBSAISON` (`LIBSAISON`),
   UNIQUE KEY `ANNEESAISON` (`ANNEESAISON`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 --
 -- Contenu de la table `saison`
@@ -575,7 +573,9 @@ CREATE TABLE IF NOT EXISTS `saison` (
 
 INSERT INTO `saison` (`IDSAISON`, `LIBSAISON`, `ANNEESAISON`) VALUES
 (1, 'Les Bleus', 2015),
-(2, 'La Grâce', 2016);
+(2, 'La Grâce', 2016),
+(3, 'Festival', 2017),
+(4, 'Eclosse', 2018);
 
 -- --------------------------------------------------------
 
@@ -608,7 +608,15 @@ CREATE TABLE IF NOT EXISTS `type_cuisine` (
   `IDTC` smallint(6) NOT NULL AUTO_INCREMENT,
   `LIBELLETC` char(32) DEFAULT NULL,
   PRIMARY KEY (`IDTC`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+--
+-- Contenu de la table `type_cuisine`
+--
+
+INSERT INTO `type_cuisine` (`IDTC`, `LIBELLETC`) VALUES
+(1, 'Chinoise'),
+(2, 'Allemande');
 
 -- --------------------------------------------------------
 
@@ -622,24 +630,26 @@ CREATE TABLE IF NOT EXISTS `visite` (
   `IDHEBERGEMENT` smallint(6) NOT NULL,
   `IDDATEV` smallint(6) DEFAULT NULL,
   `COMMENTAIREV` text,
-  `CONTREVISITE` tinyint(4) DEFAULT NULL,
+  `CONTREVISITE` tinyint(1) DEFAULT NULL,
   `NBETOILEPLUS` smallint(6) DEFAULT NULL,
   PRIMARY KEY (`IDVISITE`),
   KEY `I_FK_VISITE_INSPECTEUR` (`IDINSPECTEUR`),
   KEY `I_FK_VISITE_HEBERGEMENT` (`IDHEBERGEMENT`),
   KEY `I_FK_VISITE_DATEV` (`IDDATEV`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
 -- Contenu de la table `visite`
 --
 
 INSERT INTO `visite` (`IDVISITE`, `IDINSPECTEUR`, `IDHEBERGEMENT`, `IDDATEV`, `COMMENTAIREV`, `CONTREVISITE`, `NBETOILEPLUS`) VALUES
-(1, 1, 1, 1, 'DETHJQETYHJQRYJSRYJSHY', NULL, NULL);
+(1, 1, 1, 1, 'DETHJQETYHJQRYJSRYJSHY', NULL, NULL),
+(2, 2, 5, 2, 'jgcfjgfghfyfgkuhgfkjhgfkluglkglkuglujgljugljugljugflujglugfukgfkufglufglugfluguolglugfulglouglugfulgfulfgulfglougflougoluiydyugoufiyfgyupiiyfgiggjkwxcbnppirahlmhdqjirdb', 1, 4),
+(3, 1, 6, 2, 'z(yz''(thyue''(hye"(yhe(hye(ry(-uzutrhdjryjrjryjrjkyèjk', NULL, NULL);
 
 --
 -- Déclencheurs `visite`
---Vérifi que l'hébergement qu'on va inséré correspond à la spécialité de l'inspecteur
+--
 DROP TRIGGER IF EXISTS `avant_insertion_visite`;
 DELIMITER //
 CREATE TRIGGER `avant_insertion_visite` BEFORE INSERT ON `visite`
@@ -702,14 +712,16 @@ CREATE TABLE IF NOT EXISTS `vm_visites` (
   `Identifiant_Saison` smallint(6) NOT NULL DEFAULT '0',
   `Identifiant_Departement` smallint(6) NOT NULL DEFAULT '0',
   `Nom_Departement` char(32) CHARACTER SET latin1 DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Contenu de la table `vm_visites`
 --
 
 INSERT INTO `vm_visites` (`Identifiant_Visite`, `Identifiant_Inspecteur`, `Nom_Inspecteur`, `Prenom_Inspecteur`, `Nom_Hebergement`, `Adresse_Hebergement`, `Date_de_visite`, `Identifiant_Saison`, `Identifiant_Departement`, `Nom_Departement`) VALUES
-(1, 1, 'Flemming', 'David', 'LES FLINGUETTES', '19 Rue Des Capucins', '2015-12-08', 1, 1, 'Maine-Et-Loire');
+(1, 1, 'Flemming', 'James', 'LES FLINGUETTES', '19 Rue Des Capucins', '2015-12-08', 1, 1, 'Maine-Et-Loire'),
+(2, 2, 'Minea', 'Douglas', 'La Gullerma', '6 Rue Rémal', '2015-12-08', 1, 2, ' Loire-Atlantique'),
+(3, 1, 'Flemming', 'James', 'L''Everton', '10 Avenue Symbale', '2015-12-08', 1, 1, 'Maine-Et-Loire');
 
 --
 -- Contraintes pour les tables exportées

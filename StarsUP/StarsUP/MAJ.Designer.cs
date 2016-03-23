@@ -128,7 +128,7 @@
             this.label3.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.Location = new System.Drawing.Point(3, 10);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(444, 32);
+            this.label3.Size = new System.Drawing.Size(446, 32);
             this.label3.TabIndex = 0;
             this.label3.Text = "METTEZ A JOUR VOS INFORMATIONS";
             this.label3.Click += new System.EventHandler(this.label3_Click);
@@ -152,6 +152,7 @@
             this.btnOk.TabIndex = 5;
             this.btnOk.Text = "OK";
             this.btnOk.UseVisualStyleBackColor = true;
+            this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
             // 
             // btnReset
             // 

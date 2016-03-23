@@ -32,10 +32,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ClassConnect, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ClassConnect\ClassConnect\bin\Debug\ClassConnect.dll</HintPath>
-    </Reference>
     <Reference Include="itextsharp">
       <HintPath>.\itextsharp.dll</HintPath>
     </Reference>
@@ -68,6 +64,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commentaire.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Commentaire.Designer.cs">
+      <DependentUpon>Commentaire.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Connecter.cs" />
     <Compile Include="MAJ.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -109,6 +112,9 @@
     <Compile Include="Profil.Designer.cs">
       <DependentUpon>Profil.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Commentaire.resx">
+      <DependentUpon>Commentaire.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Connection.resx">
       <DependentUpon>Connection.cs</DependentUpon>
     </EmbeddedResource>
