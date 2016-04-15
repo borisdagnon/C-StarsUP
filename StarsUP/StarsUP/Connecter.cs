@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using System.Collections;
 using System.Data;
+using System.Windows.Forms;
+
 namespace ClassConnect
 {
     public class Connecter
@@ -26,8 +28,7 @@ namespace ClassConnect
 
         private DataSet dataSet = new DataSet();
 
-
-        private DataView dv_visite = new DataView(), dv_departement = new DataView(), dv_saison = new DataView(), dv_inspecteur = new DataView(), dv_etoile = new DataView();
+        private DataView dv_visite = new DataView(), dv_departement = new DataView(), dv_saison = new DataView(), dv_inspecteur = new DataView(), dv_etoile = new DataView(), dv_import2=new DataView(), dv_import3=new DataView();
 
        
 
@@ -102,6 +103,16 @@ namespace ClassConnect
             get { return dv_visite; }
             set { dv_visite = value; }
         }
+        public DataView Dv_import2
+        {
+            get { return dv_import2; }
+            set { dv_import2 = value; }
+        }
+        public DataView Dv_import3
+        {
+            get { return dv_import3; }
+            set { dv_import3 = value; }
+        }
         #endregion
 
         #region méthodes:
@@ -143,72 +154,8 @@ namespace ClassConnect
             }
         }
 
-        public String import2(String nomInsp, String date)
-        {
-            StringBuilder sb2 = new StringBuilder("");
-
-
-            StringBuilder sb = new StringBuilder();
-            sb.Append("SELECT * FROM inspecteur i INNER JOIN visite v ON i.IDINSPECTEUR=v.IDINSPECTEUR");
-            sb.Append(" INNER JOIN hebergement h ON v.IDHEBERGEMENT=h.IDHEBERGEMENT");
-            sb.Append(" INNER JOIN datev dv ON v.IDDATEV=dv.IDDATEV ");
-            sb.Append("INNER JOIN historique his ON h.IDHEBERGEMENT=his.IDHEBERGEMENT");
-            sb.Append(" INNER JOIN specialite s ON i.IDSPECIALITEI=s.IDSPECIALITE WHERE v.IDINSPECTEUR=");
-            sb.Append(" (SELECT i.IDINSPECTEUR FROM inspecteur WHERE NOMINSPECTEUR='" + nomInsp.ToString() + "') AND DATEV='" + date.ToString() + "'");
-            
-             MySqlDataReader dr;
-      
-            MySqlCommand cmd = new MySqlCommand(sb.ToString(), myConnection);
-           
-            try
-            {
-                dr = cmd.ExecuteReader();
-               
-
-                if(dr.HasRows)
-                {
-                     //lecture de ta table
-                    
-                        while (dr.Read())
-                        {
-                                sb2 = sb2.Append("Numéro Inspecteur :  " + (dr.GetString(0)) + "\n");
-                                sb2 = sb2.Append("\n");
-                                sb2.Append("Prénom Inspecteur :  "+ (dr.GetString(3))+"\n");
-                                sb2 = sb2.Append("\n");
-                                sb2 = sb2.Append("Nom Inspecteur :  " + (dr.GetString(2))+"\n");
-                                sb2 = sb2.Append("\n");
-                            try
-                            {
-                                DateTime d = Convert.ToDateTime( dr.GetString(21));
-                                string finaldate = d.ToString("dd/MM/yyyy");
-                                sb2 = sb2.Append("Date Visite :  " + (finaldate.ToString()) + "");
-                            }
-                            catch (Exception err)
-                            {
-                                errgrave = true;
-                            }
-                           
-                           
-                            dr.Read();
-                        
-                    }
-                }
-                dr.NextResult();
-                cmd.Dispose();
-                dr.Close();
-                dr.Dispose();
-              
-            }
-            catch (Exception err)
-            {
-                errgrave = true;
-               
-            }
-
-            return sb2.ToString();
-            
-        }
-        public List<String> infoInspecteur(String nominsp, String  mdpInsp)
+     
+       public List<String> infoInspecteur(String nominsp, String  mdpInsp)
         {
 
 
@@ -246,77 +193,29 @@ namespace ClassConnect
             dr.Dispose();
         }
 
-        
-
-        public String import3(String nomInsp, String date)
-        {
-            StringBuilder sb2 = new StringBuilder("");
-
-
-            StringBuilder sb = new StringBuilder();
-            sb.Append("SELECT * FROM inspecteur i INNER JOIN visite v ON i.IDINSPECTEUR=v.IDINSPECTEUR");
-            sb.Append(" INNER JOIN hebergement h ON v.IDHEBERGEMENT=h.IDHEBERGEMENT");
-            sb.Append(" INNER JOIN datev dv ON v.IDDATEV=dv.IDDATEV ");
-            sb.Append("INNER JOIN historique his ON h.IDHEBERGEMENT=his.IDHEBERGEMENT");
-            sb.Append(" INNER JOIN specialite s ON i.IDSPECIALITEI=s.IDSPECIALITE WHERE v.IDINSPECTEUR=");
-            sb.Append(" (SELECT i.IDINSPECTEUR FROM inspecteur WHERE NOMINSPECTEUR='" + nomInsp.ToString() + "') AND DATEV='" + date.ToString() + "'");
-
-            MySqlDataReader dr;
-
-            MySqlCommand cmd = new MySqlCommand(sb.ToString(), myConnection);
-
-            try
-            {
-                dr = cmd.ExecuteReader();
-
-
-                if (dr.HasRows)
-                {
-                    //lecture de ta table
-
-                    while (dr.Read())
-                    {
-                        sb2 = sb2.Append("Numéro Visite :  " + (dr.GetString(7)) + "\n");
-                        sb2 = sb2.Append("\n");
-                        sb2.Append("Nom Hébergement :  " + (dr.GetString(15)) + "\n");
-                        sb2 = sb2.Append("\n");
-                        sb2 = sb2.Append("Adresse Hébergement :  " + (dr.GetString(17)) + "\n");
-                        sb2 = sb2.Append("\n");
-                        sb2 = sb2.Append("Étoile Actuel :  " + (dr.GetString(24)) + "");
-
-
-
-
-                        dr.Read();
-
-
-
-                    }
-                }
-                dr.NextResult();
-                cmd.Dispose();
-                dr.Close();
-                dr.Dispose();
-
-            }
-            catch (Exception err)
-            {
-                errgrave = true;
-
-            }
-          
-            return sb2.ToString();
-            sb2 = null;
-        }
-        public void import(String nomInsp)
+       public void import(String nomInsp)
         {
             if (!connopen) return;
 
-           
-            MySqlCommand cmd = new MySqlCommand("call maj_vm_visites() ", myConnection);
-            
+            StringBuilder sb = new StringBuilder();
+            sb.Append("Select i.IDINSPECTEUR, PRENOMINSPECTEUR, NOMINSPECTEUR, DATEV");
+            sb.Append(" FROM inspecteur i INNER JOIN visite v ON i.IDINSPECTEUR = v.IDINSPECTEUR INNER JOIN datev d_v ON d_v.IDDATEV = v.IDDATEV");
+            sb.Append(" WHERE i.IDINSPECTEUR = (SELECT IDINSPECTEUR FROM INSPECTEUR WHERE NOMINSPECTEUR = '" + nomInsp + "') ");
 
-            mySqlDataAdapter.SelectCommand = new MySqlCommand(" select * from departement;select * from saison;select * from vm_visites where Nom_Inspecteur='" + nomInsp.ToString() + "';select * from inspecteur where NOMINSPECTEUR='"+nomInsp.ToString()+"';select IDVISITE,COMMENTAIREV,ETOILLE,v.IDHEBERGEMENT from visite v inner join historique h on v.IDHEBERGEMENT=h.IDHEBERGEMENT where  IDINSPECTEUR=(select IDINSPECTEUR from inspecteur where NOMINSPECTEUR='"+nomInsp.ToString()+"');", myConnection);
+            StringBuilder sb2 = new StringBuilder();
+            sb2.Append("SELECT v.IDVISITE,NOMHEBERGEMENT,ADRESSEHEBERGEMENT,ETOILLE,DATEV");
+            sb2.Append(" FROM visite v INNER JOIN hebergement h ON h.IDHEBERGEMENT = v.IDHEBERGEMENT");
+            sb2.Append(" INNER JOIN historique his ON v.IDVISITE = his.IDVISITE");
+            sb2.Append(" INNER JOIN datev d_v ON d_v.IDDATEV = v.IDDATEV");
+            sb2.Append(" WHERE v.IDINSPECTEUR = (SELECT IDINSPECTEUR FROM inspecteur WHERE NOMINSPECTEUR = '" + nomInsp + "')");
+
+          
+
+            MySqlCommand cmd = new MySqlCommand("call maj_vm_visites() ", myConnection);
+            MySqlCommand cmd2 = new MySqlCommand("CALL `maj_vm_saison`();", myConnection);
+          
+
+            mySqlDataAdapter.SelectCommand = new MySqlCommand("select * from departement;select * from vm_saison where Nom_Inspecteur='"+nomInsp+"';select * from vm_visites where Nom_Inspecteur='" + nomInsp.ToString() + "';select * from inspecteur where NOMINSPECTEUR='"+nomInsp.ToString()+"';select v.IDVISITE,COMMENTAIREV,ETOILLE,v.IDHEBERGEMENT from visite v inner join historique h on v.IDVISITE=h.IDVISITE where  IDINSPECTEUR=(select IDINSPECTEUR from inspecteur where NOMINSPECTEUR='"+nomInsp.ToString()+"');"+sb.ToString()+";"+sb2.ToString()+";", myConnection);
             try
             {
                 dataSet.Clear();
@@ -325,15 +224,19 @@ namespace ClassConnect
 
                 vcommand.CommandText = "SELECT AUTO_INCREMENT as last_id FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'visite'";
                 UInt64 der_visite = (UInt64)vcommand.ExecuteScalar();
-                dataSet.Tables[1].Columns[0].AutoIncrement = true;
-                dataSet.Tables[1].Columns[0].AutoIncrementSeed = Convert.ToInt64(der_visite);
-                dataSet.Tables[1].Columns[0].AutoIncrementStep = 1;
+                dataSet.Tables[2].Columns[0].AutoIncrement = true;
+                dataSet.Tables[2].Columns[0].AutoIncrementSeed = Convert.ToInt64(der_visite);
+                dataSet.Tables[2].Columns[0].AutoIncrementStep = 1;
+
 
                 dv_departement = dataSet.Tables[0].DefaultView;
                 dv_saison = dataSet.Tables[1].DefaultView;
                 dv_visite = dataSet.Tables[2].DefaultView;
                 dv_inspecteur = dataSet.Tables[3].DefaultView;
                 dv_etoile = dataSet.Tables[4].DefaultView;
+                dv_import2 = dataSet.Tables[5].DefaultView;
+                dv_import3 = dataSet.Tables[6].DefaultView;
+
 
                 chargement = true;
             }
@@ -342,9 +245,10 @@ namespace ClassConnect
                 errgrave = true;
             }
             cmd.Dispose();
+            cmd2.Dispose();
         }
 
-        public bool login(string pseudo, string mdp)
+       public bool login(string pseudo, string mdp)
         {
             bool ret;
 
@@ -385,14 +289,19 @@ namespace ClassConnect
                    {
                        vcommand.CommandText="SELECT COUNT(*) FROM inspecteur WHERE IDINSPECTEUR ='"+args.Row[0,DataRowVersion.Original]+"'";
                    }
-                   nb = (Int64)vcommand.ExecuteScalar();
+                  else
+                    {
+                        if (vtable == 'v')
+                        {
+                            vcommand.CommandText = "SELECT COUNT(*) FROM visite WHERE IDVISITE ='" + args.Row[0, DataRowVersion.Original] + "'";
+                        }
+                    }
                    //on veut savoir si l'inspecteur existe dans la bdd
-                   if(vtable=='v')
-                   {
-                       vcommand.CommandText = "SELECT COUNT(*) FROM visite WHERE IDVISITE ='" + args.Row[0, DataRowVersion.Original] + "'";
-                   }
-                   nb2 = (Int64)vcommand.ExecuteScalar();
-               }
+                  
+                    nb = (Int64)vcommand.ExecuteScalar();
+                }
+
+
                if(vaction=='u')
                {
                    if(nb==1)
@@ -401,19 +310,18 @@ namespace ClassConnect
                        {
                            msg = "pour le numéro de personne: " + args.Row[0, DataRowVersion.Original] + " impossible MAJ car enr modifié dans la base";
                        }
-                       rapport.Add(msg);
-                       errmaj = true;
-                   }
+                      else
+                        {
+                            if (vtable == 'v')
+                            {
+                                msg = "pour le numéro de visite: " + args.Row[0, DataRowVersion.Original] + " impossible MAJ car enr modifié dans la base";
+                            }
+                        }
 
-                   if (nb2 == 1)
-                   {
-                       if (vtable == 'v')
-                       {
-                           msg = "pour le numéro de visite: " + args.Row[0, DataRowVersion.Original] + " impossible MAJ car enr modifié dans la base";
-                       }
-                       rapport.Add(msg);
-                       errmaj = true;
-                   }
+                        rapport.Add(msg);
+                        errmaj = true;
+                    }
+                   
 
                    else
                    {
@@ -433,7 +341,7 @@ namespace ClassConnect
            }
         }
       
-        public void mod_inspecteur()
+       public void mod_inspecteur()
        {
            vaction = 'u';
            vtable = 'i';
@@ -456,23 +364,23 @@ namespace ClassConnect
            mySqlDataAdapter.RowUpdated -= new MySqlRowUpdatedEventHandler(onRowUpdated);
         
         }
-
-
-        public void mod_commentaire_etoile()
+        
+       public void mod_etoile()
         {
             vaction = 'u';
             vtable = 'v';
 
             if (!connopen) return;
             mySqlDataAdapter.RowUpdated += new MySqlRowUpdatedEventHandler(onRowUpdated);
-            mySqlDataAdapter.UpdateCommand = new MySqlCommand("UPDATE visite set COMMENTAIREV=?COMMENTAIREV WHERE IDVISITE=?IDVISITE", myConnection);
-            mySqlDataAdapter.UpdateCommand = new MySqlCommand("UPDATE historique set ETOILLE=?ETOILLE WHERE IDHEBERGEMENT=?IDHEBERGEMENT", myConnection);
+            
+            mySqlDataAdapter.UpdateCommand = new MySqlCommand("update visite v inner join historique h ON v.IDVISITE=h.IDVISITE SET ETOILLE=?ETOILLE,COMMENTAIREV=?COMMENTAIREV WHERE IDVISITE=?IDVISITE", myConnection);
 
             mySqlDataAdapter.UpdateCommand.Parameters.Add("?ETOILLE", MySqlDbType.Text, 655, "ETOILLE");
-            mySqlDataAdapter.UpdateCommand.Parameters.Add("?COMMENTAIREV", MySqlDbType.Text, 655, "COMMENTAIREV");
-            mySqlDataAdapter.UpdateCommand.Parameters.Add("?IDVISITE", MySqlDbType.Text, 655, "IDVISITE");
-            mySqlDataAdapter.UpdateCommand.Parameters.Add("?IDHEBERGEMENT", MySqlDbType.Text, 655, "IDHEBERGEMENT");
            
+            mySqlDataAdapter.UpdateCommand.Parameters.Add("?IDVISITE", MySqlDbType.Text, 655, "IDVISITE");
+
+            mySqlDataAdapter.UpdateCommand.Parameters.Add("?COMMENTAIREV", MySqlDbType.Text, 3000, "COMMENTAIREV");
+
             mySqlDataAdapter.ContinueUpdateOnError = true;
 
             DataTable table = dataSet.Tables[4];
@@ -483,15 +391,18 @@ namespace ClassConnect
 
         }
 
-        public bool export()
+      
+
+       public bool export()
         {
             bool ret = false;
             if (connopen)
             {
                 try
                 {
-                    mod_inspecteur();
-                    mod_commentaire_etoile();
+                   mod_inspecteur();
+                    mod_etoile();
+                   
                     ret = true;
                 }
 

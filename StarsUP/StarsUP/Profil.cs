@@ -22,7 +22,7 @@ namespace StarsUP
         PictureBox PB;
         MySqlConnection cn = new MySqlConnection();//Connection pour les requêtes 
         MySqlCommand cmd = new MySqlCommand();
-        MySqlDataReader dr;
+        MySqlDataReader dr=null;
         String nomInsp;
         String mdpInsp;
         int nbClic;//Cette variable sert à connaître le nombre de clic qu'il y a eu sur le bouton Profil dans Index
@@ -502,9 +502,18 @@ namespace StarsUP
 
         }
 
-       
+        private void Profil_FormClosed(object sender, FormClosedEventArgs e)
+        {try
+            {
+                dr.Close();
+            }
+            catch(Exception err)
+            {
+
+            }
 
 
-
+            
+        }
     }
 }

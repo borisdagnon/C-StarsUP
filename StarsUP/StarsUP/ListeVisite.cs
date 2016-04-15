@@ -21,17 +21,19 @@ namespace StarsUP
             List<KeyValuePair<int, string>> Flist = new List<KeyValuePair<int, string>>();
             Flist.Add(new KeyValuePair<int, string>(0, "Tous les départements"));
             cbDepartement.Items.Add("Tous les départements");
-
-            List<KeyValuePair<int, string>> FlistS = new List<KeyValuePair<int, string>>();
-            FlistS.Add(new KeyValuePair<int, string>(0, "Toutes les saisons"));
-            cbSaison.Items.Add("Toutes les saisons");
-
+            
             for (int i = 0; i < controller.Vmodel.Dv_departement.ToTable().Rows.Count; i++) 
             {
               //  MessageBox.Show(controller.Vmodel.Dv_departement.ToTable().Rows[i][0].ToString() + " - " + controller.Vmodel.Dv_departement.ToTable().Rows[i][2].ToString());
                 Flist.Add(new KeyValuePair<int, string>(Convert.ToInt32(controller.Vmodel.Dv_departement.ToTable().Rows[i][0].ToString()),
                 controller.Vmodel.Dv_departement.ToTable().Rows[i][2].ToString()));
             }
+
+
+            List<KeyValuePair<int, string>> FlistS = new List<KeyValuePair<int, string>>();
+            FlistS.Add(new KeyValuePair<int, string>(0, "Toutes les saisons"));
+            cbSaison.Items.Add("Toutes les saisons");
+
             for (int i = 0; i < controller.Vmodel.Dv_saison.ToTable().Rows.Count; i++)
             {
                 FlistS.Add(new KeyValuePair<int, string>(Convert.ToInt32(controller.Vmodel.Dv_saison.ToTable().Rows[i][0].ToString()),
@@ -56,8 +58,9 @@ namespace StarsUP
 
             dataGV.Columns[0].Visible = false;
             dataGV.Columns[1].Visible = false;
-            dataGV.Columns[6].Visible = false;
             dataGV.Columns[7].Visible = false;
+            dataGV.Columns[8].Visible = false;
+            dataGV.Columns[11].Visible = false;
 
             int vwidth = dataGV.RowHeadersWidth;
             for(int i = 0;i<dataGV.Columns.Count;i++)
@@ -122,7 +125,7 @@ namespace StarsUP
             string Filter = "Date_de_visite>='"+dateTimePicker1.Value.ToShortDateString()+"' AND Date_de_visite<='"+dateTimePicker2.Value.ToShortDateString()+"'";
             controller.Vmodel.Dv_visite.RowFilter=Filter;
             //Il s'agit du filtre de la saison
-            string FilterSaison = "ANNEESAISON='"+dateTimePicker1.Value.Year.ToString()+"'";
+            string FilterSaison = "Annee_Saison='" + dateTimePicker1.Value.Year.ToString()+"'";
             controller.Vmodel.Dv_saison.RowFilter = FilterSaison;
             
             //On crée une nouvelle liste pour lui ajouter les nouvelles saison en fonction de l'année de la date
@@ -181,18 +184,36 @@ namespace StarsUP
         {
 
         }
-
+        /// <summary>
+        /// Au clic de ce boutton on transfert l'option u et le numéro de visite présent dans le datagridview pour la modification du commentaire
+        /// et des étoiles en appelant la méthode crud_etoile qui se trouve dans la classe controller
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button1_Click(object sender, EventArgs e)
         {
+            if(dataGV.Rows.Count!=0)
+            {
+                if (dataGV.Rows[dataGV.SelectedRows[0].Index].Cells[0].Value != null)
+                {
+                    controller.crud_etoile('u', dataGV.Rows[dataGV.SelectedRows[0].Index].Cells[0].Value.ToString());
+
+                    bindingSource1.MoveLast();
+                    bindingSource1.MoveFirst();
+                    dataGV.Refresh();
+                }
+            }
+           
+            else
+            {
+                MessageBox.Show("Veuillez sélectionner une visite", "Visites", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
             
-            controller.crud_etoile('u', dataGV.Rows[dataGV.SelectedRows[0].Index].Cells[0].Value.ToString());
-            bindingSource1.MoveLast();
-            bindingSource1.MoveFirst();
-            dataGV.Refresh();
         }
 
-        
-
-
+        private void ListeVisite_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            controller.Vmodel.Dv_visite.RowFilter = null;
+        }
     }
 }

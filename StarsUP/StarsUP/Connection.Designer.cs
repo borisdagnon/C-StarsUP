@@ -33,11 +33,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.tbNomUtil = new System.Windows.Forms.TextBox();
             this.tbMDP = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.btnConnection = new System.Windows.Forms.Button();
-            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -74,29 +70,10 @@
             this.tbMDP.TabIndex = 1;
             this.tbMDP.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tbMDP_KeyUp);
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Segoe UI", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(243, 12);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(157, 50);
-            this.label3.TabIndex = 0;
-            this.label3.Text = "StarsUP";
-            // 
-            // panel1
-            // 
-            this.panel1.BackColor = System.Drawing.Color.Gray;
-            this.panel1.Controls.Add(this.label3);
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(504, 62);
-            this.panel1.TabIndex = 4;
-            // 
             // btnConnection
             // 
-            this.btnConnection.Image = ((System.Drawing.Image)(resources.GetObject("btnConnection.Image")));
-            this.btnConnection.Location = new System.Drawing.Point(170, 249);
+            this.btnConnection.Image = global::StarsUP.Properties.Resources.icon_store_member1;
+            this.btnConnection.Location = new System.Drawing.Point(252, 261);
             this.btnConnection.Name = "btnConnection";
             this.btnConnection.Size = new System.Drawing.Size(177, 48);
             this.btnConnection.TabIndex = 2;
@@ -106,10 +83,9 @@
             // 
             // Connection
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(605, 332);
-            this.Controls.Add(this.panel1);
             this.Controls.Add(this.btnConnection);
             this.Controls.Add(this.tbMDP);
             this.Controls.Add(this.tbNomUtil);
@@ -121,8 +97,6 @@
             this.Name = "Connection";
             this.Text = "Connection";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Connection_FormClosing);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -141,9 +115,6 @@
         }
         private System.Windows.Forms.TextBox tbMDP;
         private System.Windows.Forms.Button btnConnection;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Panel panel1;
-        private System.ComponentModel.BackgroundWorker backgroundWorker1;
     }
 }
 

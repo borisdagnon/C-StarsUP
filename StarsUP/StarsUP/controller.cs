@@ -37,6 +37,12 @@ namespace StarsUP
            
         }
 
+        /// <summary>
+        /// Cette méthode crud personne permet de charger les informations de l'inspecteur dans les textbox respectives
+        /// Elle a besoin d'un caractèere et d'un clé pour savoir quoi faire
+        /// </summary>
+        /// <param name="c">Correspond au caractère u=update,d=delete,c=create</param>
+        /// <param name="cle">Cette clé correspond à l'identifiant de l'inspecteur</param>
        public static void crud_Inspecteur(Char c, String cle)
         {
             int index = 0;
@@ -56,6 +62,11 @@ namespace StarsUP
            M.ShowDialog();
           
         }
+        /// <summary>
+        /// Cette méthode permet de charger les information liées au commentaire et à l'étoile dans une richtextbox pour le commentaire et une trackb
+        /// </summary>
+        /// <param name="c">Correspond au caractère u=update,d=delete,c=create</param>
+        /// <param name="cle">Correspond à la clé de l'identifiant de visite</param>
         public static void crud_etoile(Char c, String cle)
        {
            int index = 0;
@@ -67,19 +78,26 @@ namespace StarsUP
                vmodel.Dv_etoile.Sort = sort;
                index=vmodel.Dv_etoile.Find(cle);
                co.TbCommentaire.Text = controller.vmodel.Dv_etoile[index][1].ToString();
-               co.TbEtoile.Value =Convert.ToInt32( controller.vmodel.Dv_etoile[index][2]);
+               co.TbEtoile.Value =Convert.ToInt32( controller.vmodel.Dv_etoile[index][2].ToString());
                
            }
 
-           co.ShowDialog();
 
-       }
-        /// <summary>
-        /// Il s'agit d'une expression régulière pour vérifier le numéro de téléphone lorsqu'il change
-        /// Si il est correcte on renvoie un message positif sinon un warning et on ne change pas le numéro
-        /// </summary>
-        /// <param name="num"></param>
-        /// <returns></returns>
+           co.ShowDialog();
+            if(co.DialogResult== DialogResult.OK)
+            {
+                controller.Vmodel.Dv_etoile[index]["COMMENTAIREV"] = co.TbCommentaire.Text.ToString();
+                controller.Vmodel.Dv_etoile[index]["ETOILLE"] = Convert.ToInt16(co.TbEtoile.Value);
+                MessageBox.Show("Les données ont été mises à jour", "Mise à Jour", MessageBoxButtons.OK, MessageBoxIcon.Information);
+               
+            }
+            else
+            {
+                MessageBox.Show("Annulation : aucune donnée enregistrée");
+                co.Dispose();
+            }
+        }
+       
        
     }
 }

@@ -115,6 +115,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(605, 332);
+
             this.Controls.Add(this.btnModifier);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -123,9 +124,11 @@
             this.Controls.Add(this.lbNumero);
             this.Controls.Add(this.lbNom);
             this.Controls.Add(this.pictureBox1);
+
             this.Name = "Profil";
             this.Text = "Profil";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Profil_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Profil_FormClosed);
             this.Load += new System.EventHandler(this.Profil_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);

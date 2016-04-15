@@ -43,9 +43,17 @@ namespace StarsUP
         }
 
        
-
+        /// <summary>
+        /// Cette méthode se décleche lorsqu'on quitte la forme Index sans cliquer sur export.
+        /// Elle permet de d'appeler la méthode d'export du boutton export présente plus bas
+        /// On crée ensuite une nouvelle forme de connection, qu'on affiche
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Index_FormClosed(object sender, FormClosedEventArgs e)
         {
+
+            exportToolStripMenuItem_Click(sender, e);
             controller.Vmodel.sedeconnecter();
             Connection C = new Connection();
             C.Show();
@@ -78,7 +86,8 @@ namespace StarsUP
                 else MessageBox.Show("Error Import", "Import", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             }
-            controller.Vmodel.seconnecter();
+           
+
         }
 
         /// <summary>
@@ -104,7 +113,11 @@ namespace StarsUP
         {
           
         }
-
+        /// <summary>
+        /// Cette méthode se déclenche sous l'action du clic export et permet d'appeler le controleur pour se connecter et pour exporter
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void exportToolStripMenuItem_Click(object sender, EventArgs e)
         {
             controller.Vmodel.seconnecter();
@@ -116,7 +129,16 @@ namespace StarsUP
             {
                 MessageBox.Show("Connexion réussie", "OK", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 if (!controller.Vmodel.export())
-                    MessageBox.Show("Erreur Export");
+                {
+                    MessageBox.Show("L'exportation a rencontré un problème", "Erreur Export", MessageBoxButtons.OK,MessageBoxIcon.Information);
+
+                }
+                else
+                {
+                    MessageBox.Show("L'exportation s'est bien effectuée", "Exportation", MessageBoxButtons.OK,MessageBoxIcon.Information);
+
+                }
+                //Enfin on se déconnecte après l'export ou l'échec de celui-ci
                 controller.Vmodel.sedeconnecter();
             }
         }

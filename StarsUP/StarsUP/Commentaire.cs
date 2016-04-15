@@ -32,20 +32,22 @@ namespace StarsUP
         {
 
         }
-
+        /// <summary>
+        /// Lorsqu'on clic sur ce boutton on modifi dans le dataview les valeurs des champs.
+        /// Ici on change l'étoile et le commentaire
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button1_Click(object sender, EventArgs e)
         {
-            
-            
-            int index=0;
-            string n = controller.Vmodel.Dv_visite[index]["Identifiant_Visite"].ToString();
-            string Filter = "IDVISITE='" + n + "'";
-            controller.Vmodel.Dv_etoile.RowFilter = Filter;
-
-            controller.Vmodel.Dv_etoile[index]["COMMENTAIREV"] = tbCommentaire.Text;
-            controller.Vmodel.Dv_etoile[index]["ETOILLE"] = Convert.ToInt16(tbEtoile.Value);
-            MessageBox.Show("Les données ont été mises à jour", "Mise à Jour", MessageBoxButtons.OK, MessageBoxIcon.Information);
            
+            
+           
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

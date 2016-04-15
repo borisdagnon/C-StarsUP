@@ -33,6 +33,7 @@ namespace StarsUP
             List<KeyValuePair<int, string>> Flist = new List<KeyValuePair<int, string>>();
             Flist.Add(new KeyValuePair<int, string>(0, "Visites")); //on ajoute à l'index 0 le string "Visites", c'st donc le premier qu'on verra
             cbVisites.Items.Add("Visites");
+            
 
             for (int i = 0; i < controller.Vmodel.Dv_visite.ToTable().Rows.Count; i++)
             {
@@ -71,15 +72,43 @@ namespace StarsUP
             StringBuilder sb = new StringBuilder("");
            
            string res= cbVisites.Text;
+            
             try
             {
                 DateTime d = DateTime.Parse(res);
-                string final = d.ToString("yyy/MM/dd");
-                MessageBox.Show(nomInsp + " " + final);
-                String requete =controller.Vmodel.import2(nomInsp.ToString(), final.ToString());
-                String requete2 = controller.Vmodel.import3(nomInsp.ToString(), final.ToString());
-                MessageBox.Show(requete.ToString());
-                MessageBox.Show(requete2.ToString());
+                string final = d.ToString("yyy/MM/dd"); //On crée un filtre de date
+                
+                String requete = null;//On met les variables à null
+                String requete2 = null;//On met les variables à null
+                String filter= "DATEV='"+final+"'";
+                controller.Vmodel.Dv_import2.RowFilter = filter;//On applique le filtre au dataview qui contient les informations de l'inspecteur
+                controller.Vmodel.Dv_import3.RowFilter = filter;//On applique le filtre au dataview qui contient les informations de la visite
+                String filter2 = "IDVISITE='" + Convert.ToInt16(cbVisites.SelectedValue.ToString()) + "'";//On filtre avec l'identifiant de visite pour l'unicité de la visite
+                //Il faut se souvenir qu'on a fait un List<KeyValuePair<int, string>> pour remplir la combobox, ce qui veut dire que le value dans ce cas-ci est l'identifiant de visite qu'on récupère dans la dataview de visite
+                //C'est grâce à elle qu'on récupère les informations dans la combobox
+                controller.Vmodel.Dv_import3.RowFilter = filter2;
+
+
+
+                //On fait une concaténation des informations dans les varaibles respectives requete et requete2
+
+                requete += "Identifiant Inspecteur : " + controller.Vmodel.Dv_import2[0]["IDINSPECTEUR"].ToString() + "\n\r";
+                    requete += "Prénom Inspecteur : " +  controller.Vmodel.Dv_import2[0]["PRENOMINSPECTEUR"].ToString() + "\n\r";
+                    requete += "Nom Inspecteur : " + controller.Vmodel.Dv_import2[0]["NOMINSPECTEUR"].ToString() + "\n\r";
+                String date = controller.Vmodel.Dv_import2[0]["DATEV"].ToString();
+                DateTime.Parse(date).ToString("dd/MM/yyy");
+                    requete += "Date Visite : " +  date.Remove(10);
+                    
+
+                
+                    requete2 += "Identifiant Visite : " + controller.Vmodel.Dv_import3[0]["IDVISITE"].ToString() + "\n\r";
+                    requete2 +="Nom Hébergement : "+ controller.Vmodel.Dv_import3[0]["NOMHEBERGEMENT"].ToString() + "\n\r";
+                    requete2 += "Adresse Hébergement : "+controller.Vmodel.Dv_import3[0]["ADRESSEHEBERGEMENT"].ToString() + "\n\r";
+                    requete2 += "Étoile Hébergement : "+controller.Vmodel.Dv_import3[0]["ETOILLE"].ToString() + "\n\r";
+                    
+
+                    MessageBox.Show(requete.ToString());
+                    MessageBox.Show(requete2.ToString());
 
                 
                 try
@@ -138,9 +167,6 @@ namespace StarsUP
            
         }
 
-        private void GenerationPDF_FormClosing(object sender, FormClosingEventArgs e)
-        {
-
-        }
+       
     }
 }

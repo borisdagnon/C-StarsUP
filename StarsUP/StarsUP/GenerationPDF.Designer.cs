@@ -63,8 +63,7 @@
             this.ForeColor = System.Drawing.SystemColors.ControlText;
             this.Name = "GenerationPDF";
             this.Text = "GenerationPDF";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GenerationPDF_FormClosing);
-            this.Load += new System.EventHandler(this.GenerationPDF_Load);
+             this.Load += new System.EventHandler(this.GenerationPDF_Load);
             this.ResumeLayout(false);
 
         }

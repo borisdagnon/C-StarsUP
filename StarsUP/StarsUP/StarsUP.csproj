@@ -78,6 +78,11 @@
       <DependentUpon>MAJ.cs</DependentUpon>
     </Compile>
     <Compile Include="Path.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Session.cs" />
     <Compile Include="Connection.cs">
       <SubType>Form</SubType>
@@ -143,11 +148,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -161,15 +161,16 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\icon-store-member.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\icon-store-member.ico" />
-  </ItemGroup>
-  <ItemGroup>
+    <Content Include="Properties\ebonyblack.jpg" />
+    <Content Include="Properties\stars.jpg" />
+    <None Include="Resources\stars.jpg" />
+    <None Include="Resources\clearbrown.jpg" />
+    <None Include="Properties\icon-store-member.ico" />
+    <None Include="Properties\icon-store-member.png" />
     <None Include="bin\Debug\779-metallic-mesh-1920x1080-abstract-wallpaper.jpg" />
     <Content Include="MetroFramework.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

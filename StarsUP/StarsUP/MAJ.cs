@@ -104,6 +104,12 @@ namespace StarsUP
 
         }
 
+        /// <summary>
+        /// Il s'agit d'une expression régulière pour vérifier le numéro de téléphone lorsqu'il change
+        /// Si il est correcte on renvoie un message positif sinon un warning et on ne change pas le numéro
+        /// </summary>
+        /// <param name="num"></param>
+        /// <returns></returns>
         private static bool verif_numero(string num)
         {
             bool ret = false;
