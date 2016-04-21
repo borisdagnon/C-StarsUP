@@ -64,6 +64,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commentaire Contre Visite.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Commentaire Contre Visite.Designer.cs">
+      <DependentUpon>Commentaire Contre Visite.cs</DependentUpon>
+    </Compile>
     <Compile Include="Commentaire.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -71,6 +77,12 @@
       <DependentUpon>Commentaire.cs</DependentUpon>
     </Compile>
     <Compile Include="Connecter.cs" />
+    <Compile Include="ContreVisite.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ContreVisite.Designer.cs">
+      <DependentUpon>ContreVisite.cs</DependentUpon>
+    </Compile>
     <Compile Include="MAJ.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -117,11 +129,17 @@
     <Compile Include="Profil.Designer.cs">
       <DependentUpon>Profil.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Commentaire Contre Visite.resx">
+      <DependentUpon>Commentaire Contre Visite.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Commentaire.resx">
       <DependentUpon>Commentaire.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Connection.resx">
       <DependentUpon>Connection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ContreVisite.resx">
+      <DependentUpon>ContreVisite.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GenerationPDF.resx">
       <DependentUpon>GenerationPDF.cs</DependentUpon>

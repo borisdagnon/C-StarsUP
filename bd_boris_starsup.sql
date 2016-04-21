@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Jeu 14 Avril 2016 à 15:51
+-- Généré le :  Lun 18 Avril 2016 à 16:35
 -- Version du serveur :  5.6.17
 -- Version de PHP :  5.5.12
 
@@ -64,6 +64,23 @@ BEGIN
        END IF;
         END IF;
        END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `maj_vm_contrevisite`()
+    NO SQL
+BEGIN
+TRUNCATE vm_contrevisite;
+INSERT INTO vm_contrevisite
+SELECT IDCONTREVISITE AS Identifiant_Contrevisite, i.IDINSPECTEUR AS Identifiant_Inspecteur, 
+NOMINSPECTEUR AS Nom_Inspecteur, PRENOMINSPECTEUR AS Prenom_Inspecteur, NOMHEBERGEMENT AS Nom_Hebergement, 
+ADRESSEHEBERGEMENT AS Adress_Hebergement, DATEV AS Date_de_visite, s.IDSAISON AS Identifiant_Saison,
+ d.IDDEPARTEMENT AS Identifiant_Departement, LIBDEPARTEMENT AS Nom_Departement, LIBSAISON AS Nom_Saison, 
+ YEAR(DATEV) AS Annee_Date_Visite FROM contrevisite c INNER JOIN inspecteur i ON c.IDINSPECTEUR=i.IDINSPECTEUR
+INNER JOIN saison s ON c.IDSAISON=s.IDSAISON
+INNER JOIN visite v ON v.IDVISITE=c.IDVISITE
+INNER JOIN hebergement h ON h.IDHEBERGEMENT=v.IDHEBERGEMENT
+INNER JOIN datev dv ON v.IDDATEV=dv.IDDATEV
+INNER JOIN departement d ON d.IDDEPARTEMENT=h.IDDEPARTEMENT;
+END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `maj_vm_saison`()
 BEGIN
@@ -318,6 +335,7 @@ IF EXISTS(SELECT * FROM visite WHERE IDVISITE=NEW.IDVISITE AND IDINSPECTEUR=NEW.
 
  END IF;
  END IF;
+
 END
 //
 DELIMITER ;
@@ -331,8 +349,9 @@ DELIMITER ;
 CREATE TABLE IF NOT EXISTS `datev` (
   `IDDATEV` smallint(6) NOT NULL AUTO_INCREMENT,
   `DATEV` date DEFAULT NULL,
-  PRIMARY KEY (`IDDATEV`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+  PRIMARY KEY (`IDDATEV`),
+  UNIQUE KEY `DATEV` (`DATEV`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
 
 --
 -- Contenu de la table `datev`
@@ -340,7 +359,12 @@ CREATE TABLE IF NOT EXISTS `datev` (
 
 INSERT INTO `datev` (`IDDATEV`, `DATEV`) VALUES
 (1, '2015-12-08'),
-(2, '2016-03-11');
+(2, '2016-03-11'),
+(3, '2016-04-18'),
+(4, '2016-04-19'),
+(5, '2016-04-20'),
+(6, '2016-04-21'),
+(7, '2016-04-22');
 
 -- --------------------------------------------------------
 
@@ -470,9 +494,9 @@ CREATE TABLE IF NOT EXISTS `historique` (
 --
 
 INSERT INTO `historique` (`IDVISITE`, `ETOILLE`) VALUES
-(1, 0),
+(1, 5),
 (2, 1),
-(3, 2);
+(3, 4);
 
 -- --------------------------------------------------------
 
@@ -492,7 +516,8 @@ CREATE TABLE IF NOT EXISTS `hotel` (
 INSERT INTO `hotel` (`IDHEBERGEMENT`) VALUES
 (1),
 (4),
-(6);
+(6),
+(7);
 
 --
 -- Déclencheurs `hotel`
@@ -694,16 +719,17 @@ CREATE TABLE IF NOT EXISTS `visite` (
   KEY `I_FK_VISITE_HEBERGEMENT` (`IDHEBERGEMENT`),
   KEY `I_FK_VISITE_DATEV` (`IDDATEV`),
   KEY `IDSAISON` (`IDSAISON`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 --
 -- Contenu de la table `visite`
 --
 
 INSERT INTO `visite` (`IDVISITE`, `IDINSPECTEUR`, `IDHEBERGEMENT`, `IDDATEV`, `IDSAISON`, `COMMENTAIREV`, `CONTREVISITE`, `NBETOILEPLUS`) VALUES
-(1, 1, 1, 1, 1, 'DETHJQETY', 0, NULL),
+(1, 1, 1, 1, 1, 'Blblblblblblbllbl', 1, NULL),
 (2, 2, 5, 2, 2, 'jgcfjgfghfydb', 1, 4),
-(3, 1, 6, 2, 3, 'fsdgdfbgsfgsfgsdfgsdfgsdfgsdgsdfgsdgsdfgsdfgsfdgsdfg', 0, NULL);
+(3, 1, 6, 2, 3, 'Boris', 0, NULL),
+(4, 1, 7, 7, 4, NULL, NULL, NULL);
 
 --
 -- Déclencheurs `visite`
@@ -758,6 +784,27 @@ CREATE TRIGGER `avant_insertion_visite` BEFORE INSERT ON `visite`
   END
 //
 DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `vm_contrevisite`
+--
+
+CREATE TABLE IF NOT EXISTS `vm_contrevisite` (
+  `Identifiant_Contrevisite` smallint(6) DEFAULT NULL,
+  `Identifiant_Inspecteur` smallint(6) DEFAULT NULL,
+  `Nom_Inspecteur` char(32) DEFAULT NULL,
+  `Prenom_Inspecteur` char(32) DEFAULT NULL,
+  `Nom_Hebergement` varchar(30) DEFAULT NULL,
+  `Adresse_Hebergement` varchar(30) DEFAULT NULL,
+  `Date_de_visite` date DEFAULT NULL,
+  `Identifiant_Saison` smallint(6) DEFAULT NULL,
+  `Identifiant_Departement` smallint(6) DEFAULT NULL,
+  `Nom_Departement` char(32) DEFAULT NULL,
+  `Nom_Saison` char(32) DEFAULT NULL,
+  `Annee_Date_Visite` year(4) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 

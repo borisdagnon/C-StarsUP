@@ -142,5 +142,11 @@ namespace StarsUP
                 controller.Vmodel.sedeconnecter();
             }
         }
+
+        private void listeContreVisitesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ContreVisites cv = new ContreVisites();
+                cv.Show();
+        }
     }
 }

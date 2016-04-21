@@ -74,6 +74,8 @@ CREATE TRIGGER avant_insertion_visite BEFORE INSERT
 ON visite FOR EACH ROW
 BEGIN
 
+ 
+           
 
           DECLARE nom_spe varchar(30) DEFAULT '';
           SELECT (LIBSPECIALITE) INTO nom_spe FROM inspecteur i INNER JOIN specialite s ON i.IDSPECIALITEI=s.IDSPECIALITE WHERE i.IDINSPECTEUR=NEW.IDINSPECTEUR;
@@ -116,6 +118,9 @@ BEGIN
      signal sqlstate '16440' SET message_text='Cette cobinaison existe déjà' ;
  
            END IF;
+          
+
+
   END
 ----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -156,6 +161,8 @@ IF EXISTS(SELECT * FROM visite WHERE IDVISITE=NEW.IDVISITE AND IDINSPECTEUR=NEW.
              signal sqlstate'16440' SET message_text='Visite Impossible: le département de l\'inspecteur et de l\'hébergement sont différents';
               END IF;
 
+
+
           IF nom_spe='Hotel'
           THEN
                                          IF NOT EXISTS(SELECT * FROM hotel WHERE IDHEBERGEMENT=var2) 
@@ -183,6 +190,13 @@ IF EXISTS(SELECT * FROM visite WHERE IDVISITE=NEW.IDVISITE AND IDINSPECTEUR=NEW.
 
  END IF;
  END IF;
+ IF EXISTS(SELECT * FROM visite v INNER JOIN hebergement h ON v.IDHEBERGEMENT=h.IDHEBERGEMENT WHERE v.IDVISITE=NEW.IDVISITE AND IDINSPECTEUR=NEW.IDINSPECTEUR AND v.IDHEBERGEMENT=h.IDHEBERGEMENT AND IDSAISON=NEW.IDSAISON)
+ THEN
+ 
+     signal sqlstate '16440' SET message_text='Cette cobinaison existe déjà' ;
+ 
+           END IF;
+ 
 END
 
 
@@ -285,14 +299,7 @@ BEGIN
 
         
 
-        CREATE TRIGGER avant_maj_historique BEFORE UPDATE
-        ON historique FOR EACH ROW
-       BEGIN
-     
-           
-      CALL maj_etoille(NEW.IDHEBERGEMENT,NEW.IDSAISON,NEW.ETOILLE);
-
-END
+      
 
 CREATE PROCEDURE maj_ajout_etoille (IN IdVisite int(6), IN EtoileAj int(6))
     BEGIN
@@ -319,24 +326,22 @@ CREATE PROCEDURE maj_ajout_etoille (IN IdVisite int(6), IN EtoileAj int(6))
        
 
        CREATE PROCEDURE maj_diminuer_etoille (IN IdVisite smallint(6), IN EtoileAj smallint(6))
-    BEGIN
-        
-        DECLARE num int(6) DEFAULT 0;
-            IF EXISTS (SELECT * FROM visite WHERE IDVISITE=IdVisite)
-            THEN
-    
-                   IF EXISTS(SELECT * FROM historique WHERE IDVISITE=IdVisite AND ETOILLE > 1) 
-                  THEN
-                IF EXISTS(SELECT * FROM historique WHERE IDVISITE=IdVisite AND ETOILLE-EtoileAj>= 1)
-                 THEN
-            UPDATE historique SET ETOILLE=ETOILLE-EtoileAj WHERE IDVISITE=IdVisite;
-                ELSE
-                 UPDATE historique SET ETOILLE=ETOILLE WHERE IDVISITE=IdVisite;
-       END IF;
+BEGIN
+       
+       
+        IF EXISTS(SELECT * FROM historique WHERE IDVISITE=IdVisite AND ETOILLE > 1) 
+       THEN
+                       IF EXISTS(SELECT * FROM historique WHERE IDVISITE=IdVisite AND ETOILLE-EtoileAj>= 1)
+                       THEN
+                           UPDATE historique SET ETOILLE=ETOILLE-EtoileAj WHERE IDVISITE=IdVisite;
+                       ELSE
+                        UPDATE historique SET ETOILLE=ETOILLE WHERE IDVISITE=IdVisite;
+                       END IF;
                   
-       END IF;
         END IF;
-       END
+   
+END
+
 
 
      CREATE PROCEDURE maj_vm_saison()
@@ -351,3 +356,93 @@ INNER JOIN saison s ON s.IDSAISON = v.IDSAISON
 INNER JOIN saison_annee s_a ON s_a.IDSAISON = v.IDSAISON 
 WHERE ANNEE = YEAR(DATEV);
 END
+
+
+CREATE PROCEDURE maj_vm_contrevisite()
+BEGIN
+DECLARE var date DEFAULT NULL;
+SELECT DATEV INTO var FROM datev dv INNER JOIN contrevisite c ON dv.IDDATEV=c.IDDATEV;
+TRUNCATE vm_contrevisite;
+INSERT INTO vm_contrevisite
+SELECT IDCONTREVISITE AS Identifiant_Contrevisite, i.IDINSPECTEUR AS Identifiant_Inspecteur, 
+NOMINSPECTEUR AS Nom_Inspecteur, PRENOMINSPECTEUR AS Prenom_Inspecteur, NOMHEBERGEMENT AS Nom_Hebergement, 
+ADRESSEHEBERGEMENT AS Adress_Hebergement, DATEV AS Date_de_visite,var AS Date_de_contrevisite,  s.IDSAISON AS Identifiant_Saison,
+ d.IDDEPARTEMENT AS Identifiant_Departement, LIBDEPARTEMENT AS Nom_Departement, LIBSAISON AS Nom_Saison, 
+ YEAR(DATEV) AS Annee_Date_Visite,YEAR(var) AS Annee_Date_Contrevisite FROM contrevisite c INNER JOIN inspecteur i ON c.IDINSPECTEUR=i.IDINSPECTEUR
+INNER JOIN saison s ON c.IDSAISON=s.IDSAISON
+INNER JOIN visite v ON v.IDVISITE=c.IDVISITE
+INNER JOIN hebergement h ON h.IDHEBERGEMENT=v.IDHEBERGEMENT
+INNER JOIN datev dv ON v.IDDATEV=dv.IDDATEV
+INNER JOIN departement d ON d.IDDEPARTEMENT=h.IDDEPARTEMENT;
+END
+
+CREATE TRIGGER avant_insertion_historique BEFORE INSERT ON historique
+FOR EACH ROW
+BEGIN
+IF EXISTS(SELECT * FROM historique WHERE NEW.ETOILLE<1 OR NEW.ETOILLE>5)
+THEN
+         signal sqlstate'16440' SET message_text='Insertion Impossible: ETOILLE<1 OU ETOILLE>5';
+
+END IF;
+
+END
+
+CREATE TRIGGER avant_update_historique BEFORE UPDATE ON historique
+FOR EACH ROW
+BEGIN
+IF EXISTS(SELECT * FROM historique WHERE IDVISITE=NEW.IDVISITE AND NEW.ETOILLE<1 OR NEW.ETOILLE>5)
+THEN
+         signal sqlstate'16440' SET message_text='MAJ Impossible: ETOILLE<1 OU ETOILLE>5';
+
+END IF;
+
+END
+
+
+CREATE TRIGGER avant_update_contrevisite BEFORE UPDATE ON
+contrevisite
+FOR EACH ROW
+BEGIN
+
+ CALL maj_diminuer_etoille(NEW.IDVISITE,NEW.NBETOILEMOINS);
+
+END
+
+CREATE TRIGGER apres_insertion_visite AFTER INSERT ON
+visite FOR EACH ROW
+BEGIN
+
+IF NOT EXISTS(SELECT * FROM historique WHERE IDVISITE=NEW.IDVISITE)
+THEN
+INSERT INTO historique (IDVISITE,ETOILLE) VALUES(NEW.IDVISITE,1);
+END IF; 
+
+END
+
+CREATE TRIGGER avant_suppression_visite BEFORE DELETE ON
+visite FOR EACH ROW
+BEGIN
+IF EXISTS(SELECT * FROM historique WHERE IDVISITE=OLD.IDVISITE)
+THEN
+DELETE FROM historique WHERE IDVISITE=OLD.IDVISITE;
+END IF;
+END
+
+CREATE TRIGGER apres_update_visite AFTER UPDATE ON
+visite
+FOR EACH ROW
+BEGIN
+
+ CALL maj_ajout_etoille(NEW.IDVISITE,NEW.NBETOILEPLUS);
+
+END
+
+
+
+
+
+
+
+
+
+

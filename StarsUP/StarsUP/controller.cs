@@ -32,10 +32,7 @@ namespace StarsUP
             vmodel = new Connecter();
         }
 
-        public static void update(MAJ M,char c)
-        {
-           
-        }
+       
 
         /// <summary>
         /// Cette méthode crud personne permet de charger les informations de l'inspecteur dans les textbox respectives
@@ -74,20 +71,32 @@ namespace StarsUP
 
            if (c == 'u' || c == 'd')
            {
-               string sort = "IDVISITE";
-               vmodel.Dv_etoile.Sort = sort;
-               index=vmodel.Dv_etoile.Find(cle);
-               co.TbCommentaire.Text = controller.vmodel.Dv_etoile[index][1].ToString();
-               co.TbEtoile.Value =Convert.ToInt32( controller.vmodel.Dv_etoile[index][2].ToString());
-               
-           }
+                try
+                {
+                    string sort = "IDVISITE";
+                    vmodel.Dv_etoile.Sort = sort;
+                    index = vmodel.Dv_etoile.Find(cle);
+                    co.TbCommentaire.Text = controller.vmodel.Dv_etoile[index][1].ToString();
+                    co.TbEtoile.Value = Convert.ToInt16(controller.vmodel.Dv_etoile[index][2].ToString());
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show("Vérifiez dans la BDD que cette visite est présente dans la table historique");
+                }
+
+            }
 
 
-           co.ShowDialog();
+            co.ShowDialog();
             if(co.DialogResult== DialogResult.OK)
             {
-                controller.Vmodel.Dv_etoile[index]["COMMENTAIREV"] = co.TbCommentaire.Text.ToString();
-                controller.Vmodel.Dv_etoile[index]["ETOILLE"] = Convert.ToInt16(co.TbEtoile.Value);
+                string val = "1";
+                controller.Vmodel.Dv_etoile[index]["COMMENTAIREV"] =  co.TbCommentaire.Text.ToString();
+                controller.Vmodel.Dv_etoile[index]["ETOILLE"] = Convert.ToInt16(co.TbEtoile.Value.ToString());
+                if (co.ChbContreVisite.Checked == true)
+                {
+                    controller.Vmodel.Dv_etoile[index]["CONTREVISITE"] = Convert.ToInt16(val);
+                }
                 MessageBox.Show("Les données ont été mises à jour", "Mise à Jour", MessageBoxButtons.OK, MessageBoxIcon.Information);
                
             }
@@ -95,6 +104,41 @@ namespace StarsUP
             {
                 MessageBox.Show("Annulation : aucune donnée enregistrée");
                 co.Dispose();
+            }
+        }
+
+
+        public static void crud_contrevisite(Char c,String cle)
+        {
+            int index = 0;
+            Commentaire_Contre_Visite ccv = new Commentaire_Contre_Visite();
+
+            if (c == 'u' || c == 'd')
+            {
+                string sort = "IDCONTREVISITE";
+                vmodel.Dv_contrevisite.Sort = sort;
+                index = vmodel.Dv_contrevisite.Find(cle);
+                ccv.TbCommentaire.Text = controller.vmodel.Dv_contrevisite[index][5].ToString();
+                ccv.TbEtoile.Value = Convert.ToInt16(controller.vmodel.Dv_contrevisite[index][6].ToString());
+
+
+            }
+
+
+            ccv.ShowDialog();
+            if (ccv.DialogResult == DialogResult.OK)
+            {
+               
+                controller.Vmodel.Dv_contrevisite[index]["COMMENTAIRECV"] = ccv.TbCommentaire.Text.ToString();
+                controller.Vmodel.Dv_contrevisite[index]["NBETOILEMOINS"] = Convert.ToInt16(ccv.TbEtoile.Value.ToString());
+               
+                MessageBox.Show("Les données ont été mises à jour", "Mise à Jour", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            }
+            else
+            {
+                MessageBox.Show("Annulation : aucune donnée enregistrée");
+                ccv.Dispose();
             }
         }
        

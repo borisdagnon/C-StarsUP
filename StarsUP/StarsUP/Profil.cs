@@ -58,13 +58,12 @@ namespace StarsUP
            //Si c'est la première fois qu'il accède à cette form depuis la connection alors on charge les données depuis la BDD 
         if(nbClic==1)
         {
-            lesInfos = controller.Vmodel.infoInspecteur(nomInsp.ToString(), mdpInsp.ToString());
             Session s = new Session{
             
-            IndentifiantInspecteur = lbIdentifiant.Text = lesInfos[0].ToString(),
-            NomInspecteur = lbNom.Text = lesInfos[1].ToString(),
-            PrenomInspecteur = lbPrenom.Text = lesInfos[2].ToString(),
-            NumeroInspecteur = lbNumero.Text = "+33" + lesInfos[3].ToString()
+            IndentifiantInspecteur = lbIdentifiant.Text = controller.Vmodel.Dv_inspecteur[0][0].ToString(),
+            NomInspecteur = lbNom.Text = controller.Vmodel.Dv_inspecteur[0][2].ToString(),
+            PrenomInspecteur = lbPrenom.Text = controller.Vmodel.Dv_inspecteur[0][3].ToString(),
+            NumeroInspecteur = lbNumero.Text = "+33" + controller.Vmodel.Dv_inspecteur[0][5].ToString()
             };
                
             //On procède ensuite à une serialisation pour pouvoir enregistrer les données dans le fichier xml.
@@ -503,16 +502,7 @@ namespace StarsUP
         }
 
         private void Profil_FormClosed(object sender, FormClosedEventArgs e)
-        {try
-            {
-                dr.Close();
-            }
-            catch(Exception err)
-            {
-
-            }
-
-
+        {
             
         }
     }

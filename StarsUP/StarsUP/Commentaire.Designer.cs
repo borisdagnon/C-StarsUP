@@ -34,6 +34,8 @@
             this.tbEtoile = new System.Windows.Forms.TrackBar();
             this.btnEnreg = new System.Windows.Forms.Button();
             this.btnAnnuler = new System.Windows.Forms.Button();
+            this.chbContreVisite = new System.Windows.Forms.CheckBox();
+            this.lbContreVisites = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.tbEtoile)).BeginInit();
             this.SuspendLayout();
             // 
@@ -72,6 +74,7 @@
             // 
             this.tbEtoile.Location = new System.Drawing.Point(131, 151);
             this.tbEtoile.Margin = new System.Windows.Forms.Padding(2);
+            this.tbEtoile.Maximum = 5;
             this.tbEtoile.Name = "tbEtoile";
             this.tbEtoile.Size = new System.Drawing.Size(171, 45);
             this.tbEtoile.TabIndex = 3;
@@ -80,19 +83,18 @@
             // btnEnreg
             // 
             this.btnEnreg.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnEnreg.Location = new System.Drawing.Point(131, 214);
+            this.btnEnreg.Location = new System.Drawing.Point(131, 259);
             this.btnEnreg.Margin = new System.Windows.Forms.Padding(2);
             this.btnEnreg.Name = "btnEnreg";
             this.btnEnreg.Size = new System.Drawing.Size(68, 24);
             this.btnEnreg.TabIndex = 4;
             this.btnEnreg.Text = "Enregistrer";
             this.btnEnreg.UseVisualStyleBackColor = true;
-            this.btnEnreg.Click += new System.EventHandler(this.button1_Click);
             // 
             // btnAnnuler
             // 
             this.btnAnnuler.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnAnnuler.Location = new System.Drawing.Point(243, 214);
+            this.btnAnnuler.Location = new System.Drawing.Point(243, 259);
             this.btnAnnuler.Name = "btnAnnuler";
             this.btnAnnuler.Size = new System.Drawing.Size(75, 23);
             this.btnAnnuler.TabIndex = 5;
@@ -100,13 +102,34 @@
             this.btnAnnuler.UseVisualStyleBackColor = true;
             this.btnAnnuler.Click += new System.EventHandler(this.button2_Click);
             // 
+            // chbContreVisite
+            // 
+            this.chbContreVisite.AutoSize = true;
+            this.chbContreVisite.Location = new System.Drawing.Point(131, 202);
+            this.chbContreVisite.Name = "chbContreVisite";
+            this.chbContreVisite.Size = new System.Drawing.Size(45, 17);
+            this.chbContreVisite.TabIndex = 6;
+            this.chbContreVisite.Text = "OUI";
+            this.chbContreVisite.UseVisualStyleBackColor = true;
+            // 
+            // lbContreVisites
+            // 
+            this.lbContreVisites.AutoSize = true;
+            this.lbContreVisites.Location = new System.Drawing.Point(33, 202);
+            this.lbContreVisites.Name = "lbContreVisites";
+            this.lbContreVisites.Size = new System.Drawing.Size(69, 13);
+            this.lbContreVisites.TabIndex = 7;
+            this.lbContreVisites.Text = "ContreVisite :";
+            // 
             // Commentaire
             // 
             this.AcceptButton = this.btnEnreg;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnAnnuler;
-            this.ClientSize = new System.Drawing.Size(326, 246);
+            this.ClientSize = new System.Drawing.Size(359, 284);
+            this.Controls.Add(this.lbContreVisites);
+            this.Controls.Add(this.chbContreVisite);
             this.Controls.Add(this.btnAnnuler);
             this.Controls.Add(this.btnEnreg);
             this.Controls.Add(this.tbEtoile);
@@ -140,7 +163,16 @@
             get { return tbEtoile; }
             set { tbEtoile = value; }
         }
+        public System.Windows.Forms.CheckBox ChbContreVisite
+        {
+            get { return chbContreVisite; }
+            set { chbContreVisite = value; }
+        }
         private System.Windows.Forms.Button btnEnreg;
         private System.Windows.Forms.Button btnAnnuler;
+        private System.Windows.Forms.CheckBox chbContreVisite;
+
+       
+        private System.Windows.Forms.Label lbContreVisites;
     }
 }

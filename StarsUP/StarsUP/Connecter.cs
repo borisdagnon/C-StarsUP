@@ -28,8 +28,9 @@ namespace ClassConnect
 
         private DataSet dataSet = new DataSet();
 
-        private DataView dv_visite = new DataView(), dv_departement = new DataView(), dv_saison = new DataView(), dv_inspecteur = new DataView(), dv_etoile = new DataView(), dv_import2=new DataView(), dv_import3=new DataView();
+        private DataView dv_visite = new DataView(), dv_departement = new DataView(), dv_saison = new DataView(), dv_inspecteur = new DataView(), dv_etoile = new DataView(), dv_vm_contrevisite = new DataView(),dv_contrevisite=new DataView(), dv_import2 = new DataView(), dv_import3 = new DataView();
 
+       
        
 
        
@@ -53,7 +54,19 @@ namespace ClassConnect
             get { return connopen; }
 
         }
-      
+
+        public DataView Dv_vm_contrevisite
+        {
+            get { return dv_vm_contrevisite; }
+            set { dv_vm_contrevisite = value; }
+        }
+
+        public DataView Dv_contrevisite
+        {
+            get { return dv_contrevisite; }
+            set { dv_contrevisite = value; }
+        }
+
 
         public bool Errmaj
         {
@@ -123,7 +136,7 @@ namespace ClassConnect
 
         public void seconnecter()
         {
-            string myConnectionString = "Database=bd_boris_starsup;Data Source=localhost;User Id=root;";
+            string myConnectionString = "Database=bd_boris_starsup;Data Source=localhost;User Id=root";
             myConnection = new MySqlConnection(myConnectionString);
             connopen = true;
             try //tentative
@@ -155,44 +168,7 @@ namespace ClassConnect
         }
 
      
-       public List<String> infoInspecteur(String nominsp, String  mdpInsp)
-        {
-
-
-            List<String> infos  = new List<String>();
-          
-            
-            MySqlDataReader dr;
-            MySqlCommand cd = new MySqlCommand("SELECT IDINSPECTEUR,NOMINSPECTEUR,PRENOMINSPECTEUR,NUMEROTEL FROM inspecteur where NOMINSPECTEUR='" + nominsp + "' AND MDPINSPECTEUR='" + mdpInsp + "';", myConnection);
-
-            try
-            {
-                
-                dr = cd.ExecuteReader();
-               
-                
-                   while (dr.Read())
-                        {
-                            infos.Add(dr[0].ToString());
-                           infos.Add( dr[1].ToString());
-                            infos.Add( dr[2].ToString());
-                           infos.Add( dr[3].ToString());
-                           
-                        }
-                 
-                    }
-               
-            
-            catch(Exception err)
-            {
-                errgrave = true;
-            }
-            return infos;
-            cd.Dispose();
-            dr.Close();
-            dr.Dispose();
-        }
-
+    
        public void import(String nomInsp)
         {
             if (!connopen) return;
@@ -213,9 +189,9 @@ namespace ClassConnect
 
             MySqlCommand cmd = new MySqlCommand("call maj_vm_visites() ", myConnection);
             MySqlCommand cmd2 = new MySqlCommand("CALL `maj_vm_saison`();", myConnection);
-          
 
-            mySqlDataAdapter.SelectCommand = new MySqlCommand("select * from departement;select * from vm_saison where Nom_Inspecteur='"+nomInsp+"';select * from vm_visites where Nom_Inspecteur='" + nomInsp.ToString() + "';select * from inspecteur where NOMINSPECTEUR='"+nomInsp.ToString()+"';select v.IDVISITE,COMMENTAIREV,ETOILLE,v.IDHEBERGEMENT from visite v inner join historique h on v.IDVISITE=h.IDVISITE where  IDINSPECTEUR=(select IDINSPECTEUR from inspecteur where NOMINSPECTEUR='"+nomInsp.ToString()+"');"+sb.ToString()+";"+sb2.ToString()+";", myConnection);
+
+            mySqlDataAdapter.SelectCommand = new MySqlCommand("select * from departement;select * from vm_saison where Nom_Inspecteur='" + nomInsp + "';select * from vm_visites where Nom_Inspecteur='" + nomInsp.ToString() + "';select * from inspecteur where NOMINSPECTEUR='" + nomInsp.ToString() + "';select v.IDVISITE,COMMENTAIREV,ETOILLE,v.IDHEBERGEMENT,CONTREVISITE from visite v inner join historique h on v.IDVISITE=h.IDVISITE where  IDINSPECTEUR=(select IDINSPECTEUR from inspecteur where NOMINSPECTEUR='" + nomInsp.ToString() + "');SELECT * FROM vm_contrevisite WHERE Nom_Inspecteur='" + nomInsp + "';SELECT * FROM contrevisite;" + sb.ToString() + ";" + sb2.ToString() + ";", myConnection);
             try
             {
                 dataSet.Clear();
@@ -234,8 +210,10 @@ namespace ClassConnect
                 dv_visite = dataSet.Tables[2].DefaultView;
                 dv_inspecteur = dataSet.Tables[3].DefaultView;
                 dv_etoile = dataSet.Tables[4].DefaultView;
-                dv_import2 = dataSet.Tables[5].DefaultView;
-                dv_import3 = dataSet.Tables[6].DefaultView;
+                dv_vm_contrevisite = dataSet.Tables[5].DefaultView;
+                dv_contrevisite = dataSet.Tables[6].DefaultView;
+                dv_import2 = dataSet.Tables[7].DefaultView;
+                dv_import3 = dataSet.Tables[8].DefaultView;
 
 
                 chargement = true;
@@ -295,8 +273,16 @@ namespace ClassConnect
                         {
                             vcommand.CommandText = "SELECT COUNT(*) FROM visite WHERE IDVISITE ='" + args.Row[0, DataRowVersion.Original] + "'";
                         }
+                        else
+                        {
+                            if (vtable == 'c')
+                            {
+                                vcommand.CommandText = "SELECT COUNT(*) FROM contrevisite WHERE IDCONTREVISITE ='" + args.Row[0, DataRowVersion.Original] + "'";
+                            }
+                        }
+                         
                     }
-                   //on veut savoir si l'inspecteur existe dans la bdd
+                   //on veut savoir si l'inspecteur existe ou si la visite existe dans la bdd
                   
                     nb = (Int64)vcommand.ExecuteScalar();
                 }
@@ -304,39 +290,59 @@ namespace ClassConnect
 
                if(vaction=='u')
                {
-                   if(nb==1)
-                   {
-                       if(vtable=='i')
-                       {
-                           msg = "pour le numéro de personne: " + args.Row[0, DataRowVersion.Original] + " impossible MAJ car enr modifié dans la base";
-                       }
-                      else
+                    if (nb == 1) 
+                    {
+                        if (vtable == 'i')
+                        {
+                            msg = "pour le numéro de personne: " + args.Row[0, DataRowVersion.Original] + " impossible MAJ car enr modifié dans la base";
+                        }
+                       else
                         {
                             if (vtable == 'v')
                             {
                                 msg = "pour le numéro de visite: " + args.Row[0, DataRowVersion.Original] + " impossible MAJ car enr modifié dans la base";
                             }
-                        }
+                            else
+                            {
+                                if(vtable=='c')
+                                {
+                                    msg = "pour le numéro de contre visite: " + args.Row[0, DataRowVersion.Original] + " impossible MAJ car enr modifié dans la base";
 
+                                }
+                            }
+                        }
+                       
                         rapport.Add(msg);
                         errmaj = true;
+
+                    }
+                    else
+                    {
+                        if (vtable == 'i')
+                        {
+                            msg = "pour le numéro de l'inspecteur: " + args.Row[0, DataRowVersion.Original] + " impossible MAJ car enr supprimé dans la base";
+                        }
+                       else
+                        {
+                            if (vtable == 'v')
+                            {
+                                msg = "pour le numéro de visite: " + args.Row[0, DataRowVersion.Original] + " impossible MAJ car enr supprimé dans la base";
+                            }
+                            else
+                            {
+                                if(vtable=='c')
+                                {
+                                    msg = "pour le numéro de contre visite: " + args.Row[0, DataRowVersion.Original] + " impossible MAJ car enr supprimé dans la base";
+
+                                }
+                            }
+                        }
+                           
+                            rapport.Add(msg);
+                            errmaj = true;
+                      
                     }
                    
-
-                   else
-                   {
-                       if(vtable=='i')
-                       {
-                           msg = "pour le numéro de personne : " + args.Row[0, DataRowVersion.Original] + " impossible MAJ car enr supprimé dans la base";
-                       }
-
-                       if (vtable == 'v')
-                       {
-                           msg = "pour le numéro de visite : " + args.Row[0, DataRowVersion.Original] + " impossible MAJ car enr supprimé dans la base";
-                       }
-                       rapport.Add(msg);
-                       errmaj = true;
-                   }
                }
            }
         }
@@ -373,13 +379,14 @@ namespace ClassConnect
             if (!connopen) return;
             mySqlDataAdapter.RowUpdated += new MySqlRowUpdatedEventHandler(onRowUpdated);
             
-            mySqlDataAdapter.UpdateCommand = new MySqlCommand("update visite v inner join historique h ON v.IDVISITE=h.IDVISITE SET ETOILLE=?ETOILLE,COMMENTAIREV=?COMMENTAIREV WHERE IDVISITE=?IDVISITE", myConnection);
+            mySqlDataAdapter.UpdateCommand = new MySqlCommand("update visite v inner join historique h ON v.IDVISITE=h.IDVISITE SET ETOILLE=?ETOILLE,COMMENTAIREV=?COMMENTAIREV,CONTREVISITE=?CONTREVISITE WHERE v.IDVISITE=?IDVISITE", myConnection);
 
-            mySqlDataAdapter.UpdateCommand.Parameters.Add("?ETOILLE", MySqlDbType.Text, 655, "ETOILLE");
-           
-            mySqlDataAdapter.UpdateCommand.Parameters.Add("?IDVISITE", MySqlDbType.Text, 655, "IDVISITE");
-
+            mySqlDataAdapter.UpdateCommand.Parameters.Add("?ETOILLE", MySqlDbType.Int16, 10, "ETOILLE");
+            mySqlDataAdapter.UpdateCommand.Parameters.Add("?IDVISITE", MySqlDbType.Int16, 10, "IDVISITE");
             mySqlDataAdapter.UpdateCommand.Parameters.Add("?COMMENTAIREV", MySqlDbType.Text, 3000, "COMMENTAIREV");
+            mySqlDataAdapter.UpdateCommand.Parameters.Add("?CONTREVISITE", MySqlDbType.Int16, 10, "CONTREVISITE");
+
+           
 
             mySqlDataAdapter.ContinueUpdateOnError = true;
 
@@ -389,11 +396,41 @@ namespace ClassConnect
 
             mySqlDataAdapter.RowUpdated -= new MySqlRowUpdatedEventHandler(onRowUpdated);
 
+
+
         }
 
-      
 
-       public bool export()
+        public void mod_contrevisite()
+        {
+            vaction = 'u';
+            vtable = 'c';
+
+            if (!connopen) return;
+            mySqlDataAdapter.RowUpdated += new MySqlRowUpdatedEventHandler(onRowUpdated);
+
+            mySqlDataAdapter.UpdateCommand = new MySqlCommand("update contrevisite SET COMMENTAIRECV=?COMMENTAIRECV,NBETOILEMOINS=?NBETOILEMOINS WHERE IDCONTREVISITE=?IDCONTREVISITE", myConnection);
+
+            mySqlDataAdapter.UpdateCommand.Parameters.Add("?COMMENTAIRECV", MySqlDbType.Text, 3000, "COMMENTAIRECV");
+            mySqlDataAdapter.UpdateCommand.Parameters.Add("?NBETOILEMOINS", MySqlDbType.Int16, 10, "NBETOILEMOINS");
+            mySqlDataAdapter.UpdateCommand.Parameters.Add("?IDCONTREVISITE", MySqlDbType.Int16, 10, "IDCONTREVISITE");
+
+
+            mySqlDataAdapter.ContinueUpdateOnError = true;
+
+            DataTable table = dataSet.Tables[6];
+
+            mySqlDataAdapter.Update(table.Select(null, null, DataViewRowState.ModifiedCurrent));
+
+            mySqlDataAdapter.RowUpdated -= new MySqlRowUpdatedEventHandler(onRowUpdated);
+
+
+
+        }
+
+
+
+        public bool export()
         {
             bool ret = false;
             if (connopen)
@@ -402,7 +439,9 @@ namespace ClassConnect
                 {
                    mod_inspecteur();
                     mod_etoile();
-                   
+                    mod_contrevisite();
+
+
                     ret = true;
                 }
 

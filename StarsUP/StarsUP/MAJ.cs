@@ -92,11 +92,8 @@ namespace StarsUP
                 
 
                 controller.Vmodel.Dv_inspecteur[index]["IDINSPECTEUR"] = LbIdentifiant.Text;
-                MessageBox.Show(controller.Vmodel.Dv_inspecteur[index]["IDINSPECTEUR"].ToString());
                 controller.Vmodel.Dv_inspecteur[index]["PRENOMINSPECTEUR"] = TbPrenom.Text;
-                MessageBox.Show(controller.Vmodel.Dv_inspecteur[index]["PRENOMINSPECTEUR"].ToString());
                 controller.Vmodel.Dv_inspecteur[index]["MDPINSPECTEUR"] = TbMdp.Text;
-                MessageBox.Show(controller.Vmodel.Dv_inspecteur[index]["MDPINSPECTEUR"].ToString());
             
 
             MessageBox.Show("Mise à jour OK", "MAJ", MessageBoxButtons.OK, MessageBoxIcon.Information);

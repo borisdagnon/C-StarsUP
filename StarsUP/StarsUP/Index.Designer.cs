@@ -35,6 +35,7 @@
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gestionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listeVisiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.listeContreVisitesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pDFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.générerPDFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnProfil = new System.Windows.Forms.Button();
@@ -79,7 +80,8 @@
             // gestionToolStripMenuItem
             // 
             this.gestionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.listeVisiteToolStripMenuItem});
+            this.listeVisiteToolStripMenuItem,
+            this.listeContreVisitesToolStripMenuItem});
             this.gestionToolStripMenuItem.Name = "gestionToolStripMenuItem";
             this.gestionToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
             this.gestionToolStripMenuItem.Text = "Gestion";
@@ -87,9 +89,16 @@
             // listeVisiteToolStripMenuItem
             // 
             this.listeVisiteToolStripMenuItem.Name = "listeVisiteToolStripMenuItem";
-            this.listeVisiteToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.listeVisiteToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
             this.listeVisiteToolStripMenuItem.Text = "Liste Visite";
             this.listeVisiteToolStripMenuItem.Click += new System.EventHandler(this.listeVisiteToolStripMenuItem_Click);
+            // 
+            // listeContreVisitesToolStripMenuItem
+            // 
+            this.listeContreVisitesToolStripMenuItem.Name = "listeContreVisitesToolStripMenuItem";
+            this.listeContreVisitesToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.listeContreVisitesToolStripMenuItem.Text = "Liste Contre Visites";
+            this.listeContreVisitesToolStripMenuItem.Click += new System.EventHandler(this.listeContreVisitesToolStripMenuItem_Click);
             // 
             // pDFToolStripMenuItem
             // 
@@ -147,5 +156,6 @@
         private System.Windows.Forms.ToolStripMenuItem pDFToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem générerPDFToolStripMenuItem;
         private System.Windows.Forms.Button btnProfil;
+        private System.Windows.Forms.ToolStripMenuItem listeContreVisitesToolStripMenuItem;
     }
 }
