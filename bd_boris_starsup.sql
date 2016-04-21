@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Lun 18 Avril 2016 à 16:35
+-- Généré le :  Jeu 21 Avril 2016 à 23:00
 -- Version du serveur :  5.6.17
 -- Version de PHP :  5.5.12
 
@@ -24,57 +24,37 @@ DELIMITER $$
 --
 -- Procédures
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `maj_ajout_etoille`(IN `IdVisite` INT(6), IN `EtoileAj` INT(6))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `maj_ajout_etoille`(IN `IdV` SMALLINT(6), IN `EtoileAj` SMALLINT(6))
 BEGIN
-            IF EXISTS (SELECT * FROM visite WHERE IDVISITE=IdVisite)
-            THEN
-           
-                   IF EXISTS(SELECT * FROM historique WHERE IDVISITE=IdVisite AND ETOILLE<6) 
-                  THEN
-                  
-                IF EXISTS(SELECT * FROM historique WHERE IDVISITE=IdVisite AND ETOILLE+EtoileAj<6)
 
-                 THEN
-            UPDATE historique SET ETOILLE=ETOILLE+EtoileAj WHERE IDVISITE=IdVisite ;
+               
+                 
+            UPDATE historique SET ETOILLE=(EtoileAj+ETOILLE) WHERE IDVISITE=IdV;
             
-                ELSE
-                 UPDATE historique SET ETOILLE=ETOILLE WHERE IDVISITE=IdVisite;
-            
-       END IF;      
-       END IF;
-       END IF;
+                
+      
        END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `maj_diminuer_etoille`(IN IdVisite smallint(6), IN EtoileAj smallint(6))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `maj_diminuer_etoille`(IN `IdV` SMALLINT(6), IN `EtoileAj` SMALLINT(6))
 BEGIN
-        
-        DECLARE num int(6) DEFAULT 0;
-            IF EXISTS (SELECT * FROM visite WHERE IDVISITE=IdVisite)
-            THEN
-    
-                   IF EXISTS(SELECT * FROM historique WHERE IDVISITE=IdVisite AND ETOILLE > 1) 
-                  THEN
-                IF EXISTS(SELECT * FROM historique WHERE IDVISITE=IdVisite AND ETOILLE-EtoileAj>= 1)
-                 THEN
-            UPDATE historique SET ETOILLE=ETOILLE-EtoileAj WHERE IDVISITE=IdVisite;
-                ELSE
-                 UPDATE historique SET ETOILLE=ETOILLE WHERE IDVISITE=IdVisite;
-       END IF;
-                  
-       END IF;
-        END IF;
-       END$$
+
+                           UPDATE historique SET ETOILLE=ETOILLE-EtoileAj WHERE IDVISITE=IdV;
+                       
+   
+END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `maj_vm_contrevisite`()
     NO SQL
 BEGIN
+DECLARE var date DEFAULT NULL;
+SELECT DATEV INTO var FROM datev dv INNER JOIN contrevisite c ON dv.IDDATEV=c.IDDATEV;
 TRUNCATE vm_contrevisite;
 INSERT INTO vm_contrevisite
 SELECT IDCONTREVISITE AS Identifiant_Contrevisite, i.IDINSPECTEUR AS Identifiant_Inspecteur, 
 NOMINSPECTEUR AS Nom_Inspecteur, PRENOMINSPECTEUR AS Prenom_Inspecteur, NOMHEBERGEMENT AS Nom_Hebergement, 
-ADRESSEHEBERGEMENT AS Adress_Hebergement, DATEV AS Date_de_visite, s.IDSAISON AS Identifiant_Saison,
+ADRESSEHEBERGEMENT AS Adress_Hebergement, DATEV AS Date_de_visite,var AS Date_de_contrevisite,  s.IDSAISON AS Identifiant_Saison,
  d.IDDEPARTEMENT AS Identifiant_Departement, LIBDEPARTEMENT AS Nom_Departement, LIBSAISON AS Nom_Saison, 
- YEAR(DATEV) AS Annee_Date_Visite FROM contrevisite c INNER JOIN inspecteur i ON c.IDINSPECTEUR=i.IDINSPECTEUR
+ YEAR(DATEV) AS Annee_Date_Visite,YEAR(var) AS Annee_Date_Contrevisite FROM contrevisite c INNER JOIN inspecteur i ON c.IDINSPECTEUR=i.IDINSPECTEUR
 INNER JOIN saison s ON c.IDSAISON=s.IDSAISON
 INNER JOIN visite v ON v.IDVISITE=c.IDVISITE
 INNER JOIN hebergement h ON h.IDHEBERGEMENT=v.IDHEBERGEMENT
@@ -271,17 +251,41 @@ CREATE TABLE IF NOT EXISTS `contrevisite` (
   `IDINSPECTEUR` smallint(6) NOT NULL,
   `IDSAISON` smallint(6) NOT NULL,
   `IDVISITE` smallint(6) NOT NULL,
+  `IDDATEV` smallint(6) DEFAULT NULL,
   `COMMENTAIRECV` text,
   `NBETOILEMOINS` smallint(6) DEFAULT NULL,
   PRIMARY KEY (`IDCONTREVISITE`),
   KEY `I_FK_CONTREVISITE_INSPECTEUR` (`IDINSPECTEUR`),
   KEY `I_FK_CONTREVISITE_DATEV` (`IDSAISON`),
-  KEY `I_FK_CONTREVISITE_VISITE` (`IDVISITE`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  KEY `I_FK_CONTREVISITE_VISITE` (`IDVISITE`),
+  KEY `IDDATEV` (`IDDATEV`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Contenu de la table `contrevisite`
+--
+
+INSERT INTO `contrevisite` (`IDCONTREVISITE`, `IDINSPECTEUR`, `IDSAISON`, `IDVISITE`, `IDDATEV`, `COMMENTAIRECV`, `NBETOILEMOINS`) VALUES
+(1, 4, 1, 1, 7, 'Finalement cet hébergement ne respecte pas certaines normes. On lui retire donc 1 étoile', 2);
 
 --
 -- Déclencheurs `contrevisite`
 --
+DROP TRIGGER IF EXISTS `after_insertion_contre_visite`;
+DELIMITER //
+CREATE TRIGGER `after_insertion_contre_visite` AFTER INSERT ON `contrevisite`
+ FOR EACH ROW BEGIN
+ DECLARE p0 int(6) DEFAULT 0;
+  DECLARE p1 int(6) DEFAULT 0;
+
+SELECT NEW.IDVISITE INTO p0;     
+SELECT NEW.NBETOILEMOINS INTO p1 ;
+
+ CALL maj_diminuer_etoille(p0, p1);
+
+END
+//
+DELIMITER ;
 DROP TRIGGER IF EXISTS `avant_insertion_contre_visite`;
 DELIMITER //
 CREATE TRIGGER `avant_insertion_contre_visite` BEFORE INSERT ON `contrevisite`
@@ -307,6 +311,8 @@ IF EXISTS(SELECT * FROM visite WHERE IDVISITE=NEW.IDVISITE AND IDINSPECTEUR=NEW.
              THEN 
              signal sqlstate'16440' SET message_text='Visite Impossible: le département de l\'inspecteur et de l\'hébergement sont différents';
               END IF;
+
+
 
           IF nom_spe='Hotel'
           THEN
@@ -335,6 +341,23 @@ IF EXISTS(SELECT * FROM visite WHERE IDVISITE=NEW.IDVISITE AND IDINSPECTEUR=NEW.
 
  END IF;
  END IF;
+ IF EXISTS(SELECT * FROM visite v INNER JOIN hebergement h ON v.IDHEBERGEMENT=h.IDHEBERGEMENT WHERE v.IDVISITE=NEW.IDVISITE AND IDINSPECTEUR=NEW.IDINSPECTEUR AND v.IDHEBERGEMENT=h.IDHEBERGEMENT AND IDSAISON=NEW.IDSAISON)
+ THEN
+ 
+     signal sqlstate '16440' SET message_text='Cette cobinaison existe déjà' ;
+ 
+           END IF;
+ 
+END
+//
+DELIMITER ;
+DROP TRIGGER IF EXISTS `avant_update_contrevisite`;
+DELIMITER //
+CREATE TRIGGER `avant_update_contrevisite` BEFORE UPDATE ON `contrevisite`
+ FOR EACH ROW BEGIN
+
+ CALL maj_diminuer_etoille(NEW.IDVISITE, NEW.NBETOILEMOINS);
+
 
 END
 //
@@ -494,9 +517,40 @@ CREATE TABLE IF NOT EXISTS `historique` (
 --
 
 INSERT INTO `historique` (`IDVISITE`, `ETOILLE`) VALUES
-(1, 5),
-(2, 1),
-(3, 4);
+(1, 3),
+(2, 4),
+(3, 2),
+(4, 3);
+
+--
+-- Déclencheurs `historique`
+--
+DROP TRIGGER IF EXISTS `avant_insertion_historique`;
+DELIMITER //
+CREATE TRIGGER `avant_insertion_historique` BEFORE INSERT ON `historique`
+ FOR EACH ROW BEGIN
+IF EXISTS(SELECT * FROM historique WHERE NEW.ETOILLE<1 OR NEW.ETOILLE>5)
+THEN
+         signal sqlstate'16440' SET message_text='Insertion Impossible: ETOILLE<1 OU ETOILLE>5';
+
+END IF;
+
+END
+//
+DELIMITER ;
+DROP TRIGGER IF EXISTS `avant_update_historique`;
+DELIMITER //
+CREATE TRIGGER `avant_update_historique` BEFORE UPDATE ON `historique`
+ FOR EACH ROW BEGIN
+IF EXISTS(SELECT * FROM historique WHERE IDVISITE=NEW.IDVISITE AND NEW.ETOILLE<1 OR NEW.ETOILLE>5)
+THEN
+         signal sqlstate'16440' SET message_text='MAJ Impossible: ETOILLE<1 OU ETOILLE>5';
+
+END IF;
+
+END
+//
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -712,7 +766,7 @@ CREATE TABLE IF NOT EXISTS `visite` (
   `IDDATEV` smallint(6) DEFAULT NULL,
   `IDSAISON` smallint(6) DEFAULT NULL,
   `COMMENTAIREV` text CHARACTER SET utf8,
-  `CONTREVISITE` tinyint(1) DEFAULT NULL,
+  `CONTREVISITE` tinyint(1) NOT NULL DEFAULT '0',
   `NBETOILEPLUS` smallint(6) DEFAULT NULL,
   PRIMARY KEY (`IDVISITE`),
   KEY `I_FK_VISITE_INSPECTEUR` (`IDINSPECTEUR`),
@@ -726,19 +780,45 @@ CREATE TABLE IF NOT EXISTS `visite` (
 --
 
 INSERT INTO `visite` (`IDVISITE`, `IDINSPECTEUR`, `IDHEBERGEMENT`, `IDDATEV`, `IDSAISON`, `COMMENTAIREV`, `CONTREVISITE`, `NBETOILEPLUS`) VALUES
-(1, 1, 1, 1, 1, 'Blblblblblblbllbl', 1, NULL),
+(1, 1, 1, 1, 1, 'Blblblblblblbllbl', 0, 2),
 (2, 2, 5, 2, 2, 'jgcfjgfghfydb', 1, 4),
-(3, 1, 6, 2, 3, 'Boris', 0, NULL),
-(4, 1, 7, 7, 4, NULL, NULL, NULL);
+(3, 1, 6, 2, 3, 'Boris', 0, 1),
+(4, 1, 7, 7, 4, NULL, 0, 2);
 
 --
 -- Déclencheurs `visite`
 --
+DROP TRIGGER IF EXISTS `apres_insertion_visite`;
+DELIMITER //
+CREATE TRIGGER `apres_insertion_visite` AFTER INSERT ON `visite`
+ FOR EACH ROW BEGIN
+
+IF NOT EXISTS(SELECT * FROM historique WHERE IDVISITE=NEW.IDVISITE)
+THEN
+INSERT INTO historique (IDVISITE,ETOILLE) VALUES(NEW.IDVISITE,1);
+END IF; 
+CALL maj_diminuer_etoille(NEW.IDVISITE, NEW.NBETOILEPLUS);
+
+END
+//
+DELIMITER ;
+DROP TRIGGER IF EXISTS `apres_update_visite`;
+DELIMITER //
+CREATE TRIGGER `apres_update_visite` AFTER UPDATE ON `visite`
+ FOR EACH ROW BEGIN
+
+ CALL maj_ajout_etoille(NEW.IDVISITE,NEW.NBETOILEPLUS);
+
+END
+//
+DELIMITER ;
 DROP TRIGGER IF EXISTS `avant_insertion_visite`;
 DELIMITER //
 CREATE TRIGGER `avant_insertion_visite` BEFORE INSERT ON `visite`
  FOR EACH ROW BEGIN
 
+ 
+           
 
           DECLARE nom_spe varchar(30) DEFAULT '';
           SELECT (LIBSPECIALITE) INTO nom_spe FROM inspecteur i INNER JOIN specialite s ON i.IDSPECIALITEI=s.IDSPECIALITE WHERE i.IDINSPECTEUR=NEW.IDINSPECTEUR;
@@ -781,7 +861,21 @@ CREATE TRIGGER `avant_insertion_visite` BEFORE INSERT ON `visite`
      signal sqlstate '16440' SET message_text='Cette cobinaison existe déjà' ;
  
            END IF;
+          
+
+
   END
+//
+DELIMITER ;
+DROP TRIGGER IF EXISTS `avant_suppression_visite`;
+DELIMITER //
+CREATE TRIGGER `avant_suppression_visite` BEFORE DELETE ON `visite`
+ FOR EACH ROW BEGIN
+IF EXISTS(SELECT * FROM historique WHERE IDVISITE=OLD.IDVISITE)
+THEN
+DELETE FROM historique WHERE IDVISITE=OLD.IDVISITE;
+END IF;
+END
 //
 DELIMITER ;
 
@@ -799,12 +893,21 @@ CREATE TABLE IF NOT EXISTS `vm_contrevisite` (
   `Nom_Hebergement` varchar(30) DEFAULT NULL,
   `Adresse_Hebergement` varchar(30) DEFAULT NULL,
   `Date_de_visite` date DEFAULT NULL,
+  `Date_de_contrevisite` date NOT NULL,
   `Identifiant_Saison` smallint(6) DEFAULT NULL,
   `Identifiant_Departement` smallint(6) DEFAULT NULL,
   `Nom_Departement` char(32) DEFAULT NULL,
   `Nom_Saison` char(32) DEFAULT NULL,
-  `Annee_Date_Visite` year(4) DEFAULT NULL
+  `Annee_Date_Visite` year(4) DEFAULT NULL,
+  `Annee_Date_Contrevisite` year(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Contenu de la table `vm_contrevisite`
+--
+
+INSERT INTO `vm_contrevisite` (`Identifiant_Contrevisite`, `Identifiant_Inspecteur`, `Nom_Inspecteur`, `Prenom_Inspecteur`, `Nom_Hebergement`, `Adresse_Hebergement`, `Date_de_visite`, `Date_de_contrevisite`, `Identifiant_Saison`, `Identifiant_Departement`, `Nom_Departement`, `Nom_Saison`, `Annee_Date_Visite`, `Annee_Date_Contrevisite`) VALUES
+(1, 4, 'Mauriah', 'Alexandre', 'LES FLINGUETTES', '19 Rue Des Capucins', '2015-12-08', '2016-04-22', 1, 1, 'Maine-Et-Loire', 'Printemps', 2015, 2016);
 
 -- --------------------------------------------------------
 
@@ -826,7 +929,8 @@ CREATE TABLE IF NOT EXISTS `vm_saison` (
 INSERT INTO `vm_saison` (`Identifiant_Saison`, `Nom_Saison`, `Annee_Saison`, `Nom_Inspecteur`) VALUES
 (1, 'Printemps', 2015, 'Flemming'),
 (2, 'Été', 2016, 'Minea'),
-(3, 'Hiver', 2016, 'Flemming');
+(3, 'Hiver', 2016, 'Flemming'),
+(4, 'Automne', 2016, 'Flemming');
 
 -- --------------------------------------------------------
 
@@ -856,6 +960,7 @@ CREATE TABLE IF NOT EXISTS `vm_visites` (
 INSERT INTO `vm_visites` (`Identifiant_Visite`, `Identifiant_Inspecteur`, `Nom_Inspecteur`, `Prenom_Inspecteur`, `Nom_Hebergement`, `Adresse_Hebergement`, `Date_de_visite`, `Identifiant_Saison`, `Identifiant_Departement`, `Nom_Departement`, `Nom_Saison`, `Annee_Date_Visite`) VALUES
 (1, 1, 'Flemming', 'Bob', 'LES FLINGUETTES', '19 Rue Des Capucins', '2015-12-08', 1, 1, 'Maine-Et-Loire', 'Printemps', 2015),
 (3, 1, 'Flemming', 'Bob', 'L''Everton', '10 Avenue Symbale', '2016-03-11', 3, 1, 'Maine-Et-Loire', 'Hiver', 2016),
+(4, 1, 'Flemming', 'Bob', 'L''Iliade', 'La Rue Des Florandes', '2016-04-22', 4, 1, 'Maine-Et-Loire', 'Automne', 2016),
 (2, 2, 'Minea', 'Douglas', 'La Gullerma', '6 Rue Rémal', '2016-03-11', 2, 2, ' Loire-Atlantique', 'Été', 2016);
 
 --
@@ -894,7 +999,8 @@ ALTER TABLE `chambre_hotte`
 ALTER TABLE `contrevisite`
   ADD CONSTRAINT `contrevisite_ibfk_1` FOREIGN KEY (`IDINSPECTEUR`) REFERENCES `inspecteur` (`IDINSPECTEUR`),
   ADD CONSTRAINT `contrevisite_ibfk_2` FOREIGN KEY (`IDSAISON`) REFERENCES `saison` (`IDSAISON`),
-  ADD CONSTRAINT `contrevisite_ibfk_3` FOREIGN KEY (`IDVISITE`) REFERENCES `visite` (`IDVISITE`);
+  ADD CONSTRAINT `contrevisite_ibfk_3` FOREIGN KEY (`IDVISITE`) REFERENCES `visite` (`IDVISITE`),
+  ADD CONSTRAINT `contrevisite_ibfk_4` FOREIGN KEY (`IDDATEV`) REFERENCES `datev` (`IDDATEV`);
 
 --
 -- Contraintes pour la table `hebergement`
