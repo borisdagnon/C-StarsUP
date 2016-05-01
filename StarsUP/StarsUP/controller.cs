@@ -66,6 +66,11 @@ namespace StarsUP
         /// <param name="cle">Correspond à la clé de l'identifiant de visite</param>
         public static void crud_etoile(Char c, String cle)
        {
+           XmlSerializer serial2 = new XmlSerializer(typeof(Premiere));
+           StreamReader lire2 = new StreamReader("Premiere.xml");
+           Premiere p = (Premiere)serial2.Deserialize(lire2);
+           lire2.Close();
+
            int index = 0;
            Commentaire co = new Commentaire();
 
@@ -74,13 +79,31 @@ namespace StarsUP
                 try
                 {
                     string sort = "IDVISITE";
+                    
                     vmodel.Dv_etoile.Sort = sort;
                     index = vmodel.Dv_etoile.Find(cle);
                     co.TbCommentaire.Text = controller.vmodel.Dv_etoile[index][1].ToString();
                     co.TbEtoile.Value = Convert.ToInt16(controller.vmodel.Dv_etoile[index][2].ToString());
+                   
+                    if (p.ImportXml != 1)
+                    {
+                        if (Convert.ToBoolean(controller.Vmodel.Dv_etoile[index]["CONTREVISITE"]) == true)
+                        {
+                            co.ChbContreVisite.Checked = true;
+                        }
+                    }
+                    else
+                    {
+                        if (controller.Vmodel.Dv_etoile[index]["CONTREVISITE"].ToString() == "1")
+                        {
+                            co.ChbContreVisite.Checked = true;
+                        }
+                    }
+                    
                 }
                 catch(Exception ex)
                 {
+                    MessageBox.Show(ex.ToString());
                     MessageBox.Show("Vérifiez dans la BDD que cette visite est présente dans la table historique");
                 }
 
@@ -91,11 +114,17 @@ namespace StarsUP
             if(co.DialogResult== DialogResult.OK)
             {
                 string val = "1";
+                string val2 = "0";
+               /* MessageBox.Show(controller.Vmodel.Dv_etoile[index]["CONTREVISITE"].GetType().ToString());*/
                 controller.Vmodel.Dv_etoile[index]["COMMENTAIREV"] =  co.TbCommentaire.Text.ToString();
                 controller.Vmodel.Dv_etoile[index]["ETOILLE"] = Convert.ToInt16(co.TbEtoile.Value.ToString());
                 if (co.ChbContreVisite.Checked == true)
                 {
                     controller.Vmodel.Dv_etoile[index]["CONTREVISITE"] = Convert.ToInt16(val);
+                }
+                else
+                {
+                    controller.Vmodel.Dv_etoile[index]["CONTREVISITE"] = Convert.ToInt16(val2);
                 }
                 MessageBox.Show("Les données ont été mises à jour", "Mise à Jour", MessageBoxButtons.OK, MessageBoxIcon.Information);
                

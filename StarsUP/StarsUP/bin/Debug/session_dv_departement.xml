@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfSession_dv_departement xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <session_dv_departement IDDEPARTEMENT="1" NUMDEPARTEMENT="49" LIBDEPARTEMENT="Maine-Et-Loire" />
+  <session_dv_departement IDDEPARTEMENT="2" NUMDEPARTEMENT="44" LIBDEPARTEMENT=" Loire-Atlantique" />
+</ArrayOfSession_dv_departement>

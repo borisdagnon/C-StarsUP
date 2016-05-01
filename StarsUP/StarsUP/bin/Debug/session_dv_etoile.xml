@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfSession_dv_etoile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <session_dv_etoile IDVISITE="1" COMMENTAIREV="dyiliydcl:iydim:ydc:miqdfvdsqvfsdvsdvdssqdvsdsfbsfdbdsbsdvbdsfvbdsvdsvbrrbsfbsfbfsbsfbfsbfsbyodiycd:y" ETOILLE="4" IDHEBERGEMENT="1" CONTREVISITE="false" />
+  <session_dv_etoile IDVISITE="3" COMMENTAIREV="Boris" ETOILLE="2" IDHEBERGEMENT="6" CONTREVISITE="true" />
+  <session_dv_etoile IDVISITE="4" COMMENTAIREV="Cette visite n'est pas concluante. Il faudra revenir.futkujkhjk" ETOILLE="5" IDHEBERGEMENT="7" CONTREVISITE="false" />
+</ArrayOfSession_dv_etoile>

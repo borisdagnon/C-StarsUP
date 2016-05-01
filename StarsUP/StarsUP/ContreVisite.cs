@@ -20,66 +20,73 @@ namespace StarsUP
 
         public void remplirdgv()
         {
-            List<KeyValuePair<int, string>> Flist = new List<KeyValuePair<int, string>>();
-            Flist.Add(new KeyValuePair<int, string>(0, "Tous les départements"));
-            cbDepartement.Items.Add("Tous les départements");
-
-            for (int i = 0; i < controller.Vmodel.Dv_departement.ToTable().Rows.Count; i++)
+            try
             {
-                //  MessageBox.Show(controller.Vmodel.Dv_departement.ToTable().Rows[i][0].ToString() + " - " + controller.Vmodel.Dv_departement.ToTable().Rows[i][2].ToString());
-                Flist.Add(new KeyValuePair<int, string>(Convert.ToInt32(controller.Vmodel.Dv_departement.ToTable().Rows[i][0].ToString()),
-                controller.Vmodel.Dv_departement.ToTable().Rows[i][2].ToString()));
+                List<KeyValuePair<int, string>> Flist = new List<KeyValuePair<int, string>>();
+                Flist.Add(new KeyValuePair<int, string>(0, "Tous les départements"));
+                cbDepartement.Items.Add("Tous les départements");
+
+                for (int i = 0; i < controller.Vmodel.Dv_departement.ToTable().Rows.Count; i++)
+                {
+                    //  MessageBox.Show(controller.Vmodel.Dv_departement.ToTable().Rows[i][0].ToString() + " - " + controller.Vmodel.Dv_departement.ToTable().Rows[i][2].ToString());
+                    Flist.Add(new KeyValuePair<int, string>(Convert.ToInt32(controller.Vmodel.Dv_departement.ToTable().Rows[i][0].ToString()),
+                    controller.Vmodel.Dv_departement.ToTable().Rows[i][2].ToString()));
+                }
+
+
+                List<KeyValuePair<int, string>> FlistS = new List<KeyValuePair<int, string>>();
+                FlistS.Add(new KeyValuePair<int, string>(0, "Toutes les saisons"));
+                cbSaison.Items.Add("Toutes les saisons");
+
+                for (int i = 0; i < controller.Vmodel.Dv_saison.ToTable().Rows.Count; i++)
+                {
+                    FlistS.Add(new KeyValuePair<int, string>(Convert.ToInt32(controller.Vmodel.Dv_saison.ToTable().Rows[i][0].ToString()),
+                    controller.Vmodel.Dv_saison.ToTable().Rows[i][1].ToString()));
+                }
+                //on relie la liste à la combox
+                cbDepartement.DataSource = Flist;
+                cbDepartement.ValueMember = "Key";
+                cbDepartement.DisplayMember = "Value";
+                cbDepartement.Text = cbDepartement.Items[0].ToString();
+                cbDepartement.DropDownStyle = ComboBoxStyle.DropDownList;
+
+
+                cbSaison.DataSource = FlistS;
+                cbSaison.ValueMember = "Key";
+                cbSaison.DisplayMember = "Value";
+                cbSaison.Text = cbSaison.Items[0].ToString();
+                cbSaison.DropDownStyle = ComboBoxStyle.DropDownList;
+
+                bindingSource1.DataSource = controller.Vmodel.Dv_vm_contrevisite;
+                dataGV.DataSource = bindingSource1;
+
+                dataGV.Columns[0].Visible = false;
+                dataGV.Columns[1].Visible = false;
+                dataGV.Columns[6].Visible = false;
+                dataGV.Columns[12].Visible = false;
+                dataGV.Columns[8].Visible = false;
+                dataGV.Columns[9].Visible = false;
+
+
+
+
+                int vwidth = dataGV.RowHeadersWidth;
+                for (int i = 0; i < dataGV.Columns.Count; i++)
+                {
+                    if (dataGV.Columns[i].Visible)
+                        vwidth = vwidth + dataGV.Columns[i].GetPreferredWidth(DataGridViewAutoSizeColumnMode.AllCells, false);
+
+                }
+                if (dataGV.ScrollBars.Equals(ScrollBars.Both) | dataGV.ScrollBars.Equals(ScrollBars.Vertical))
+                {
+                    dataGV.Width += 20;
+                }
+                dataGV.Refresh();
             }
-
-
-            List<KeyValuePair<int, string>> FlistS = new List<KeyValuePair<int, string>>();
-            FlistS.Add(new KeyValuePair<int, string>(0, "Toutes les saisons"));
-            cbSaison.Items.Add("Toutes les saisons");
-
-            for (int i = 0; i < controller.Vmodel.Dv_saison.ToTable().Rows.Count; i++)
+            catch(Exception ex)
             {
-                FlistS.Add(new KeyValuePair<int, string>(Convert.ToInt32(controller.Vmodel.Dv_saison.ToTable().Rows[i][0].ToString()),
-                controller.Vmodel.Dv_saison.ToTable().Rows[i][1].ToString()));
+                MessageBox.Show( ex.ToString());
             }
-            //on relie la liste à la combox
-            cbDepartement.DataSource = Flist;
-            cbDepartement.ValueMember = "Key";
-            cbDepartement.DisplayMember = "Value";
-            cbDepartement.Text = cbDepartement.Items[0].ToString();
-            cbDepartement.DropDownStyle = ComboBoxStyle.DropDownList;
-
-
-            cbSaison.DataSource = FlistS;
-            cbSaison.ValueMember = "Key";
-            cbSaison.DisplayMember = "Value";
-            cbSaison.Text = cbSaison.Items[0].ToString();
-            cbSaison.DropDownStyle = ComboBoxStyle.DropDownList;
-
-            bindingSource1.DataSource = controller.Vmodel.Dv_vm_contrevisite;
-            dataGV.DataSource = bindingSource1;
-
-            dataGV.Columns[0].Visible = false;
-            dataGV.Columns[1].Visible = false;
-            dataGV.Columns[6].Visible = false;
-            dataGV.Columns[12].Visible = false;
-            dataGV.Columns[8].Visible = false;
-            dataGV.Columns[9].Visible = false;
-
-
-
-
-            int vwidth = dataGV.RowHeadersWidth;
-            for (int i = 0; i < dataGV.Columns.Count; i++)
-            {
-                if (dataGV.Columns[i].Visible)
-                    vwidth = vwidth + dataGV.Columns[i].GetPreferredWidth(DataGridViewAutoSizeColumnMode.AllCells, false);
-
-            }
-            if (dataGV.ScrollBars.Equals(ScrollBars.Both) | dataGV.ScrollBars.Equals(ScrollBars.Vertical))
-            {
-                dataGV.Width += 20;
-            }
-            dataGV.Refresh();
 
         }
         /// <summary>
@@ -87,19 +94,31 @@ namespace StarsUP
         /// </summary>
         public void filtre()
         {
-            string num = cbDepartement.SelectedValue.ToString();
-            int n = Convert.ToInt32(num);
-            if (n == 0)
+            try
             {
-                controller.Vmodel.Dv_vm_contrevisite.RowFilter = "";
+                string num = cbDepartement.SelectedValue.ToString();
+                int n = Convert.ToInt32(num);
+                if (n == 0)
+                {
+                    controller.Vmodel.Dv_vm_contrevisite.RowFilter = "";
+
+                }
+                else
+                {
+                    string Filter = "Identifiant_Departement='" + n + "'";
+                    controller.Vmodel.Dv_vm_contrevisite.RowFilter = Filter;
+                }
+                dataGV.Refresh();
+            }
+            catch(Exception ex)
+
+            {
+                MessageBox.Show("Filtre imporssible, il n'y a pas de données", "Filtre", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
             }
-            else
-            {
-                string Filter = "Identifiant_Departement='" + n + "'";
-                controller.Vmodel.Dv_vm_contrevisite.RowFilter = Filter;
-            }
-            dataGV.Refresh();
+
+
+
         }
 
         /// <summary>
@@ -107,23 +126,32 @@ namespace StarsUP
         /// </summary>
         public void filtreS()
         {
-            string num = cbSaison.SelectedValue.ToString();
-            if(cbSaison.SelectedValue.ToString()== "[0, Toutes les saisons]")
+            try
             {
-                num = "0";
-            }
-            int n = Convert.ToInt32(num);
-            if (n == 0)
-            {
-                controller.Vmodel.Dv_vm_contrevisite.RowFilter = "";
+                string num = cbSaison.SelectedValue.ToString();
+                if (cbSaison.SelectedValue.ToString() == "[0, Toutes les saisons]")
+                {
+                    num = "0";
+                }
+                int n = Convert.ToInt32(num);
+                if (n == 0)
+                {
+                    controller.Vmodel.Dv_vm_contrevisite.RowFilter = "";
 
+                }
+                else
+                {
+                    string Filter = "Identifiant_Saison='" + n + "'";
+                    controller.Vmodel.Dv_vm_contrevisite.RowFilter = Filter;
+                }
+                dataGV.Refresh();
             }
-            else
+            catch(Exception ex)
             {
-                string Filter = "Identifiant_Saison='" + n + "'";
-                controller.Vmodel.Dv_vm_contrevisite.RowFilter = Filter;
+                MessageBox.Show("Filtre imporssible, il n'y a pas de données", "Filtre", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+               
             }
-            dataGV.Refresh();
+            
         }
 
         /// <summary>
@@ -132,16 +160,24 @@ namespace StarsUP
         ///  public void filtreD()
         public void filtreD()
         {
-            //Ce filtre permet de charger les visites qui sont situées entre les deux dates 
-            string Filter = "Date_de_visite>='" + dateTimePicker1.Value.ToShortDateString() + "' AND Date_de_visite<='" + dateTimePicker2.Value.ToShortDateString() + "'";
-        controller.Vmodel.Dv_vm_contrevisite.RowFilter=Filter;
-            //Il s'agit du filtre de la saison
-            string FilterSaison = "Annee_Saison='" + dateTimePicker1.Value.Year.ToString() + "'";
-        controller.Vmodel.Dv_saison.RowFilter = FilterSaison;
-            
-           
-           //On fait un rafraichissement de la datagridview pour pouvoir voir le résultat
-            dataGV.Refresh();
+            try
+            {
+                //Ce filtre permet de charger les visites qui sont situées entre les deux dates 
+                string Filter = "Date_de_visite>='" + dateTimePicker1.Value.ToShortDateString() + "' AND Date_de_visite<='" + dateTimePicker2.Value.ToShortDateString() + "'";
+                controller.Vmodel.Dv_vm_contrevisite.RowFilter = Filter;
+                //Il s'agit du filtre de la saison
+                string FilterSaison = "Annee_Saison='" + dateTimePicker1.Value.Year.ToString() + "'";
+                controller.Vmodel.Dv_saison.RowFilter = FilterSaison;
+
+
+                //On fait un rafraichissement de la datagridview pour pouvoir voir le résultat
+                dataGV.Refresh();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Filtre imporssible, il n'y a pas de données", "Filtre", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                /*MessageBox.Show(ex.ToString());*/
+            }
         }
 
 public ContreVisites()

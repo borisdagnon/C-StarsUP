@@ -136,7 +136,7 @@ namespace ClassConnect
 
         public void seconnecter()
         {
-            string myConnectionString = "Database=bd_boris_starsup;Data Source=localhost;User Id=root";
+            string myConnectionString = "Database=bd_boris_starsup;Data Source=192.168.236.;User Id=boris;Password=123 ";
             myConnection = new MySqlConnection(myConnectionString);
             connopen = true;
             try //tentative
@@ -384,7 +384,7 @@ namespace ClassConnect
             mySqlDataAdapter.UpdateCommand.Parameters.Add("?ETOILLE", MySqlDbType.Int16, 10, "ETOILLE");
             mySqlDataAdapter.UpdateCommand.Parameters.Add("?IDVISITE", MySqlDbType.Int16, 10, "IDVISITE");
             mySqlDataAdapter.UpdateCommand.Parameters.Add("?COMMENTAIREV", MySqlDbType.Text, 3000, "COMMENTAIREV");
-            mySqlDataAdapter.UpdateCommand.Parameters.Add("?CONTREVISITE", MySqlDbType.Int16, 10, "CONTREVISITE");
+            mySqlDataAdapter.UpdateCommand.Parameters.Add("?CONTREVISITE", MySqlDbType.Text, 655, "CONTREVISITE");
 
            
 

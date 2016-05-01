@@ -53,8 +53,14 @@ namespace StarsUP
 
         public void chargerinfo()
         {
-           
 
+            XmlSerializer serial2 = new XmlSerializer(typeof(Premiere));
+            StreamReader lire2 = new StreamReader("Premiere.xml");
+            Premiere p = (Premiere)serial2.Deserialize(lire2);
+            lire2.Close();
+
+
+            
            //Si c'est la première fois qu'il accède à cette form depuis la connection alors on charge les données depuis la BDD 
         if(nbClic==1)
         {
@@ -392,7 +398,7 @@ namespace StarsUP
         private void Profil_Load(object sender, EventArgs e)
         {
             Int16 result = 0;
-            cn.ConnectionString = "Database=bd_boris_starsup;Data Source=localhost;User Id=root;";
+            cn.ConnectionString = "Database=bd_boris_starsup;Data Source=192.168.236.1;User Id=boris;Password=123";
             cmd.Connection = cn;
             try
             {

@@ -168,6 +168,7 @@
             get { return chbContreVisite; }
             set { chbContreVisite = value; }
         }
+
         private System.Windows.Forms.Button btnEnreg;
         private System.Windows.Forms.Button btnAnnuler;
         private System.Windows.Forms.CheckBox chbContreVisite;

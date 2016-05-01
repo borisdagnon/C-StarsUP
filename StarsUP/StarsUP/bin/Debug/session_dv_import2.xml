@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfSession_dv_import2 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <session_dv_import2 IDINSPECTEUR="1" PRENOMINSPECTEUR="David" NOMINSPECTEUR="Flemming" DATEV="08/12/2015 00:00:00" />
+  <session_dv_import2 IDINSPECTEUR="1" PRENOMINSPECTEUR="David" NOMINSPECTEUR="Flemming" DATEV="11/03/2016 00:00:00" />
+  <session_dv_import2 IDINSPECTEUR="1" PRENOMINSPECTEUR="David" NOMINSPECTEUR="Flemming" DATEV="22/04/2016 00:00:00" />
+</ArrayOfSession_dv_import2><?xml version="1.0" encoding="utf-8"?>
+<ArrayOfSession_dv_import2 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />

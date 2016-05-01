@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfSession_dv_inspecteur xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <session_dv_inspecteur IDINSPECTEUR="1" IDSPECIALITEI="1" NOMINSPECTEUR="Flemming" PRENOMINSPECTEUR="David" IDDEPARTEMENT="1" NUMEROTEL="623524874" MDPINSPECTEUR="linch" />
+</ArrayOfSession_dv_inspecteur>

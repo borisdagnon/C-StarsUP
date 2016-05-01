@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfSession_dv_saison xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <session_dv_saison Identifiant_Saison="1" Nom_Saison="Printemps" Annee_Saison="2015" Nom_Inspecteur="Flemming" />
+  <session_dv_saison Identifiant_Saison="3" Nom_Saison="Hiver" Annee_Saison="2016" Nom_Inspecteur="Flemming" />
+  <session_dv_saison Identifiant_Saison="4" Nom_Saison="Automne" Annee_Saison="2016" Nom_Inspecteur="Flemming" />
+</ArrayOfSession_dv_saison>

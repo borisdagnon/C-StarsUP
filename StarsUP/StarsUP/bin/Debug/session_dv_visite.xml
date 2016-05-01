@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfSession_dv_visite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <session_dv_visite Identifiant_Visite="1" Identifiant_Inspecteur="1" Nom_Inspecteur="Flemming" Prenom_Inspecteur="Bob" Nom_Hebergement="LES FLINGUETTES" Adresse_Hebergement="19 Rue Des Capucins" Date_de_visite="08/12/2015" Identifiant_Saison="1" Identifiant_Departement="1" Nom_Departement="Maine-Et-Loire" Nom_Saison="Printemps" Annee_Date_Visite="2015" />
+  <session_dv_visite Identifiant_Visite="3" Identifiant_Inspecteur="1" Nom_Inspecteur="Flemming" Prenom_Inspecteur="Bob" Nom_Hebergement="L'Everton" Adresse_Hebergement="10 Avenue Symbale" Date_de_visite="11/03/2016" Identifiant_Saison="3" Identifiant_Departement="1" Nom_Departement="Maine-Et-Loire" Nom_Saison="Hiver" Annee_Date_Visite="2016" />
+  <session_dv_visite Identifiant_Visite="4" Identifiant_Inspecteur="1" Nom_Inspecteur="Flemming" Prenom_Inspecteur="Bob" Nom_Hebergement="L'Iliade" Adresse_Hebergement="La Rue Des Florandes" Date_de_visite="22/04/2016" Identifiant_Saison="4" Identifiant_Departement="1" Nom_Departement="Maine-Et-Loire" Nom_Saison="Automne" Annee_Date_Visite="2016" />
+</ArrayOfSession_dv_visite>

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfSession_dv_contrevisite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <session_dv_contrevisite IDCONTREVISITE="1" IDINSPECTEUR="4" IDSAISON="1" IDVISITE="1" IDDATEV="7" COMMENTAIRECV="Finalement cet hébergement ne respecte pas certaines normes. On lui retire donc 1 étoile" NBETOILEMOINS="2" />
+</ArrayOfSession_dv_contrevisite>

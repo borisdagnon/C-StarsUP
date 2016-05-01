@@ -83,6 +83,9 @@
     <Compile Include="ContreVisite.Designer.cs">
       <DependentUpon>ContreVisite.cs</DependentUpon>
     </Compile>
+    <Compile Include="session_dv_import3.cs" />
+    <Compile Include="session_dv_import2.cs" />
+    <Compile Include="DateConnexion.cs" />
     <Compile Include="MAJ.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -90,6 +93,7 @@
       <DependentUpon>MAJ.cs</DependentUpon>
     </Compile>
     <Compile Include="Path.cs" />
+    <Compile Include="Premiere.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -129,6 +133,13 @@
     <Compile Include="Profil.Designer.cs">
       <DependentUpon>Profil.cs</DependentUpon>
     </Compile>
+    <Compile Include="session_dv_etoile.cs" />
+    <Compile Include="session_dv_inspecteur.cs" />
+    <Compile Include="session_dv_contrevisite_.cs" />
+    <Compile Include="session_dv_visite.cs" />
+    <Compile Include="session_dv_vm_contrevisite.cs" />
+    <Compile Include="session_dv_saison.cs" />
+    <Compile Include="session_dv_departement.cs" />
     <EmbeddedResource Include="Commentaire Contre Visite.resx">
       <DependentUpon>Commentaire Contre Visite.cs</DependentUpon>
     </EmbeddedResource>
