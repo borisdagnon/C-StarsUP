@@ -463,7 +463,10 @@ namespace StarsUP
             controller.Vmodel.Dv_contrevisite = ds6.Tables[0].DefaultView;
             
 
-           ds.Clear();
+     /*   
+     
+            Il ne faut pas faire ça si on veut concerver les données
+            ds.Clear();
             ds.Dispose();
             ds1.Clear();
             ds1.Dispose();
@@ -477,7 +480,7 @@ namespace StarsUP
             ds5.Dispose();
             ds6.Clear();
             ds6.Dispose();
-
+            */
 
         }
         private void listeContreVisitesToolStripMenuItem_Click(object sender, EventArgs e)
