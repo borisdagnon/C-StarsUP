@@ -463,7 +463,7 @@ namespace StarsUP
             controller.Vmodel.Dv_contrevisite = ds6.Tables[0].DefaultView;
             
 
-     /      ds.Clear();
+           ds.Clear();
             ds.Dispose();
             ds1.Clear();
             ds1.Dispose();
